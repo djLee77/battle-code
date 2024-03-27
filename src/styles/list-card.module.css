@@ -1,0 +1,49 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    border-radius: 24px;
+    padding: 2px;
+    padding-left: 48px;
+    padding-right: 48px;
+    background-color: black;
+    color: white;
+}
+
+.top-box {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    display: flex;
+}
+
+.status-box {
+    display: flex;
+    align-items: center;
+}
+
+.status-box h4 {
+    margin-left: 12px;
+    font-size: 18px;
+}
+
+
+.option-list {
+    display: flex;
+    list-style-type: none;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    margin-bottom: 14px;
+}
+
+.option-list li {
+    background-color: #606060;
+    padding: 6px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-right: 12px;
+}
