@@ -3,11 +3,12 @@
     flex-direction: column;
     border-radius: 24px;
     padding: 2px;
-    padding-left: 48px;
-    padding-right: 48px;
+    padding-left: 24px;
+    padding-right: 24px;
     background-color: black;
     color: white;
     margin-bottom: 12px;
+    border: 1px solid rgb(93, 93, 93);
 }
 
 .wrapper-disabled {
@@ -15,8 +16,8 @@
     flex-direction: column;
     border-radius: 24px;
     padding: 2px;
-    padding-left: 48px;
-    padding-right: 48px;
+    padding-left: 24px;
+    padding-right: 24px;
     background-color: rgb(87, 87, 87);
     color: rgb(178, 178, 178);
     margin-bottom: 12px;
