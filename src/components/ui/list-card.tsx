@@ -1,12 +1,18 @@
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import styles from "../../styles/list-card.module.css";
-export default function ListCard() {
+import { Room } from "../../types";
+
+interface ListCardProps {
+  room: Room;
+}
+
+export default function ListCard({ room }: ListCardProps) {
   return (
     <div className={styles.wrapper}>
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
           <LockOpenIcon sx={{ marginRight: "12px" }} />
-          #1. 1ㄷ1 뜨실 초보만~
+          {`#${room.id}. ${room.title}`}
         </h3>
         <div className={styles[`status-box`]}>
           <span>대기중</span>

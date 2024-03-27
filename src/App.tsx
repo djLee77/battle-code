@@ -1,11 +1,10 @@
-import React from "react";
-import ListCard from "./components/ui/list-card";
+import RoomList from "./pages/room-list";
 
 function App() {
   return (
     <div className="App">
       <h4>ㅎㅇ</h4>
-      <ListCard />
+      <RoomList />
     </div>
   );
 }
