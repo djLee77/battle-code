@@ -8,7 +8,7 @@ interface ListCardProps {
 
 export default function ListCard({ room }: ListCardProps) {
   return (
-    <div className={styles.wrapper}>
+    <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}>
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
           <LockOpenIcon sx={{ marginRight: "12px" }} />

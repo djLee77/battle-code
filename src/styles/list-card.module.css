@@ -10,6 +10,18 @@
     margin-bottom: 12px;
 }
 
+.wrapper-disabled {
+    display: flex;
+    flex-direction: column;
+    border-radius: 24px;
+    padding: 2px;
+    padding-left: 48px;
+    padding-right: 48px;
+    background-color: rgb(87, 87, 87);
+    color: rgb(178, 178, 178);
+    margin-bottom: 12px;
+}
+
 .top-box {
     display: flex;
     width: 100%;
