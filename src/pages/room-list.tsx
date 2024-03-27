@@ -1,6 +1,7 @@
 import ListCard from "../components/ui/list-card";
 import { Room } from "../types";
 import styles from "../styles/room-list.module.css";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function RoomList() {
   const roomList: Room[] = [
@@ -33,6 +34,9 @@ export default function RoomList() {
   ];
   return (
     <div>
+      <nav>
+        <AccountCircleIcon />
+      </nav>
       <div className={styles[`list-container`]}>
         {roomList.map((room: Room) => (
           <ListCard key={room.id} room={room} />
