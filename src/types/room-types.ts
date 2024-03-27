@@ -5,7 +5,7 @@ export interface Room {
   members: string;
   isWait: boolean;
   password: string | null;
-  settings: RoomSettings[];
+  settings: RoomSettings;
 }
 
 // 방 설정 타입

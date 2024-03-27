@@ -15,15 +15,15 @@ export default function ListCard({ room }: ListCardProps) {
           {`#${room.id}. ${room.title}`}
         </h3>
         <div className={styles[`status-box`]}>
-          <span>대기중</span>
-          <h4>1/2</h4>
+          <span>{room.isWait ? "대기중" : "게임중"}</span>
+          <h4>{room.members}</h4>
         </div>
       </div>
       <ul className={styles[`option-list`]}>
-        <li>난이도 : 브론즈1</li>
-        <li>제한 시간 : 1시간</li>
-        <li>제출 제한 : 5번</li>
-        <li>언어 설정 : JAVA</li>
+        <li>{`난이도 : ${room.settings.difficulty}`}</li>
+        <li>{`제한 시간 : ${room.settings.timeLimit}`}</li>
+        <li>{`제출 제한 : ${room.settings.numOfSubmissions}`}</li>
+        <li>{`언어 설정 : ${room.settings.lang}`}</li>
       </ul>
     </div>
   );

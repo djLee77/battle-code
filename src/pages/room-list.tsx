@@ -9,14 +9,12 @@ export default function RoomList() {
       members: "1/2",
       isWait: true,
       password: null,
-      settings: [
-        {
-          difficulty: "브론즈1",
-          timeLimit: "1h",
-          numOfSubmissions: 5,
-          lang: "JAVA",
-        },
-      ],
+      settings: {
+        difficulty: "브론즈1",
+        timeLimit: "1h",
+        numOfSubmissions: 5,
+        lang: "JAVA",
+      },
     },
     {
       id: 2,
@@ -24,14 +22,12 @@ export default function RoomList() {
       members: "3/3",
       isWait: false,
       password: null,
-      settings: [
-        {
-          difficulty: "브론즈1",
-          timeLimit: "1h",
-          numOfSubmissions: 5,
-          lang: "JAVA",
-        },
-      ],
+      settings: {
+        difficulty: "브론즈1",
+        timeLimit: "1h",
+        numOfSubmissions: 5,
+        lang: "JAVA",
+      },
     },
   ];
   return (
