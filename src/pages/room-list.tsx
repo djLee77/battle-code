@@ -1,5 +1,6 @@
 import ListCard from "../components/ui/list-card";
 import { Room } from "../types";
+import styles from "../styles/room-list.module.css";
 
 export default function RoomList() {
   const roomList: Room[] = [
@@ -32,7 +33,7 @@ export default function RoomList() {
   ];
   return (
     <div>
-      <div>
+      <div className={styles[`list-container`]}>
         {roomList.map((room: Room) => (
           <ListCard key={room.id} room={room} />
         ))}
