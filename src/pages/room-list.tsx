@@ -5,6 +5,7 @@ import Navigation from "../components/navigation";
 import { roomListData } from "../data/room-list-data";
 import RoomEntry from "../components/room-entry";
 import CustomBtn from "../components/ui/button";
+import CreateRoomModal from "../components/modals/create-room";
 
 export default function RoomList() {
   const roomList = roomListData; // 테스트 데이터
@@ -18,9 +19,7 @@ export default function RoomList() {
             <CustomBtn size="small" onClick={() => {}}>
               방 새로고침
             </CustomBtn>
-            <CustomBtn size="small" onClick={() => {}}>
-              방 만들기
-            </CustomBtn>
+            <CreateRoomModal />
           </div>
         </div>
         <div className={styles.list}>
