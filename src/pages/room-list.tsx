@@ -4,6 +4,7 @@ import styles from "../styles/room-list.module.css";
 import Navigation from "../components/navigation";
 import { roomListData } from "../data/room-list-data";
 import RoomEntry from "../components/room-entry";
+import CustomBtn from "../components/ui/button";
 
 export default function RoomList() {
   const roomList = roomListData; // 테스트 데이터
@@ -14,8 +15,12 @@ export default function RoomList() {
         <div className={styles.top}>
           <RoomEntry />
           <div>
-            <button>방 새로고침</button>
-            <button>방 만들기</button>
+            <CustomBtn size="small" onClick={() => {}}>
+              방 새로고침
+            </CustomBtn>
+            <CustomBtn size="small" onClick={() => {}}>
+              방 만들기
+            </CustomBtn>
           </div>
         </div>
         <div className={styles.list}>
