@@ -1,4 +1,12 @@
 .list-container {
-    width: 60%;
+    width: 90%;
     margin: 0 auto;
+    border: 1px solid rgb(0, 0, 0);
+    height: 80vh;
+    margin-top: 32px;
+}
+
+.list {
+    padding: 36px;
+
 }

@@ -36,9 +36,12 @@ export default function RoomList() {
     <div>
       <Navigation />
       <div className={styles[`list-container`]}>
-        {roomList.map((room: Room) => (
-          <ListCard key={room.id} room={room} />
-        ))}
+        <button>입장</button>
+        <div className={styles.list}>
+          {roomList.map((room: Room) => (
+            <ListCard key={room.id} room={room} />
+          ))}
+        </div>
       </div>
     </div>
   );
