@@ -8,7 +8,7 @@ interface ButtonProps {
 }
 
 const CustomBtn = ({ size = "small", children, onClick }: ButtonProps) => {
-  const buttonClassName = `${styles.btn} ${styles[size]}`; // 사이즈에 따른 클래스를 추가합니다.
+  const buttonClassName = `${styles.btn} ${styles[size]}`;
 
   return (
     <button className={buttonClassName} onClick={onClick}>
