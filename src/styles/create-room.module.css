@@ -1,0 +1,17 @@
+.container {
+    display: grid;
+    grid-template-columns: 80px 60%;
+    row-gap: 30px;
+    justify-content: center;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.btn-group button {
+    margin-right: 18px;
+
+}
