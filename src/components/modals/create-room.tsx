@@ -19,6 +19,11 @@ const style = {
   p: 4,
 };
 
+type Option = {
+  value: string;
+  name: string;
+};
+
 export default function CreateRoomModal() {
   const [title, setTitle] = useState("");
   const [pw, setPW] = useState("");
@@ -76,7 +81,7 @@ export default function CreateRoomModal() {
 
             <label htmlFor="level">난이도 </label>
             <select id="level" name="level" value={level} onChange={(e) => setLevel(e.target.value)}>
-              {levelSelectList.map((item: any) => (
+              {levelSelectList.map((item: Option) => (
                 <option value={item.value} key={item.value}>
                   {item.name}
                 </option>
@@ -85,7 +90,7 @@ export default function CreateRoomModal() {
 
             <label htmlFor="lang">언어 설정 </label>
             <select id="level" name="level" value={lang} onChange={(e) => setLang(e.target.value)}>
-              {langSelectList.map((item: any) => (
+              {langSelectList.map((item: Option) => (
                 <option value={item.value} key={item.value}>
                   {item.name}
                 </option>
@@ -103,7 +108,7 @@ export default function CreateRoomModal() {
 
             <label htmlFor="limit_time">제한 시간 </label>
             <select id="level" name="level" value={limitTime} onChange={(e) => setlimitTime(e.target.value)}>
-              {limitTimeSelectList.map((item: any) => (
+              {limitTimeSelectList.map((item: Option) => (
                 <option value={item.value} key={item.value}>
                   {item.name}
                 </option>
