@@ -3,7 +3,6 @@ import styles from "../../styles/button.module.css";
 interface ButtonProps {
   size?: "small" | "medium" | "large";
   children: string;
-  backgroundColor?: string;
   onClick?: () => void;
 }
 
