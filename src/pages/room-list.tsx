@@ -14,7 +14,7 @@ export default function RoomList() {
       <div className={styles[`list-container`]}>
         <div className={styles.top}>
           <RoomEntry />
-          <div>
+          <div className={styles[`btn-group`]}>
             <CustomBtn size="small" onClick={() => {}}>
               방 새로고침
             </CustomBtn>
