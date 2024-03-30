@@ -2,9 +2,10 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "../ui/button";
 import styles from "../../styles/create-room.module.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import { langData, levelData, limitTImeData } from "../../data/room-setting-data";
 
+// 모달 창 스타일
 const style = {
   position: "absolute",
   top: "50%",
@@ -19,10 +20,17 @@ const style = {
   p: 4,
 };
 
+// select option 타입
 type Option = {
   value: string;
   name: string;
 };
+
+//setState 타입
+type SetStateNumberAction = React.Dispatch<React.SetStateAction<number>>;
+
+// input change event 타입
+type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
 export default function CreateRoomModal() {
   const [title, setTitle] = useState("");
@@ -41,7 +49,7 @@ export default function CreateRoomModal() {
   const limitTimeSelectList = limitTImeData;
 
   // 숫자 제한 함수
-  const handleNumChange = (e: React.ChangeEvent<HTMLInputElement>, set: any, max: number, min: number) => {
+  const handleNumChange = (e: ChangeEvent, set: SetStateNumberAction, max: number, min: number) => {
     let value = parseInt(e.target.value);
     if (value < min) {
       value = min;
