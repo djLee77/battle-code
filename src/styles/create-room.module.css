@@ -5,6 +5,28 @@
     justify-content: center;
 }
 
+.container label {
+    display: flex;
+    align-items: center;
+}
+
+.container input,
+select {
+    background-color: black;
+    height: 32px;
+    border-radius: 14px;
+    color: white;
+    padding-left: 14px;
+    border: 1px solid black;
+}
+
+.container select {
+
+    box-sizing: content-box;
+}
+
+
+
 .btn-group {
     display: flex;
     justify-content: flex-end;
