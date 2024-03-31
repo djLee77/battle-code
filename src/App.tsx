@@ -2,6 +2,7 @@ import DockLayout from "rc-dock";
 import RoomList from "./pages/room-list";
 import { useRef } from "react";
 import "./styles/rc-dock-dark.css"; // 다크모드(커스텀)
+import Navigation from "./components/navigation";
 
 // 탭 형식에 맞게 만드는 함수
 function getTab(id: string, component: any) {
@@ -32,10 +33,11 @@ function App() {
 
   return (
     <div className="App">
+      <Navigation />
       <DockLayout
         ref={dockLayoutRef} // ref 설정
         defaultLayout={defaultLayout} // 초기 레이아웃 설정
-        style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0 }} // 스타일 설정
+        style={{ position: "absolute", left: 0, top: 50, right: 0, bottom: 0 }} // 스타일 설정
       />
     </div>
   );
