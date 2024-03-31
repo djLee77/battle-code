@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SignupModal from "./SignupModal";
 import { setToken, getToken, removeToken } from "../utils/cookie";
-import useUserStore from "../store/userStore";
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
-  const login = useUserStore((state) => state.login);
 
   //아래 useEffect는 추후 삭제
   useEffect(() => {
@@ -26,9 +24,8 @@ const Login = () => {
         userId,
         password,
       });
-      const { token, username } = response.data;
+      const { token } = response.data;
       setToken(token);
-      login(username);
       console.log("로그인 성공");
     } catch (error) {
       console.error("로그인 실패", error);
