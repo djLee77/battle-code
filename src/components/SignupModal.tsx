@@ -9,11 +9,18 @@ interface SignupModalProps {
 
 const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (password !== passwordConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
     console.log(username);
     console.log(password);
     console.log(email);
@@ -40,9 +47,9 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            placeholder="UserId"
             required
           />
           <input
@@ -50,6 +57,20 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            required
+          />
+          <input
+            type="password"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+            placeholder="Confirm Password"
+            required
+          />
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="username"
             required
           />
           <input
