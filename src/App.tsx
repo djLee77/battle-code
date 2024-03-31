@@ -3,6 +3,7 @@ import RoomList from "./pages/room-list";
 import { useRef } from "react";
 import "./styles/rc-dock-dark.css"; // 다크모드(커스텀)
 import Navigation from "./components/navigation";
+import "./styles/global-style.css";
 
 // 탭 형식에 맞게 만드는 함수
 function getTab(id: string, component: any) {
