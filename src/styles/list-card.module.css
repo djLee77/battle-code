@@ -28,10 +28,13 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
 
 .title {
     display: flex;
+    font-size: 18px;
 }
 
 .status-box {
