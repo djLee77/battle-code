@@ -14,6 +14,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
 
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -25,7 +27,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     console.log(password);
     console.log(email);
     // try {
-    //   await axios.post("/api/signup", {
+    //   await axios.post(`${serverUrl}/api/signup`, {
     //     username,
     //     password,
     //     email,

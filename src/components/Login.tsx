@@ -8,6 +8,8 @@ const Login = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
 
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
+
   //아래 useEffect는 추후 삭제
   useEffect(() => {
     const token = getToken();
@@ -20,7 +22,7 @@ const Login = () => {
     e.preventDefault();
     try {
       //아래 라인들은 이후 병선이와 다시 맞추기
-      const response = await axios.post("/api/login", {
+      const response = await axios.post(`${serverUrl}/api/login`, {
         userId,
         password,
       });
