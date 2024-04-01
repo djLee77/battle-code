@@ -1,0 +1,25 @@
+.user-container {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 12px;
+    padding: 12px;
+    flex-direction: column;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info h2 {
+    margin-right: 12px;
+}
+
+.record-container {
+    display: flex;
+
+}
+
+.record-box {
+    width: 100%;
+}
