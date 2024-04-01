@@ -1,6 +1,6 @@
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import styles from "../../styles/list-card.module.css";
-import { Room } from "../../types";
+import styles from "styles/list-card.module.css";
+import { Room } from "types";
 
 interface ListCardProps {
   room: Room;
