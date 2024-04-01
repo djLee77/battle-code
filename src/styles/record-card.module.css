@@ -1,0 +1,31 @@
+.record {
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-end;
+    border-radius: 24px;
+    padding: 12px 24px;
+    margin-bottom: 12px;
+}
+
+.record-result {
+    display: flex;
+    flex-direction: column;
+    min-width: 100px
+}
+
+.record-result b {
+    font-size: 18px;
+}
+
+.record-user {
+    font-size: 18px;
+}
+
+.record-level {
+    display: flex;
+}
+
+.record-level div {
+    display: flex;
+    flex-direction: column;
+}
