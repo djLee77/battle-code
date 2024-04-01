@@ -1,4 +1,4 @@
-import ListCard from "components/ui/list-card";
+import ListCard from "components/list-card";
 import { Room } from "types";
 import styles from "styles/room-list.module.css";
 import { roomListData } from "data/room-list-data";
