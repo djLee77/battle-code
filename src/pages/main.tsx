@@ -1,10 +1,9 @@
 import DockLayout from "rc-dock";
-import RoomList from "../components/tabs/room-list";
+import RoomList from "components/tabs/room-list";
 import { useRef } from "react";
-import "../styles/rc-dock-dark.css"; // 다크모드(커스텀)
-import Navigation from "../components/navigation";
-import User from "../components/tabs/user";
-import { getTab } from "../utils/tabs";
+import "styles/rc-dock-dark.css"; // 다크모드(커스텀)
+import Navigation from "components/navigation";
+import { getTab } from "utils/tabs";
 
 export const MainPage = () => {
   const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
