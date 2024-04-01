@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SignupModal from "./SignupModal";
-import { setToken, getToken, removeToken } from "../utils/cookie";
+import { setRefreshToken, removeRefreshToken } from "../utils/cookie";
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -9,14 +9,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-
-  //아래 useEffect는 추후 삭제
-  useEffect(() => {
-    const token = getToken();
-    if (token) {
-      console.log("already logged in");
-    }
-  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,12 +18,13 @@ const Login = () => {
         userId,
         password,
       });
-      const { token } = response.data;
-      setToken(token);
+      const { accessToken, refreshToken } = response.data;
+      setRefreshToken(refreshToken);
+      //리다이렉션 로직 추가 필요
       console.log("로그인 성공");
     } catch (error) {
       console.error("로그인 실패", error);
-      removeToken();
+      removeRefreshToken();
     }
   };
 
