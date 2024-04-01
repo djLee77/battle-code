@@ -1,10 +1,10 @@
-import ListCard from "./ui/list-card";
-import { Room } from "../types";
-import styles from "../styles/room-list.module.css";
-import { roomListData } from "../data/room-list-data";
-import RoomEntry from "./room-entry";
-import CustomBtn from "./ui/button";
-import CreateRoomModal from "./modals/create-room";
+import ListCard from "../ui/list-card";
+import { Room } from "../../types";
+import styles from "../../styles/room-list.module.css";
+import { roomListData } from "../../data/room-list-data";
+import RoomEntry from "../room-entry";
+import CustomBtn from "../ui/button";
+import CreateRoomModal from "../modals/create-room";
 
 export default function RoomList() {
   const roomList = roomListData; // 테스트 데이터
