@@ -18,7 +18,10 @@
     "baseUrl": "src",
     "paths": {
       "components/*": ["components/*"],
-      "styles/*": ["styles/*"]
+      "styles/*": ["styles/*"],
+      "data/*": ["data/*"],
+      "types/*": ["types/*"],
+      "pages/*": ["pages/*"]
     }
   },
   "include": ["src"]
