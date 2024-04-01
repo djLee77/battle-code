@@ -1,16 +1,16 @@
+// src/store/useAuthStore.ts
 import create from "zustand";
 
-interface UserState {
-  username: string;
-  login: (username: string) => void;
-  logout: () => void;
+// 상태 타입 정의
+interface AuthState {
+  accessToken: string | null;
+  setAccessToken: (token: string | null) => void;
 }
 
-const useUserStore = create<UserState>((set) => ({
-  userId: null,
-  username: "",
-  login: (username) => set({ username }),
-  logout: () => set({ username: "" }),
+// Zustand 스토어 생성
+const useAuthStore = create<AuthState>((set) => ({
+  accessToken: null,
+  setAccessToken: (token: string | null) => set({ accessToken: token }),
 }));
 
-export default useUserStore;
+export default useAuthStore;
