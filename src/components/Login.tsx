@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import SignupModal from "./SignupModal";
 import { setRefreshToken, removeRefreshToken } from "../utils/cookie";
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "../store/userStore";
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -9,6 +11,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const { setAccessToken } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +24,8 @@ const Login = () => {
       });
       const { accessToken, refreshToken } = response.data;
       setRefreshToken(refreshToken);
-      //리다이렉션 로직 추가 필요
+      setAccessToken(accessToken);
+      navigate("/");
       console.log("로그인 성공");
     } catch (error) {
       console.error("로그인 실패", error);
