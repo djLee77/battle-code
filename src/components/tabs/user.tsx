@@ -2,10 +2,14 @@ import CircleProgress from "components/circle";
 import RecordCard from "components/record-card";
 import CustomBtn from "components/ui/button";
 import { userData } from "data/user-data";
+import { useEffect } from "react";
 import styles from "styles/user.module.css";
 
 export default function User() {
   const userTestData = userData;
+  useEffect(() => {
+    console.log("테스트");
+  }, []);
   return (
     <div className={styles[`user-container`]}>
       <div className={styles[`user-info`]}>
