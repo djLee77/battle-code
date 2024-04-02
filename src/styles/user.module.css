@@ -33,5 +33,5 @@
     height: 500px;
     background-color: rgb(26, 23, 23);
     padding: 12px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }

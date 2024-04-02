@@ -22,6 +22,6 @@
 
 .list {
     padding: 12px;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 70vh;
 }
