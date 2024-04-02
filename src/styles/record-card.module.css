@@ -28,4 +28,7 @@
 .record-level div {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-right: 14px;
 }
