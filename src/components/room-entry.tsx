@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CustomBtn from "./ui/button";
+import styles from "styles/room-entry.module.css";
 
 export default function RoomEntry() {
   const [value, setValue] = useState("");
@@ -10,7 +11,7 @@ export default function RoomEntry() {
     setValue(validInputValue);
   };
   return (
-    <div>
+    <div className={styles[`room-entry-container`]}>
       <input placeholder="방 번호로 입장하기" value={value} onChange={(e) => handleInputValue(e)} />
       <CustomBtn size="small" onClick={() => {}}>
         방 입장
