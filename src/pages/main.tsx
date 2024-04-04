@@ -1,6 +1,6 @@
-import DockLayout from "rc-dock";
+import DockLayout, { LayoutData } from "rc-dock";
 import RoomList from "components/tabs/room-list";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "styles/rc-dock-dark.css"; // 다크모드(커스텀)
 import Navigation from "components/navigation";
 import { getTab } from "utils/tabs";
@@ -8,20 +8,25 @@ import { getTab } from "utils/tabs";
 export const MainPage = () => {
   const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
-  const defaultLayout: any = {
-    dockbox: {
-      mode: "vertical", // 수직 모드로 설정
-      children: [
-        {
-          id: "my_panel", // 패널의 고유한 ID
-          tabs: [
-            // 패널에 초기 탭 설정
-            getTab("대기방 목록", <RoomList />, false),
-          ],
-        },
-      ],
-    },
-  };
+  const defaultLayout = useMemo<LayoutData>(
+    () => ({
+      dockbox: {
+        mode: "vertical", // 수직 모드로 설정
+        children: [
+          {
+            id: "my_panel", // 패널의 고유한 ID
+            tabs: [
+              // 패널에 초기 탭 설정
+              getTab("대기방 목록", <RoomList />, false),
+            ],
+            panelLock: {},
+          },
+        ],
+        size: 50,
+      },
+    }),
+    []
+  );
 
   return (
     <div className="App">
