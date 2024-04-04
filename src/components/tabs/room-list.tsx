@@ -37,8 +37,8 @@ export default function RoomList() {
         </div>
       </div>
       <div className={styles.list} style={{ height: viewportHeight * 0.7 }}>
-        {roomList.map((room: Room) => (
-          <ListCard key={room.id} room={room} />
+        {roomList.map((room: Room, idx: number) => (
+          <ListCard key={idx} room={room} />
         ))}
       </div>
     </div>
