@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import SignupModal from "./SignupModal";
-import { setRefreshToken, removeRefreshToken } from "../utils/cookie";
+import {
+  setRefreshToken,
+  removeRefreshToken,
+  getRefreshToken,
+  setAccessToken,
+  getAccessToken,
+} from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/login.module.css";
 
@@ -11,24 +17,29 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const { setAccessToken } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      //아래 라인들은 이후 병선이와 다시 맞추기
-      const response = await axios.post(`${serverUrl}/api/login`, {
-        userId,
-        password,
+      const response = await axios.post(`${serverUrl}v1/oauth/sign-in`, {
+        userId: userId,
+        password: password,
       });
-      const { accessToken, refreshToken } = response.data;
+      const { accessToken, refreshToken } = response.data.data;;
       setRefreshToken(refreshToken);
       setAccessToken(accessToken);
       navigate("/");
       console.log("로그인 성공");
-    } catch (error) {
-      console.error("로그인 실패", error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.message ?? "서버에서 응답을 받지 못했습니다.";
+        console.error("로그인 실패:", message);
+      } else {
+        // Axios 외의 에러 처리
+        console.error("로그인 실패: 알 수 없는 에러 발생");
+      }
       removeRefreshToken();
     }
   };
@@ -50,24 +61,24 @@ const Login = () => {
           <pre>실시간으로 상대방과 코딩테스트 대결을 펼쳐 보세요!</pre>
         </div>
         <div className={styles.inputGroup}>
-        <input
+          <input
             className={styles.input}
-          type="text"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          placeholder="UserId"
-          required
-        />
+            type="text"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            placeholder="UserId"
+            required
+          />
         </div>
         <div className={styles.inputGroup}>
-        <input
+          <input
             className={styles.input}
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
         </div>
         <div className={styles.item}>
           <button className={`${styles.customBtn}`} type="submit">
@@ -85,10 +96,10 @@ const Login = () => {
         </div>
       </form>
       <div>
-      <SignupModal
-        isOpen={isSignupModalOpen}
-        onClose={() => setIsSignupModalOpen(false)}
-      />
+        <SignupModal
+          isOpen={isSignupModalOpen}
+          onClose={() => setIsSignupModalOpen(false)}
+        />
       </div>
     </div>
   );
