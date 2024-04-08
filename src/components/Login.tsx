@@ -34,30 +34,62 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>로그인</h2>
-      <form onSubmit={handleLogin}>
+    <div className={styles.background}>
+      <div className={styles.filter}></div>
+      <form onSubmit={handleLogin} className={styles.loginBox}>
+        <div className={styles.logo}>
+          <img
+            src="logo-battlecode-removebg.png"
+            alt="logo"
+            width="250px"
+            height="40px"
+            style={{ zIndex: "5" }}
+          ></img>
+        </div>
+        <div className={styles.intro}>
+          <pre>실시간으로 상대방과 코딩테스트 대결을 펼쳐 보세요!</pre>
+        </div>
+        <div className={styles.inputGroup}>
         <input
+            className={styles.input}
           type="text"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
           placeholder="UserId"
           required
         />
+        </div>
+        <div className={styles.inputGroup}>
         <input
+            className={styles.input}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
         />
-        <button type="submit">로그인</button>
+        </div>
+        <div className={styles.item}>
+          <button className={`${styles.customBtn}`} type="submit">
+            로그인
+          </button>
+        </div>
+        <div className={styles.signup}>
+          <pre>아직 계정이 없으신가요? </pre>
+          <pre
+            onClick={() => setIsSignupModalOpen(true)}
+            style={{ cursor: "pointer", color: "#fff" }}
+          >
+            회원가입
+          </pre>
+        </div>
       </form>
-      <button onClick={() => setIsSignupModalOpen(true)}>회원가입</button>
+      <div>
       <SignupModal
         isOpen={isSignupModalOpen}
         onClose={() => setIsSignupModalOpen(false)}
       />
+      </div>
     </div>
   );
 };
