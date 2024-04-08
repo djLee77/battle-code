@@ -2,9 +2,7 @@ import Cookies from "js-cookie";
 
 export const setRefreshToken = (token: string) => {
   Cookies.set("refreshToken", token, {
-    expires: 7,
     secure: true,
-    httpOnly: true,
     sameSite: "Strict",
   });
 };
@@ -15,4 +13,19 @@ export const getRefreshToken = () => {
 
 export const removeRefreshToken = () => {
   Cookies.remove("refreshToken");
+};
+
+export const setAccessToken = (token: string) => {
+  Cookies.set("accessToken", token, {
+    secure: true,
+    sameSite: "Strict",
+  });
+};
+
+export const getAccessToken = () => {
+  return Cookies.get("accessToken");
+};
+
+export const removeAccessToken = () => {
+  Cookies.remove("accessToken");
 };
