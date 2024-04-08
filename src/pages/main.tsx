@@ -3,10 +3,14 @@ import RoomList from "../components/tabs/room-list";
 import { useEffect, useRef } from "react";
 import "../styles/rc-dock-dark.css"; // 다크모드(커스텀)
 import Navigation from "../components/navigation";
-import { getRefreshToken, removeRefreshToken } from "../utils/cookie";
+import {
+  getRefreshToken,
+  removeRefreshToken,
+  setRefreshToken,
+  setAccessToken,
+} from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import useAuthStore from "../store/userStore";
 
 // 탭 형식에 맞게 만드는 함수
 function getTab(id: string, component: any) {
@@ -20,25 +24,31 @@ function getTab(id: string, component: any) {
 export default function MainPage() {
   const navigate = useNavigate();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const { setAccessToken } = useAuthStore();
 
+  //Todo : 아래 useEffect 삭제 후, api 요청시마다 header에 accessToken 넣고, accessToken이 만료되었을 시, refreshToken으로 재발급
   useEffect(() => {
     const refreshToken = getRefreshToken();
-    if (refreshToken) {
-      axios
-        .post(`${serverUrl}/api/refresh`, { refreshToken })
-        .then((response) => {
-          const { accessToken } = response.data;
-          setAccessToken(accessToken); // Zustand 스토어에 accessToken 저장
-        })
-        .catch(() => {
-          removeRefreshToken(); // 쿠키에서 refreshToken 제거
-          navigate("/login"); // 로그인 페이지로 리다이렉션
-        });
-    } else {
-      alert("토큰이 만료되어 로그인 페이지로 이동합니다.");
-      navigate("/login"); // refreshToken이 없으면 로그인 페이지로 리다이렉션
-    }
+    console.log(refreshToken);
+    axios
+      .post(
+        `${serverUrl}v1/oauth/refresh-token`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        const { accessToken, refreshToken } = response.data.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        alert("환영합니다!");
+      })
+      .catch(() => {
+        removeRefreshToken();
+        navigate("/login");
+      });
   }, [navigate, setAccessToken, serverUrl]);
   const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
