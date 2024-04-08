@@ -3,7 +3,7 @@ import axios from "axios";
 import SignupModal from "./SignupModal";
 import { setRefreshToken, removeRefreshToken } from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../store/userStore";
+import styles from "../styles/login.module.css";
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
