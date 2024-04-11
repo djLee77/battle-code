@@ -7,6 +7,7 @@ interface ListCardProps {
 }
 
 export default function ListCard({ room }: ListCardProps) {
+  const onClickRoom = () => {};
   return (
     <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}>
       <div className={styles[`top-box`]}>
