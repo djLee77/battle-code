@@ -1,6 +1,8 @@
+import styles from "styles/room.module.css";
+
 export default function Room() {
   return (
-    <div>
+    <div className={styles.container}>
       <div>코딩테스트문제</div>
       <div>
         <div>방 유저 목록</div>
