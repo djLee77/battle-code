@@ -15,7 +15,10 @@ export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
     addTab("대기방", <Room />, dockLayoutRef);
   };
   return (
-    <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]} onClick={onClickRoom}>
+    <div
+      className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}
+      onClick={() => room.isWait && onClickRoom()}
+    >
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
           <LockOpenIcon sx={{ marginRight: "12px" }} />
