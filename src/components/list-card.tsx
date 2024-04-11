@@ -11,10 +11,11 @@ interface ListCardProps {
 
 export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
   const onClickRoom = () => {
+    console.log("click");
     addTab("대기방", <Room />, dockLayoutRef);
   };
   return (
-    <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}>
+    <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]} onClick={onClickRoom}>
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
           <LockOpenIcon sx={{ marginRight: "12px" }} />
