@@ -7,7 +7,11 @@ import CustomBtn from "components/ui/button";
 import CreateRoomModal from "components/modals/create-room";
 import { useEffect, useState } from "react";
 
-export default function RoomList() {
+interface RoomListProps {
+  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
+}
+
+export default function RoomList({ dockLayoutRef }: RoomListProps) {
   const roomList = roomListData; // 테스트 데이터
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
@@ -38,7 +42,7 @@ export default function RoomList() {
       </div>
       <div className={styles.list} style={{ height: viewportHeight * 0.7 }}>
         {roomList.map((room: Room, idx: number) => (
-          <ListCard key={idx} room={room} />
+          <ListCard key={idx} room={room} dockLayoutRef={dockLayoutRef} />
         ))}
       </div>
     </div>

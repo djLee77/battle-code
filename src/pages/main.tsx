@@ -17,7 +17,7 @@ export const MainPage = () => {
             id: "my_panel", // 패널의 고유한 ID
             tabs: [
               // 패널에 초기 탭 설정
-              getTab("대기방 목록", <RoomList />, false),
+              getTab("대기방 목록", <RoomList dockLayoutRef={dockLayoutRef} />, false),
             ],
             panelLock: {},
           },

@@ -4,9 +4,10 @@ import { Room } from "types";
 
 interface ListCardProps {
   room: Room;
+  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function ListCard({ room }: ListCardProps) {
+export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
   const onClickRoom = () => {};
   return (
     <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}>
