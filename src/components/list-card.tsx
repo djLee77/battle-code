@@ -1,14 +1,18 @@
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import styles from "styles/list-card.module.css";
-import { Room } from "types";
+import { IRoom } from "types";
+import { addTab } from "utils/tabs";
+import Room from "./tabs/room";
 
 interface ListCardProps {
-  room: Room;
+  room: IRoom;
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
-  const onClickRoom = () => {};
+  const onClickRoom = () => {
+    addTab("대기방", <Room />, dockLayoutRef);
+  };
   return (
     <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}>
       <div className={styles[`top-box`]}>

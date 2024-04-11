@@ -1,5 +1,5 @@
 import ListCard from "components/list-card";
-import { Room } from "types";
+import { IRoom } from "types";
 import styles from "styles/room-list.module.css";
 import { roomListData } from "data/room-list-data";
 import RoomEntry from "components/room-entry";
@@ -41,7 +41,7 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
         </div>
       </div>
       <div className={styles.list} style={{ height: viewportHeight * 0.7 }}>
-        {roomList.map((room: Room, idx: number) => (
+        {roomList.map((room: IRoom, idx: number) => (
           <ListCard key={idx} room={room} dockLayoutRef={dockLayoutRef} />
         ))}
       </div>
