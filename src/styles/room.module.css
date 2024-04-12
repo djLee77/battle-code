@@ -1,8 +1,54 @@
-.container {
-    display: flex;
-    justify-content: space-between;
+.title {
+    font-size: 18px;
+    padding: 10px;
 }
 
-.container div {
-    width: 30%;
+.container {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 34% 42% 23%;
+    padding: 10px;
+    grid-gap: 8px;
+}
+
+.test-problem {
+    border: 1px solid black;
+    height: 500px;
+}
+
+.room-info>div {
+    grid-row: 1 / span 2;
+}
+
+.user-list {
+    height: 70%;
+    border: 1px solid black;
+}
+
+.room-settings {
+    border: 1px solid black;
+    height: 28%;
+    margin-top: 10px;
+}
+
+.chat {
+    border: 1px solid black;
+}
+
+.button-wrapper {
+    height: fit-content;
+
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #313131;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #282828;
 }
