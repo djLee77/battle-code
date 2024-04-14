@@ -13,7 +13,9 @@ export default function Room() {
           <div className={styles["user-list"]}>방 유저 목록</div>
           <div className={styles["room-settings"]}>방 설정값</div>
         </div>
-        {!chatIsHide && <div className={styles[`chat`]}>채팅창</div>}
+        <div className={styles[`chat`]} style={chatIsHide ? { display: "none" } : { display: "flex" }}>
+          채팅창
+        </div>
       </div>
       <div className={styles[`button-wrapper`]}>
         <button className={styles.button}>버튼 1</button>
