@@ -17,24 +17,34 @@
 }
 
 .room-info {
-    flex: 1
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .user-list {
-    height: 70%;
     border: 1px solid black;
+    flex: 1;
 }
 
 .room-settings {
     border: 1px solid black;
-    height: 28%;
     margin-top: 10px;
+    flex: 0.4
 }
 
 .chat {
     border: 1px solid black;
     flex: 0.5;
 }
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+
 
 .button {
     padding: 10px 20px;
