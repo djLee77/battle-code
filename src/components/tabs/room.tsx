@@ -1,6 +1,9 @@
+import { useState } from "react";
 import styles from "styles/room.module.css";
 
 export default function Room() {
+  const [chatIsHide, setChatIsHide] = useState<boolean>(false);
+
   return (
     <div>
       <h2 className={styles.title}>방 제목</h2>
@@ -10,7 +13,7 @@ export default function Room() {
           <div className={styles["user-list"]}>방 유저 목록</div>
           <div className={styles["room-settings"]}>방 설정값</div>
         </div>
-        <div className={styles[`chat`]}>채팅창</div>
+        {!chatIsHide && <div className={styles[`chat`]}>채팅창</div>}
         <div className={styles[`button-wrapper`]}>
           <button className={styles.button}>버튼 1</button>
         </div>
@@ -18,7 +21,9 @@ export default function Room() {
           <button className={styles.button}>버튼 2</button>
         </div>
         <div className={styles[`button-wrapper`]}>
-          <button className={styles.button}>채팅 숨기기</button>
+          <button className={styles.button} onClick={() => setChatIsHide(!chatIsHide)}>
+            채팅 숨기기
+          </button>
         </div>
       </div>
     </div>
