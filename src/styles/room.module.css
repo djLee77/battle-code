@@ -4,9 +4,8 @@
 }
 
 .container {
-    display: grid;
+    display: flex;
     justify-content: center;
-    grid-template-columns: 34% 42% 23%;
     padding: 10px;
     grid-gap: 8px;
 }
@@ -14,11 +13,11 @@
 .test-problem {
     border: 1px solid black;
     height: 70vh;
-
+    flex: 1;
 }
 
-.room-info>div {
-    grid-row: 1 / span 2;
+.room-info {
+    flex: 1
 }
 
 .user-list {
@@ -34,11 +33,7 @@
 
 .chat {
     border: 1px solid black;
-}
-
-.button-wrapper {
-    height: fit-content;
-
+    flex: 0.5;
 }
 
 .button {

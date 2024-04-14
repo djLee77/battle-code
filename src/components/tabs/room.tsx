@@ -7,10 +7,7 @@ export default function Room() {
   return (
     <div>
       <h2 className={styles.title}>방 제목</h2>
-      <div
-        className={styles.container}
-        style={chatIsHide ? { gridTemplateColumns: "40% 60%" } : { gridTemplateColumns: "34% 42% 23%" }}
-      >
+      <div className={styles.container}>
         <div className={styles[`test-problem`]}>코딩테스트문제</div>
         <div className={styles["room-info"]}>
           <div className={styles["user-list"]}>방 유저 목록</div>
