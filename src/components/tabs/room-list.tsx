@@ -27,8 +27,6 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
     };
   }, []);
 
-  console.log(viewportHeight);
-
   return (
     <div className={styles[`list-container`]}>
       <div className={styles.top}>
