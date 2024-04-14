@@ -13,7 +13,7 @@
 .test-problem {
     border: 1px solid black;
     height: 70vh;
-    flex: 1;
+    flex: 0.7;
 }
 
 .room-info {
