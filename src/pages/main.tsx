@@ -20,7 +20,7 @@ export default function MainPage() {
     if (refreshToken !== undefined) {
       try {
         const client = new StompJs.Client({
-          brokerURL: `ws://192.168.28.207:8080/socket-endpoint`,
+          brokerURL: wsUrl,
           connectHeaders: {
             Authorization: `Bearer ${refreshToken}`,
           },
