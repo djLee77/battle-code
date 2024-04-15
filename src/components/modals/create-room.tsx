@@ -112,7 +112,7 @@ export default function CreateRoomModal() {
               <SelectField label="제한 시간" register={register("limitTime")} options={limitTimeSelectList} />
             </div>
             <div className={styles[`btn-group`]}>
-              <button type="submit">생성</button>
+              <CustomButton type="submit">생성</CustomButton>
               <CustomButton size="small" type="button" onClick={handleClose}>
                 취소
               </CustomButton>
