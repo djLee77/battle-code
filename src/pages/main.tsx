@@ -1,20 +1,12 @@
-import DockLayout from "rc-dock";
+import DockLayout, { LayoutData } from "rc-dock";
 import RoomList from "../components/tabs/room-list";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import "../styles/rc-dock-dark.css"; // 다크모드(커스텀)
 import Navigation from "../components/navigation";
 import { getRefreshToken, removeRefreshToken, setRefreshToken, setAccessToken } from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// 탭 형식에 맞게 만드는 함수
-function getTab(id: string, component: any) {
-  return {
-    id, // 탭의 고유한 ID
-    content: component, // 탭 내용
-    title: id, // 탭 제목
-  };
-}
+import { getTab } from "utils/tabs";
 
 export default function MainPage() {
   const navigate = useNavigate();
