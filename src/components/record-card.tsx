@@ -1,5 +1,5 @@
 import styles from "styles/record-card.module.css";
-import CustomBtn from "components/ui/button";
+import CustomButton from "components/ui/button";
 
 interface RecordProps {
   record: {
@@ -39,7 +39,9 @@ export default function RecordCard({ record }: RecordProps) {
           <span>난이도:{record.level}</span>
           <span>제출시간:{record.playTime}</span>
         </div>
-        <CustomBtn size="small">코드 확인</CustomBtn>
+        <CustomButton type="button" size="small">
+          코드 확인
+        </CustomButton>
       </div>
     </div>
   );

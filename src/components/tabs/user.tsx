@@ -1,6 +1,6 @@
 import CircleProgress from "components/circle";
 import RecordCard from "components/record-card";
-import CustomBtn from "components/ui/button";
+import CustomButton from "components/ui/button";
 import { userData } from "data/user-data";
 import { useEffect, useMemo, useState } from "react";
 import styles from "styles/user.module.css";
@@ -66,7 +66,9 @@ export default function User() {
       </div>
       <div>
         <span>사용 테마 : {userTestData.useTheme}</span>
-        <CustomBtn size="small">테마 변경</CustomBtn>
+        <CustomButton type="button" size="small">
+          테마 변경
+        </CustomButton>
       </div>
       <div className={styles[`record-container`]}>
         <div className={styles[`circle-box`]}>
