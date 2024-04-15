@@ -5,60 +5,22 @@ import "../styles/rc-dock-dark.css"; // 다크모드(커스텀)
 import Navigation from "../components/navigation";
 import { getRefreshToken, removeRefreshToken, setRefreshToken, setAccessToken } from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { getTab } from "utils/tabs";
 import * as StompJs from "@stomp/stompjs";
+import useWebSocketStore from "store/websocketStore";
 
 export default function MainPage() {
   const navigate = useNavigate();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const wsUrl = process.env.REACT_APP_WS_URL;
+  const { webSocketClient, connectWebSocket } = useWebSocketStore();
 
-  const connect = useCallback(() => {
-    const refreshToken = getRefreshToken();
-    // 소켓 연결
-    if (refreshToken !== undefined) {
-      try {
-        const client = new StompJs.Client({
-          brokerURL: wsUrl,
-          connectHeaders: {
-            Authorization: `Bearer ${refreshToken}`,
-          },
-        });
-
-        client.activate(); // 클라이언트 활성화
-
-        client.onConnect = () => {
-          console.log("WebSocket 연결 성공");
-          client.subscribe(
-            "/topic/chat",
-            (message) => {
-              console.log("Received message:", message.body);
-            },
-            {
-              Authorization: `Bearer ${refreshToken}`,
-            }
-          );
-
-          // WebSocket 연결 이후에 메시지 전송
-          client.publish({
-            destination: "/app/chat",
-            body: JSON.stringify("Hello!"),
-          });
-        };
-
-        console.log(client);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      navigate("/login");
-    }
-  }, []);
-
+  // 컴포넌트가 마운트될 때 WebSocket 연결 시도
   useEffect(() => {
-    connect();
-  }, []);
+    const refreshToken = getRefreshToken(); // 적절한 refresh token 설정
+    if (refreshToken) {
+      connectWebSocket(refreshToken);
+    }
+  }, [connectWebSocket]); // connectWebSocket 함수는 컴포넌트가 마운트될 때 한 번만 호출
 
   //Todo : 아래 useEffect 삭제 후, api 요청시마다 header에 accessToken 넣고, accessToken이 만료되었을 시, refreshToken으로 재발급
   // useEffect(() => {
