@@ -31,7 +31,7 @@ const Login = () => {
         console.error("로그인 실패:", message);
       } else {
         // Axios 외의 에러 처리
-        console.error("로그인 실패: 알 수 없는 에러 발생");
+        console.error(error);
       }
       removeRefreshToken();
     }
