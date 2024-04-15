@@ -12,7 +12,7 @@ import useWebSocketStore from "store/websocketStore";
 export default function MainPage() {
   const navigate = useNavigate();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const { webSocketClient, connectWebSocket } = useWebSocketStore();
+  const { isConnected, connectWebSocket } = useWebSocketStore();
 
   // 컴포넌트가 마운트될 때 WebSocket 연결 시도
   useEffect(() => {
@@ -20,29 +20,7 @@ export default function MainPage() {
     if (refreshToken) {
       connectWebSocket(refreshToken);
     }
-  }, [connectWebSocket]); // connectWebSocket 함수는 컴포넌트가 마운트될 때 한 번만 호출
-
-  //Todo : 아래 useEffect 삭제 후, api 요청시마다 header에 accessToken 넣고, accessToken이 만료되었을 시, refreshToken으로 재발급
-  // useEffect(() => {
-  //   const refreshToken = getRefreshToken();
-  //   console.log(refreshToken);
-  //   axios
-  //     .get(`${serverUrl}v1/oauth/refresh-token`, {
-  //       headers: {
-  //         Authorization: `Bearer ${refreshToken}`,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       const { accessToken, refreshToken } = response.data.data;
-  //       setAccessToken(accessToken);
-  //       setRefreshToken(refreshToken);
-  //       // alert("환영합니다!");
-  //     })
-  //     .catch(() => {
-  //       removeRefreshToken();
-  //       navigate("/login");
-  //     });
-  // }, [navigate, setAccessToken, serverUrl]);
+  }, []); // connectWebSocket 함수는 컴포넌트가 마운트될 때 한 번만 호출
 
   const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
@@ -69,11 +47,13 @@ export default function MainPage() {
   return (
     <div className="App">
       <Navigation dockLayoutRef={dockLayoutRef} />
-      <DockLayout
-        ref={dockLayoutRef} // ref 설정
-        defaultLayout={defaultLayout} // 초기 레이아웃 설정
-        style={{ position: "absolute", left: 0, top: 50, right: 0, bottom: 0 }} // 스타일 설정
-      />
+      {isConnected && (
+        <DockLayout
+          ref={dockLayoutRef} // ref 설정
+          defaultLayout={defaultLayout} // 초기 레이아웃 설정
+          style={{ position: "absolute", left: 0, top: 50, right: 0, bottom: 0 }} // 스타일 설정
+        />
+      )}
     </div>
   );
 }
