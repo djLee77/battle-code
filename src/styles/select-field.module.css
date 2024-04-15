@@ -1,0 +1,28 @@
+.select-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+.select-box select {
+    background-color: black;
+    height: 32px;
+    border-radius: 14px;
+    color: white;
+    padding-left: 14px;
+    border: 1px solid black;
+    box-sizing: content-box;
+}
+
+.select {
+    display: flex;
+}
+
+.select label {
+    flex: 0.3;
+}
+
+.select select {
+    flex: 0.7;
+}
