@@ -22,9 +22,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     try {
       // 서버에 중복 검사 요청을 보냅니다.
       // 이 예제에서는 요청 URL과 응답 형식이 가정되어 있습니다.
-      const response = await axios.get(
-        `${serverUrl}/api/checkUserId?userId=${userId}`
-      );
+      const response = await axios.get(`${serverUrl}/api/checkUserId?userId=${userId}`);
       // 서버에서 중복된 아이디가 없다고 응답하면 true, 중복되었다면 false를 반환한다고 가정
       setUserIdAvailable(response.data.available);
     } catch (error) {
@@ -62,8 +60,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       if (axios.isAxiosError(error)) {
         // error가 AxiosError 타입인지 확인
         // 에러 메시지가 error.response 안에 있고, 그 안의 data 객체 안에 message 필드로 제공되는 경우
-        const message =
-          error.response?.data?.message ?? "서버에서 응답을 받지 못했습니다.";
+        const message = error.response?.data?.message ?? "서버에서 응답을 받지 못했습니다.";
         console.error("회원가입 실패:", message);
       } else {
         // Axios 외의 에러 처리
@@ -140,10 +137,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
             <div className={styles.modalActions}>
-              <button
-                type="submit"
-                className={`${styles.customBtn} ${styles.btn2}`}
-              >
+              <button type="submit" className={`${styles.customBtn} ${styles.btn2}`}>
                 회원가입
               </button>
             </div>
