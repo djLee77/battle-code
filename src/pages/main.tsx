@@ -17,15 +17,11 @@ export default function MainPage() {
     const refreshToken = getRefreshToken();
     console.log(refreshToken);
     axios
-      .post(
-        `${serverUrl}v1/oauth/refresh-token`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`,
-          },
-        }
-      )
+      .get(`${serverUrl}v1/oauth/refresh-token`, {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      })
       .then((response) => {
         const { accessToken, refreshToken } = response.data.data;
         setAccessToken(accessToken);
