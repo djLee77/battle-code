@@ -21,10 +21,19 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
       connectHeaders: {
         Authorization: `Bearer ${refreshToken}`,
       },
+      reconnectDelay: 0, // 0은 자동 재연결 비활성화
       onConnect: () => {
         console.log("연결 성공");
         // 연결 됐으면 연결 상태 true로 변경
         set((state) => ({ ...state, isConnected: true }));
+        // 연결 성공 후 default room 구독
+        client.subscribe("/topic/public/room", (message) => {
+          console.log("받은 메시지:", message.body);
+          // 원하는 작업을 수행
+        });
+      },
+      onDisconnect: () => {
+        console.log("연걸 해제");
       },
     });
 
