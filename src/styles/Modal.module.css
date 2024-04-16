@@ -14,10 +14,10 @@
   left: 50%;
   width: 30%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: #2D2D2D;
   padding: 20px;
   z-index: 4;
-  border-radius: 8px;
+  border-radius: 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -26,20 +26,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #fff;
+}
+
+.head {
+  padding-left: 125px;
 }
 
 .modalContent {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.item {
+  margin: 10px;
+  width: fit-content;
+  align-items: center;
 }
 
 .input {
   width: 100%;
   height: 2.875rem;
   padding: 0.5rem 2.5rem 0.5rem 0.875rem;
-  border: 1px solid #d2d2d2;
-  border-radius: 0.25rem;
+  margin: 8px;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 0.75rem;
 }
 
 .modalActions {
@@ -47,31 +62,39 @@
 }
 
 .customBtn {
-  width: fit-content;
-  height: 40px;
-  color: black;
-  border-radius: 5px;
-  padding: 10px 25px;
-  font-family: "Lato", sans-serif;
-  font-weight: 500;
-  background: transparent;
+  align-items: center;
+  appearance: button;
+  background-color: #575a65;
+  border-radius: 8px;
+  border-style: none;
+  box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+  box-sizing: border-box;
+  color: #fff;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
-  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-    3px 3px 12px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-  outline: none;
-  padding-left: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  font-family: "RM Neue", sans-serif;
+  font-size: 100%;
+  line-height: 1.15;
+  margin-top: 20px;
+  padding: 10px 21px;
+  text-align: center;
+  text-transform: none;
+  transition: color 0.13s ease-in-out, background 0.13s ease-in-out,
+    opacity 0.13s ease-in-out, box-shadow 0.13s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  min-width: 220px;
+  padding-left: 82px;
+  margin-left: 12px;
 }
 
-.customBtn:before {
-  height: 0%;
-  width: 2px;
+.customBtn:active {
+  background-color: #a3a8b9;
 }
+
 .customBtn:hover {
-  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
-    -4px -4px 6px 0 rgba(116, 125, 136, 0.5),
-    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.2),
-    inset 4px 4px 6px 0 rgba(0, 0, 0, 0.4);
+  background-color: #a3a8b9;
 }
