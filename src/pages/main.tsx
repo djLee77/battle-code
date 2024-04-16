@@ -30,26 +30,23 @@ export default function MainPage() {
     const refreshToken = getRefreshToken();
     console.log(refreshToken);
     axios
-      .post(
-        `${serverUrl}v1/oauth/refresh-token`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`,
-          },
-        }
-      )
+      .get(`${serverUrl}v1/oauth/refresh-token`, {
+        headers: {
+          Authorization : `Bearer ${refreshToken}`,
+        },
+      })
       .then((response) => {
         const { accessToken, refreshToken } = response.data.data;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         alert("환영합니다!");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         removeRefreshToken();
         navigate("/login");
       });
-  }, [navigate, setAccessToken, serverUrl]);
+  }, []);
   const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
   const defaultLayout: any = {
