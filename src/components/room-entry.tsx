@@ -9,7 +9,7 @@ export default function RoomEntry() {
 
   // 메시지 발행 예시
   const handleSendMessage = () => {
-    const destination = "/app/chat"; // 메시지를 발행할 대상 destination 설정
+    const destination = "/app/public/room"; // 메시지를 발행할 대상 destination 설정
     const messageBody = "하이"; // 발행할 메시지 내용
     publishMessage(destination, messageBody);
   };
