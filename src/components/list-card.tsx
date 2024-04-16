@@ -3,13 +3,14 @@ import styles from "styles/list-card.module.css";
 import { IRoom } from "types";
 import { addTab } from "utils/tabs";
 import Room from "./tabs/room";
+import React from "react";
 
 interface ListCardProps {
   room: IRoom;
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
+export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardProps) {
   const onClickRoom = () => {
     console.log("click");
     addTab("대기방", <Room />, dockLayoutRef);
@@ -37,4 +38,4 @@ export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
       </ul>
     </div>
   );
-}
+});
