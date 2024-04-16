@@ -7,6 +7,8 @@ import { langData, levelData, limitTImeData } from "../../data/room-setting-data
 import { useForm } from "react-hook-form";
 import InputField from "components/input-field";
 import SelectField from "components/select-field";
+import axios from "axios";
+import { getAccessToken } from "utils/cookie";
 
 // 모달 창 스타일
 const style = {
@@ -30,10 +32,11 @@ type FormValues = {
   level: string;
   lang: string;
   submissionCount: number;
-  limitTime: string;
+  limitTime: number;
 };
 
 export default function CreateRoomModal() {
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
   const {
     register,
     handleSubmit,
@@ -47,8 +50,32 @@ export default function CreateRoomModal() {
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log(data);
+    try {
+      const accessToken = getAccessToken();
+      const response = await axios.post(
+        `${serverUrl}v1/waitRoom`,
+        {
+          hostId: "test",
+          title: data.title,
+          password: data.pw,
+          language: data.lang,
+          problemLevel: Number(data.level),
+          maxUserCount: Number(data.memberCount),
+          maxSubmitCount: Number(data.submissionCount),
+          limitTime: Number(data.limitTime),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error: any) {
+      console.error("요청 실패:", error.response);
+    }
   };
 
   return (
