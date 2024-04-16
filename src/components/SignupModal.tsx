@@ -79,7 +79,9 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       <div className={styles.modalBackdrop} onClick={onClose}></div>
       <div className={styles.modal}>
         <div className={styles.modalHeader}>
-          <h2>회원가입</h2>
+          <div className={styles.head}>
+            <h2>SignUp</h2>
+          </div>
           <span className={styles.closeButton} onClick={onClose}>
             &times;
           </span>
@@ -99,14 +101,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                   placeholder="User ID"
                   required
                 />
-                <button
+                {/* <button
                   type="button"
                   onClick={checkUserIdAvailability}
                   disabled={checkingUserId}
                   className={`${styles.customBtn} ${styles.btn2}`}
                 >
                   중복 검사
-                </button>
+                </button> */}
               </div>
             </div>
             <div className={styles.item}>
