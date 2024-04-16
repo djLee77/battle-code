@@ -1,6 +1,6 @@
-import { Room } from "../types";
+import { IRoom } from "../types";
 
-export const roomListData: Room[] = [
+export const roomListData: IRoom[] = [
   {
     id: 1,
     title: "1ㄷ1 뜨실 초보만",

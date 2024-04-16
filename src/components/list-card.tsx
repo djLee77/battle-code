@@ -1,14 +1,24 @@
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import styles from "../../styles/list-card.module.css";
-import { Room } from "../../types";
+import styles from "styles/list-card.module.css";
+import { IRoom } from "types";
+import { addTab } from "utils/tabs";
+import Room from "./tabs/room";
 
 interface ListCardProps {
-  room: Room;
+  room: IRoom;
+  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function ListCard({ room }: ListCardProps) {
+export default function ListCard({ room, dockLayoutRef }: ListCardProps) {
+  const onClickRoom = () => {
+    console.log("click");
+    addTab("대기방", <Room />, dockLayoutRef);
+  };
   return (
-    <div className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}>
+    <div
+      className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}
+      onClick={() => room.isWait && onClickRoom()}
+    >
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
           <LockOpenIcon sx={{ marginRight: "12px" }} />

@@ -1,9 +1,12 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import CustomBtn from "../ui/button";
+import CustomButton from "../ui/button";
 import styles from "../../styles/create-room.module.css";
 import React, { useState } from "react";
 import { langData, levelData, limitTImeData } from "../../data/room-setting-data";
+import { useForm } from "react-hook-form";
+import InputField from "components/input-field";
+import SelectField from "components/select-field";
 
 // 모달 창 스타일
 const style = {
@@ -20,26 +23,22 @@ const style = {
   p: 4,
 };
 
-// select option 타입
-type Option = {
-  value: string;
-  name: string;
+type FormValues = {
+  title: string;
+  pw: string;
+  memberCount: number;
+  level: string;
+  lang: string;
+  submissionCount: number;
+  limitTime: string;
 };
 
-//setState 타입
-type SetStateNumberAction = React.Dispatch<React.SetStateAction<number>>;
-
-// input change event 타입
-type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
-
 export default function CreateRoomModal() {
-  const [title, setTitle] = useState("");
-  const [pw, setPW] = useState("");
-  const [memberCount, setMemberCount] = useState(2);
-  const [level, setLevel] = useState("상관없음");
-  const [lang, setLang] = useState("상관없음");
-  const [submissionCount, setSubmissionCount] = useState(5);
-  const [limitTime, setlimitTime] = useState("15분");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -48,20 +47,15 @@ export default function CreateRoomModal() {
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
 
-  // 숫자 제한 함수
-  const handleNumChange = (e: ChangeEvent, set: SetStateNumberAction, max: number, min: number) => {
-    let value = parseInt(e.target.value);
-    if (value < min) {
-      value = min;
-    } else if (value > max) {
-      value = max;
-    }
-    set(value);
+  const onSubmit = (data: any) => {
+    console.log(data);
   };
 
   return (
     <div>
-      <CustomBtn onClick={handleOpen}>방 만들기</CustomBtn>
+      <CustomButton type="button" onClick={handleOpen}>
+        방 만들기
+      </CustomButton>
       <Modal
         open={open}
         onClose={handleClose}
@@ -69,66 +63,61 @@ export default function CreateRoomModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div className={styles.container}>
-            <label htmlFor="title">방 제목 </label>
-            <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.container}>
+              <InputField
+                label="방 제목"
+                type="text"
+                register={register("title", {
+                  required: "방 제목을 입력해주세요",
+                  maxLength: { value: 10, message: "방 제목은 10글자 이하여야합니다." },
+                })}
+                defaultValue=""
+                error={errors.title}
+              />
+              <InputField
+                label="비밀번호"
+                type="password"
+                register={register("pw")}
+                defaultValue=""
+                error={errors.pw}
+              />
 
-            <label htmlFor="password">비밀번호 </label>
-            <input type="password" id="password" name="password" value={pw} onChange={(e) => setPW(e.target.value)} />
+              <InputField
+                label="인원 수"
+                type="number"
+                register={register("memberCount", {
+                  required: "인원수는 필수 입력 항목입니다.",
+                  min: { value: 2, message: "인원수는 최소 2명입니다." },
+                  max: { value: 5, message: "인원수는 최대 4명입니다." },
+                })}
+                defaultValue={2}
+                error={errors.memberCount}
+              />
 
-            <label htmlFor="member_count">인원 수 </label>
-            <input
-              type="number"
-              max="5"
-              min="2"
-              id="member_count"
-              name="member_count"
-              value={memberCount}
-              onChange={(e) => handleNumChange(e, setMemberCount, 5, 2)}
-            />
+              <SelectField label="난이도" register={register("level")} options={levelSelectList} />
+              <SelectField label="언어 설정" register={register("lang")} options={langSelectList} />
 
-            <label htmlFor="level">난이도 </label>
-            <select id="level" name="level" value={level} onChange={(e) => setLevel(e.target.value)}>
-              {levelSelectList.map((item: Option) => (
-                <option value={item.value} key={item.value}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-
-            <label htmlFor="lang">언어 설정 </label>
-            <select id="level" name="level" value={lang} onChange={(e) => setLang(e.target.value)}>
-              {langSelectList.map((item: Option) => (
-                <option value={item.value} key={item.value}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-
-            <label htmlFor="submisson_count">제출 횟수 </label>
-            <input
-              type="number"
-              id="submisson_count"
-              name="submisson_count"
-              value={submissionCount}
-              onChange={(e) => handleNumChange(e, setSubmissionCount, 10, 1)}
-            />
-
-            <label htmlFor="limit_time">제한 시간 </label>
-            <select id="level" name="level" value={limitTime} onChange={(e) => setlimitTime(e.target.value)}>
-              {limitTimeSelectList.map((item: Option) => (
-                <option value={item.value} key={item.value}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles[`btn-group`]}>
-            <CustomBtn size="small">생성</CustomBtn>
-            <CustomBtn size="small" onClick={handleClose}>
-              취소
-            </CustomBtn>
-          </div>
+              <InputField
+                label="제출 횟수"
+                type="number"
+                register={register("submissionCount", {
+                  required: "제출 횟수는 필수 입력 항목입니다.",
+                  min: { value: 1, message: "제출 횟수는 최소 1 이어야 합니다." },
+                  max: { value: 5, message: "제출 횟수는 최대 5 이어야 합니다." },
+                })}
+                defaultValue={5}
+                error={errors.submissionCount}
+              />
+              <SelectField label="제한 시간" register={register("limitTime")} options={limitTimeSelectList} />
+            </div>
+            <div className={styles[`btn-group`]}>
+              <CustomButton type="submit">생성</CustomButton>
+              <CustomButton size="small" type="button" onClick={handleClose}>
+                취소
+              </CustomButton>
+            </div>
+          </form>
         </Box>
       </Modal>
     </div>

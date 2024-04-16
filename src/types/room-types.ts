@@ -1,5 +1,5 @@
 // 대기방 목록 카드 타입
-export interface Room {
+export interface IRoom {
   id: number;
   title: string;
   members: string;

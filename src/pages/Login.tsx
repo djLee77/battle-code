@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
-import SignupModal from "./SignupModal";
-import {
-  setRefreshToken,
-  removeRefreshToken,
-  getRefreshToken,
-  setAccessToken,
-  getAccessToken,
-} from "../utils/cookie";
+import SignupModal from "../components/SignupModal";
+import { setRefreshToken, removeRefreshToken, getRefreshToken, setAccessToken, getAccessToken } from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/login.module.css";
 
@@ -26,20 +20,25 @@ const Login = () => {
         userId: userId,
         password: password,
       });
-      const { accessToken, refreshToken } = response.data.data;;
+      const { accessToken, refreshToken } = response.data.data;
       setRefreshToken(refreshToken);
       setAccessToken(accessToken);
       navigate("/");
       console.log("로그인 성공");
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message ?? "서버에서 응답을 받지 못했습니다.";
-        console.error("로그인 실패:", message);
+    } catch (error: any) {
+      // 에러면 error 출력 아니면 log 출력
+      if (error instanceof Error) {
+        console.error(error);
       } else {
-        // Axios 외의 에러 처리
-        console.error("로그인 실패: 알 수 없는 에러 발생");
+        console.log(error);
       }
+      // if (axios.isAxiosError(error)) {
+      //   const message = error.response?.data?.message ?? "서버에서 응답을 받지 못했습니다.";
+      //   console.error("로그인 실패:", message);
+      // } else {
+      //   // Axios 외의 에러 처리
+      //   ;
+      // }
       removeRefreshToken();
     }
   };
@@ -49,13 +48,7 @@ const Login = () => {
       <div className={styles.filter}></div>
       <form onSubmit={handleLogin} className={styles.loginBox}>
         <div className={styles.logo}>
-          <img
-            src="logo-battlecode-removebg.png"
-            alt="logo"
-            width="250px"
-            height="40px"
-            style={{ zIndex: "5" }}
-          ></img>
+          <img src="logo-battlecode-removebg.png" alt="logo" width="250px" height="40px" style={{ zIndex: "5" }}></img>
         </div>
         <div className={styles.intro}>
           <pre>실시간으로 상대방과 코딩테스트 대결을 펼쳐 보세요!</pre>
@@ -87,19 +80,13 @@ const Login = () => {
         </div>
         <div className={styles.signup}>
           <pre>아직 계정이 없으신가요? </pre>
-          <pre
-            onClick={() => setIsSignupModalOpen(true)}
-            style={{ cursor: "pointer", color: "#fff" }}
-          >
+          <pre onClick={() => setIsSignupModalOpen(true)} style={{ cursor: "pointer", color: "#fff" }}>
             회원가입
           </pre>
         </div>
       </form>
       <div>
-        <SignupModal
-          isOpen={isSignupModalOpen}
-          onClose={() => setIsSignupModalOpen(false)}
-        />
+        <SignupModal isOpen={isSignupModalOpen} onClose={() => setIsSignupModalOpen(false)} />
       </div>
     </div>
   );

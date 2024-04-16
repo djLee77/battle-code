@@ -1,0 +1,33 @@
+.input-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 18px;
+}
+
+.input-box input {
+    background-color: black;
+    height: 32px;
+    border-radius: 14px;
+    color: white;
+    padding-left: 14px;
+    border: 1px solid black;
+}
+
+.input {
+    display: flex;
+}
+
+.input label {
+    flex: 0.3;
+}
+
+.input input {
+    flex: 0.7;
+}
+
+.error {
+    font-size: 12px;
+    color: rgb(255, 83, 83);
+    height: 8px;
+    margin-top: 8px;
+}
