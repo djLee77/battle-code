@@ -3,22 +3,34 @@ import RoomList from "../components/tabs/room-list";
 import { useEffect, useMemo, useRef } from "react";
 import "../styles/rc-dock-dark.css"; // 다크모드(커스텀)
 import Navigation from "../components/navigation";
-import { getRefreshToken } from "../utils/cookie";
+import { getAccessToken } from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import { getTab } from "utils/tabs";
 import useWebSocketStore from "store/websocketStore";
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const { isConnected, connectWebSocket } = useWebSocketStore();
+  const { isConnected, connectWebSocket, subscribe } = useWebSocketStore();
 
   // 컴포넌트가 마운트될 때 WebSocket 연결 시도
   useEffect(() => {
-    const refreshToken = getRefreshToken(); // 적절한 refresh token 설정
-    if (!refreshToken) navigate("/login");
+    const accessToken = getAccessToken(); // accesstoken 가져오기
+    if (!accessToken) navigate("/login"); // accesstoken 없으면 로그인 창으로 이동
+    if (accessToken) connectWebSocket(accessToken); // accesstoken 있으면 웹 소켓 연결 시도
+  }, []); // 컴포넌트가 마운트될 때 한 번만 호출
 
-    if (refreshToken) connectWebSocket(refreshToken);
-  }, []); // connectWebSocket 함수는 컴포넌트가 마운트될 때 한 번만 호출
+  useEffect(() => {
+    if (isConnected) {
+      // default room 구독
+      subscribe("/topic/default/room", (message: any) => {
+        console.log("default room : ", message.body);
+      });
+      // 에러 메시지 room 구독 (에러 발생 시 메시지로 알려줌)
+      subscribe("/topic/error", (message: any) => {
+        console.log("error room : ", message.body);
+      });
+    }
+  }, [isConnected]); // 웹 소켓 연결 됐을 때
 
   const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
