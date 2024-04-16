@@ -6,26 +6,29 @@ import useWebSocketStore from "store/websocketStore";
 export default function RoomEntry() {
   const [value, setValue] = useState("");
   const { isConnected, publishMessage, subscribe } = useWebSocketStore();
+
   // 메시지 발행 예시
   const handleSendMessage = () => {
     const destination = "/app/chat"; // 메시지를 발행할 대상 destination 설정
-    const messageBody = "Hello from WebSocketTestComponent!"; // 발행할 메시지 내용
+    const messageBody = "하이"; // 발행할 메시지 내용
     publishMessage(destination, messageBody);
   };
 
-  useEffect(() => {
-    const handleIncomingMessage = (message: any) => {
-      console.log("새 메시지 수신:", message.body);
-      // 수신한 메시지 처리 로직 작성
-    };
+  const handleIncomingMessage = (message: any) => {
+    console.log("새 메시지 수신:", message.body);
+    // 수신한 메시지 처리 로직 작성
+  };
 
-    console.log("ㅎㅇ");
-    subscribe("/topic/chat", handleIncomingMessage);
+  useEffect(() => {
+    // 채널 구독
+    if (isConnected) {
+      subscribe(`/topic/chat`, handleIncomingMessage);
+    }
 
     return () => {
       // 컴포넌트 언마운트 시 구독 해제 로직 작성 (필요 시)
     };
-  }, []);
+  }, [isConnected]);
 
   const handleInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 숫자만 저장
