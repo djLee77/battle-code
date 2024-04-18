@@ -83,7 +83,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
       );
       const roomId = response.data.data;
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
-      addTab(`${roomId}번방`, <Room roomId={roomId} />, dockLayoutRef);
+      addTab(`${roomId}번방`, <Room roomId={roomId} dockLayoutRef={dockLayoutRef} />, dockLayoutRef);
       handleClose();
     } catch (error: any) {
       console.error("요청 실패:", error.response);
