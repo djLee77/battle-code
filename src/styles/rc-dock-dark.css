@@ -257,6 +257,8 @@ body>.dragging-layer>div:last-child {
     height: 100%;
     outline: none;
     flex: none;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 .dock-nav {
@@ -525,7 +527,7 @@ body.dock-dragging iframe {
     position: absolute;
     pointer-events: visible;
     box-shadow: 0 0 4px #444;
-    min-width: 600px !important;
+    min-width: 700px !important;
 }
 
 .dock-fbox>.dock-panel.dragging {
