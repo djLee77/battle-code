@@ -6,7 +6,7 @@ import Navigation from "../components/navigation";
 import { getAccessToken } from "../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import { getTab } from "utils/tabs";
-import useWebSocketStore from "store/websocketStore";
+import useWebSocketStore from "store/websocket-store";
 
 export default function MainPage() {
   const navigate = useNavigate();
