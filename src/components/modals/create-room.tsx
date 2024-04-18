@@ -50,7 +50,7 @@ export default function CreateRoomModal() {
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
 
-  const onSubmit = async (data: any) => {
+  const handleCreateRoom = async (data: any) => {
     console.log(data);
     try {
       const accessToken = getAccessToken();
@@ -90,7 +90,7 @@ export default function CreateRoomModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleCreateRoom)}>
             <div className={styles.container}>
               <InputField
                 label="방 제목"
