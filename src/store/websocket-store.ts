@@ -22,14 +22,20 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
         Authorization: `Bearer ${accessToken}`,
       },
       reconnectDelay: 0, // 0은 자동 재연결 비활성화
+      // 연결 됐을 때
       onConnect: () => {
         console.log("연결 성공");
         // 연결 됐으면 연결 상태 true로 변경
         set((state) => ({ ...state, isConnected: true }));
       },
+      // 에러 났을 때
+      onStompError: (frame) => {
+        console.error(frame);
+      },
 
+      // 연결 끊어졌을 때
       onDisconnect: () => {
-        console.log("연걸 해제");
+        console.log("연결 해제");
       },
     });
 
