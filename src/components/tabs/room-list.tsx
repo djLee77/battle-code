@@ -35,12 +35,12 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
           <CustomButton type="button" size="small" onClick={() => {}}>
             방 새로고침
           </CustomButton>
-          <CreateRoomModal />
+          <CreateRoomModal dockLayoutRef={dockLayoutRef} />
         </div>
       </div>
       <div className={styles.list} style={{ height: viewportHeight * 0.7 }}>
-        {roomList.map((room: IRoom, idx: number) => (
-          <ListCard key={idx} room={room} dockLayoutRef={dockLayoutRef} />
+        {roomList.map((room: IRoom) => (
+          <ListCard key={room.id} room={room} dockLayoutRef={dockLayoutRef} />
         ))}
       </div>
     </div>

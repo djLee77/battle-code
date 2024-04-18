@@ -13,7 +13,7 @@ interface ListCardProps {
 export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardProps) {
   const onClickRoom = () => {
     console.log("click");
-    addTab("대기방", <Room />, dockLayoutRef);
+    addTab(`${room.id}번방`, <Room roomId={room.id} />, dockLayoutRef);
   };
   return (
     <div

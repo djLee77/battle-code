@@ -1,9 +1,13 @@
 import { useState } from "react";
 import styles from "styles/room.module.css";
 
-export default function Room() {
-  const [chatIsHide, setChatIsHide] = useState<boolean>(false);
+interface IProps {
+  roomId: number;
+}
 
+export default function Room({ roomId }: IProps) {
+  const [chatIsHide, setChatIsHide] = useState<boolean>(false);
+  console.log(roomId);
   return (
     <div>
       <h2 className={styles.title}>방 제목</h2>

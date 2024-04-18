@@ -9,6 +9,9 @@ import InputField from "components/input-field";
 import SelectField from "components/select-field";
 import axios from "axios";
 import { getAccessToken } from "utils/cookie";
+import { addTab } from "utils/tabs";
+import Room from "components/tabs/room";
+import useWebSocketStore from "store/websocket-store";
 
 // 모달 창 스타일
 const style = {
@@ -35,13 +38,18 @@ type FormValues = {
   limitTime: number;
 };
 
-export default function CreateRoomModal() {
+interface IProps {
+  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
+}
+
+export default function CreateRoomModal({ dockLayoutRef }: IProps) {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+  const { subscribe } = useWebSocketStore();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,6 +58,7 @@ export default function CreateRoomModal() {
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
 
+  // 방 생성 함수
   const handleCreateRoom = async (data: any) => {
     console.log(data);
     try {
@@ -72,7 +81,10 @@ export default function CreateRoomModal() {
           },
         }
       );
-      console.log(response);
+      const roomId = response.data.data;
+      // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+      addTab(`${roomId}번방`, <Room roomId={roomId} />, dockLayoutRef);
+      handleClose();
     } catch (error: any) {
       console.error("요청 실패:", error.response);
     }
