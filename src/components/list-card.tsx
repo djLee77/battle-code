@@ -15,6 +15,7 @@ export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardPro
     console.log("click");
     addTab(`${room.id}번방`, <Room roomId={room.id} />, dockLayoutRef);
   };
+
   return (
     <div
       className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}
