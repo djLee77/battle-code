@@ -2,15 +2,26 @@ import { UserCard } from "components/user-card";
 import { useEffect, useState } from "react";
 import useWebSocketStore from "store/websocket-store";
 import styles from "styles/room.module.css";
+import { removeTab } from "utils/tabs";
 
 interface IProps {
   roomId: number;
+  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function Room({ roomId }: IProps) {
+export default function Room({ roomId, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
   const { subscribe } = useWebSocketStore();
   useEffect(() => {});
+
+  const handleRoomLeave = () => {
+    console.log(dockLayoutRef.current);
+    // dockbox 안의 children 탭 제거
+    removeTab(dockLayoutRef.current.state.layout.dockbox.children, `${roomId}번방`, dockLayoutRef);
+
+    // floatbox 안의 children 탭 제거
+    removeTab(dockLayoutRef.current.state.layout.floatbox.children, `${roomId}번방`, dockLayoutRef);
+  };
 
   const testData = [
     {
@@ -32,7 +43,7 @@ export default function Room({ roomId }: IProps) {
       isReady: false,
     },
   ];
-  console.log(roomId);
+
   return (
     <div>
       <h2 className={styles.title}>방 제목</h2>
@@ -46,7 +57,7 @@ export default function Room({ roomId }: IProps) {
         <div className={styles["room-info"]}>
           <div className={styles["user-list"]}>
             {testData.map((data: any) => (
-              <UserCard data={data} />
+              <UserCard key={data.id} data={data} />
             ))}
           </div>
           <div className={styles["room-settings"]}>방 설정값</div>
@@ -59,7 +70,9 @@ export default function Room({ roomId }: IProps) {
         </div>
       </div>
       <div className={styles[`button-container`]}>
-        <button className={styles.button}>나가기</button>
+        <button className={styles.button} onClick={handleRoomLeave}>
+          나가기
+        </button>
         <button className={styles.button} style={{ marginLeft: "47%" }}>
           준비 완료
         </button>
