@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { UserCard } from "components/user-card";
+import { useEffect, useState } from "react";
+import useWebSocketStore from "store/websocket-store";
 import styles from "styles/room.module.css";
 
 interface IProps {
@@ -7,6 +9,29 @@ interface IProps {
 
 export default function Room({ roomId }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
+  const { subscribe } = useWebSocketStore();
+  useEffect(() => {});
+
+  const testData = [
+    {
+      id: 1,
+      name: "이병선",
+      lang: "Java",
+      isReady: false,
+    },
+    {
+      id: 2,
+      name: "김동건",
+      lang: "JS",
+      isReady: true,
+    },
+    {
+      id: 3,
+      name: "이우현",
+      lang: "Java",
+      isReady: false,
+    },
+  ];
   console.log(roomId);
   return (
     <div>
@@ -19,7 +44,11 @@ export default function Room({ roomId }: IProps) {
       <div className={styles.container}>
         <div className={styles[`test-problem`]}>코딩테스트문제</div>
         <div className={styles["room-info"]}>
-          <div className={styles["user-list"]}>방 유저 목록</div>
+          <div className={styles["user-list"]}>
+            {testData.map((data: any) => (
+              <UserCard data={data} />
+            ))}
+          </div>
           <div className={styles["room-settings"]}>방 설정값</div>
         </div>
         <div className={styles[`chat`]} style={chatIsHide ? { display: "none" } : { display: "block" }}>
