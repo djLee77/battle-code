@@ -67,9 +67,11 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
       console.log("채널 구독", webSocketClient);
       // 클라이언트 정보가 있으면 채널 구독, 콜백 함수로 메시지 수신
       if (webSocketClient) {
-        webSocketClient.subscribe(destination, (message) => {
+        const subscription = webSocketClient.subscribe(destination, (message) => {
           callback(message); // 새 메시지 수신 시 콜백 함수 호출
         });
+
+        console.log("새 구독:", subscription);
       }
       return state;
     });

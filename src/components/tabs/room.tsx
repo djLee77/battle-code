@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useWebSocketStore from "store/websocket-store";
 import styles from "styles/room.module.css";
 import { removeTab } from "utils/tabs";
+import StompJs from "@stomp/stompjs";
 
 interface IProps {
   roomId: number;
@@ -11,8 +12,24 @@ interface IProps {
 
 export default function Room({ roomId, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
-  const { subscribe } = useWebSocketStore();
-  useEffect(() => {});
+  const { webSocketClient } = useWebSocketStore();
+
+  useEffect(() => {
+    if (webSocketClient) {
+      const subscription = webSocketClient.subscribe("/topic/room/1", (message) => {
+        console.log("Received message:", message.body);
+      });
+
+      return () => {
+        console.log("언마운트");
+        console.log(subscription);
+        if (subscription) {
+          console.log("구독취소");
+          subscription.unsubscribe();
+        }
+      };
+    }
+  }, []);
 
   const handleRoomLeave = () => {
     console.log(dockLayoutRef.current);
