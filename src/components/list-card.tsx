@@ -1,41 +1,65 @@
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import styles from "styles/list-card.module.css";
-import { IRoom } from "types";
+import { IRoomList } from "types";
 import { addTab } from "utils/tabs";
 import Room from "./tabs/room";
 import React from "react";
+import axios from "axios";
+import { getAccessToken } from "utils/cookie";
 
 interface ListCardProps {
-  room: IRoom;
+  room: IRoomList;
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardProps) {
-  const onClickRoom = () => {
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const handleEnterRoom = async (roomId: number) => {
     console.log("click");
-    addTab(`${room.id}번방`, <Room roomId={room.id} dockLayoutRef={dockLayoutRef} />, dockLayoutRef);
+    try {
+      const accessToken = getAccessToken();
+      const response = await axios.post(
+        `${serverUrl}v1/gameRoom/enter`,
+        {
+          userId: "test",
+          roomId: roomId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response);
+      // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+      addTab(`${roomId}번방`, <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />, dockLayoutRef);
+    } catch (error: any) {
+      console.error("요청 실패:", error.response);
+    }
   };
 
   return (
     <div
-      className={room.isWait ? styles.wrapper : styles[`wrapper-disabled`]}
-      onClick={() => room.isWait && onClickRoom()}
+      className={!room.isStarted ? styles.wrapper : styles[`wrapper-disabled`]}
+      onClick={() => !room.isStarted && handleEnterRoom(room.roomId)}
     >
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
           <LockOpenIcon sx={{ marginRight: "12px" }} />
-          {`#${room.id}. ${room.title}`}
+          {`#${room.roomId}. ${room.title}`}
         </h3>
         <div className={styles[`status-box`]}>
-          <span>{room.isWait ? "대기중" : "게임중"}</span>
-          <h4>{room.members}</h4>
+          <span>{!room.isStarted ? "대기중" : "게임중"}</span>
+          <h4>
+            {room.countUsersInRoom} / {room.maxUserCount}
+          </h4>
         </div>
       </div>
       <ul className={styles[`option-list`]}>
-        <li>{`난이도 : ${room.settings.difficulty}`}</li>
-        <li>{`제한 시간 : ${room.settings.timeLimit}`}</li>
-        <li>{`제출 제한 : ${room.settings.numOfSubmissions}`}</li>
-        <li>{`언어 설정 : ${room.settings.lang}`}</li>
+        <li>{`난이도 : ${room.problemLevel}`}</li>
+        <li>{`제한 시간 : ${room.limitTime}`}</li>
+        <li>{`제출 제한 : ${room.maxSubmitCount}`}</li>
+        <li>{`언어 설정 : ${room.language}`}</li>
       </ul>
     </div>
   );
