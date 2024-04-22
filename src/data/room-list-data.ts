@@ -1,8 +1,6 @@
-import { IRoom } from "../types";
-
-export const roomListData: IRoom[] = [
+export const roomListData: any = [
   {
-    id: 1,
+    roomId: 1,
     title: "1ㄷ1 뜨실 초보만",
     members: "1/2",
     isWait: true,
@@ -18,7 +16,7 @@ export const roomListData: IRoom[] = [
     id: 2,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
-    isWait: false,
+    isWait: true,
     password: null,
     settings: {
       difficulty: "브론즈1",
