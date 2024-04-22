@@ -14,6 +14,7 @@ export const removeTab = (tabsArray: any, idSubstring: string, dockLayoutRef: an
     const tabName = child.tabs?.find((tab: any) => tab.id.includes(idSubstring));
     if (tabName) {
       dockLayoutRef.current.dockMove(tabName, null, "remove");
+      console.log("제거", dockLayoutRef);
     }
   });
 };
