@@ -12,8 +12,8 @@ export const UserCard = ({ data }: any) => {
         <span className={styles.dot} />
       </div>
       <div className={styles[`user-info`]}>
-        <UserCardInfo type="const" name="name" data={data.name} />
-        <UserCardInfo type="let" name="lang" data={data.lang} />
+        <UserCardInfo type="const" name="name" data={data.userId} />
+        <UserCardInfo type="let" name="lang" data={data.language} />
         <UserCardInfo type="let" name="isReady" data={data.isReady ? "true" : "false"} />
       </div>
     </div>
