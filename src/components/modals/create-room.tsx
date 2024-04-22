@@ -49,7 +49,6 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const { subscribe } = useWebSocketStore();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -60,15 +59,14 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
 
   // 방 생성 함수
   const handleCreateRoom = async (data: any) => {
-    console.log(data);
     try {
       const accessToken = getAccessToken();
       const response = await axios.post(
-        `${serverUrl}v1/waitRoom`,
+        `${serverUrl}v1/gameRoom`,
         {
           hostId: "test",
           title: data.title,
-          password: data.pw,
+          password: data.pw || null,
           language: data.lang,
           problemLevel: Number(data.level),
           maxUserCount: Number(data.memberCount),
@@ -81,12 +79,13 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
           },
         }
       );
-      const roomId = response.data.data;
+      console.log(response);
+      const roomId = response.data.data.roomStatus.roomId;
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
-      addTab(`${roomId}번방`, <Room roomId={roomId} dockLayoutRef={dockLayoutRef} />, dockLayoutRef);
+      addTab(`${roomId}번방`, <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />, dockLayoutRef);
       handleClose();
     } catch (error: any) {
-      console.error("요청 실패:", error.response);
+      console.error("요청 실패:", error);
     }
   };
 
