@@ -11,7 +11,6 @@ import axios from "axios";
 import { getAccessToken } from "utils/cookie";
 import { addTab } from "utils/tabs";
 import Room from "components/tabs/room";
-import useWebSocketStore from "store/websocket-store";
 
 // 모달 창 스타일
 const style = {
@@ -127,7 +126,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
                 register={register("memberCount", {
                   required: "인원수는 필수 입력 항목입니다.",
                   min: { value: 2, message: "인원수는 최소 2명입니다." },
-                  max: { value: 5, message: "인원수는 최대 4명입니다." },
+                  max: { value: 4, message: "인원수는 최대 4명입니다." },
                 })}
                 defaultValue={2}
                 error={errors.memberCount}
@@ -142,7 +141,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
                 register={register("submissionCount", {
                   required: "제출 횟수는 필수 입력 항목입니다.",
                   min: { value: 1, message: "제출 횟수는 최소 1 이어야 합니다." },
-                  max: { value: 5, message: "제출 횟수는 최대 5 이어야 합니다." },
+                  max: { value: 10, message: "제출 횟수는 최대 10 이어야 합니다." },
                 })}
                 defaultValue={5}
                 error={errors.submissionCount}
