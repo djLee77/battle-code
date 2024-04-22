@@ -4,22 +4,30 @@ import { IconButton } from "@mui/material";
 import styles from "../styles/navigation.module.css";
 import { addTab } from "../utils/tabs";
 import User from "./tabs/user";
+import useWebSocketStore from "store/websocket-store";
 
 interface NavigationProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 export default function Navigation({ dockLayoutRef }: NavigationProps) {
-  const onClickUserButton = () => {
+  const { webSocketClient } = useWebSocketStore();
+
+  const handleUserInfo = () => {
     addTab("유저 정보", <User />, dockLayoutRef);
+  };
+
+  const handleLogout = () => {
+    webSocketClient?.deactivate();
+    console.log(webSocketClient);
   };
   return (
     <nav className={styles.navigation}>
-      <IconButton size="large" onClick={onClickUserButton}>
+      <IconButton size="large" onClick={handleUserInfo}>
         <AccountCircleIcon />
       </IconButton>
       <IconButton size="large">
-        <LogoutIcon />
+        <LogoutIcon onClick={handleLogout} />
       </IconButton>
     </nav>
   );
