@@ -1,6 +1,7 @@
 // 대기방 목록 카드 타입
 export interface IRoomList {
   roomId: number;
+  hostId: string;
   title: string;
   isWait: boolean;
   isLocked: boolean;
