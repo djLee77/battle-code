@@ -1,30 +1,38 @@
 import ListCard from "components/list-card";
-import { IRoom } from "types";
+import { IRoomList } from "types";
 import styles from "styles/room-list.module.css";
-import { roomListData } from "data/room-list-data";
 import RoomEntry from "components/room-entry";
 import CustomButton from "components/ui/button";
 import CreateRoomModal from "components/modals/create-room";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { getAccessToken } from "utils/cookie";
 
 interface RoomListProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 export default function RoomList({ dockLayoutRef }: RoomListProps) {
-  const roomList = roomListData; // 테스트 데이터
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const [roomList, setRoomList] = useState([]);
+
+  const handleGetGameRoomList = async () => {
+    const accessToken = getAccessToken();
+    try {
+      const response = await axios.get(`${serverUrl}v1/gameRoomList`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(response);
+      setRoomList(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const handleResize = () => {
-      setViewportHeight(window.innerHeight);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    handleGetGameRoomList();
   }, []);
 
   return (
@@ -32,16 +40,18 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
       <div className={styles.top}>
         <RoomEntry />
         <div className={styles[`btn-group`]}>
-          <CustomButton type="button" size="small" onClick={() => {}}>
+          <CustomButton type="button" size="small" onClick={handleGetGameRoomList}>
             방 새로고침
           </CustomButton>
           <CreateRoomModal dockLayoutRef={dockLayoutRef} />
         </div>
       </div>
-      <div className={styles.list} style={{ height: viewportHeight * 0.7 }}>
-        {roomList.map((room: IRoom) => (
-          <ListCard key={room.id} room={room} dockLayoutRef={dockLayoutRef} />
-        ))}
+      <div className={styles.list}>
+        {roomList.length === 0 ? (
+          <p>대기방이 존재하지 않습니다.</p>
+        ) : (
+          roomList.map((room: IRoomList) => <ListCard key={room.roomId} room={room} dockLayoutRef={dockLayoutRef} />)
+        )}
       </div>
     </div>
   );
