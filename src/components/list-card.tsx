@@ -6,6 +6,7 @@ import Room from "./tabs/room";
 import React from "react";
 import axios from "axios";
 import { getAccessToken } from "utils/cookie";
+import useWebSocketStore from "store/websocket-store";
 
 interface ListCardProps {
   room: IRoomList;
@@ -14,9 +15,15 @@ interface ListCardProps {
 
 export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardProps) {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const { roomSubscribe } = useWebSocketStore();
   const handleEnterRoom = async (roomId: number) => {
     console.log("click");
     try {
+      console.log(roomSubscribe);
+      if (roomSubscribe.subscription) {
+        console.log(roomSubscribe.subscription);
+        roomSubscribe.subscription.unsubscribe();
+      }
       const accessToken = getAccessToken();
       const response = await axios.post(
         `${serverUrl}v1/gameRoom/enter`,

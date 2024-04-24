@@ -17,9 +17,8 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
   const [userStatus, setUserStatus] = useState(data.userStatus);
-  const { webSocketClient, publishMessage } = useWebSocketStore();
+  const { webSocketClient, roomSubscribe, publishMessage, setRoomSubscription } = useWebSocketStore();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  let subscription: any = null;
 
   const handleRoomLeave = async () => {
     const accessToken = getAccessToken();
@@ -36,8 +35,8 @@ export default function Room({ data, dockLayoutRef }: IProps) {
       console.log(response);
       removeTab(dockLayoutRef.current.state.layout.dockbox.children, `${data.roomStatus.roomId}번방`, dockLayoutRef);
       removeTab(dockLayoutRef.current.state.layout.floatbox.children, `${data.roomStatus.roomId}번방`, dockLayoutRef);
-      if (subscription) {
-        subscription.unsubscribe(); // 구독 취소
+      if (roomSubscribe.subscription) {
+        roomSubscribe.subscription.unsubscribe(); // 구독 취소
       }
     } catch (error) {
       console.error(error);
@@ -55,8 +54,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   // 첫 마운트 될 때 방 구독하기, 언마운트 될 때 구독 취소하기
   useEffect(() => {
     if (webSocketClient) {
-      console.log("구독 정보 : ", subscription);
-      subscription = webSocketClient.subscribe(`/topic/room/${data.roomStatus.roomId}`, (message) => {
+      const subscription = webSocketClient.subscribe(`/topic/room/${data.roomStatus.roomId}`, (message) => {
         const receivedMessage = JSON.parse(message.body);
         console.log("Received message:", receivedMessage);
         // 받은 메시지가 업데이트 유저 상태 객체면 바뀐 유저 상태 업데이트
@@ -88,6 +86,8 @@ export default function Room({ data, dockLayoutRef }: IProps) {
           return setRoomStatus(receivedMessage.roomStatus);
         }
       });
+
+      setRoomSubscription(subscription);
 
       return () => {
         console.log("언마운트");

@@ -11,6 +11,7 @@ import axios from "axios";
 import { getAccessToken } from "utils/cookie";
 import { addTab } from "utils/tabs";
 import Room from "components/tabs/room";
+import useWebSocketStore from "store/websocket-store";
 
 // 모달 창 스타일
 const style = {
@@ -51,6 +52,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { roomSubscribe } = useWebSocketStore();
 
   const levelSelectList = levelData;
   const langSelectList = langData;
@@ -59,6 +61,11 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
   // 방 생성 함수
   const handleCreateRoom = async (data: any) => {
     try {
+      console.log(roomSubscribe);
+      if (roomSubscribe.subscription) {
+        console.log(roomSubscribe.subscription);
+        roomSubscribe.subscription.unsubscribe();
+      }
       const accessToken = getAccessToken();
       const response = await axios.post(
         `${serverUrl}v1/gameRoom`,

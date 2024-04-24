@@ -4,15 +4,20 @@ import * as StompJs from "@stomp/stompjs";
 interface WebSocketStoreState {
   webSocketClient: StompJs.Client | null;
   isConnected: boolean;
+  roomSubscribe: {
+    subscription: StompJs.StompSubscription | null;
+  };
   connectWebSocket: (refreshToken: string) => void;
   publishMessage: (destination: string, messageBody: any) => void;
   subscribe: (destination: string, callback: any) => void;
+  setRoomSubscription: (subscription: StompJs.StompSubscription | null) => void;
 }
 
 // 전역 상태로 관리
 const useWebSocketStore = create<WebSocketStoreState>((set) => ({
   webSocketClient: null,
   isConnected: false,
+  roomSubscribe: { subscription: null },
 
   // 소켓 연결
   connectWebSocket: (accessToken: string | undefined) => {
@@ -64,7 +69,6 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
   subscribe: (destination: string, callback: (message: StompJs.Message) => void) => {
     set((state) => {
       const { webSocketClient } = state;
-      console.log("채널 구독", webSocketClient);
       // 클라이언트 정보가 있으면 채널 구독, 콜백 함수로 메시지 수신
       if (webSocketClient) {
         const subscription = webSocketClient.subscribe(destination, (message) => {
@@ -76,6 +80,11 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
       return state;
     });
   },
+
+  setRoomSubscription: (subscription) =>
+    set((state) => ({
+      roomSubscribe: { ...state.roomSubscribe, subscription }, // subscription 업데이트
+    })),
 }));
 
 export default useWebSocketStore;
