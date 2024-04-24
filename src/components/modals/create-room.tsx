@@ -63,7 +63,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
       const response = await axios.post(
         `${serverUrl}v1/gameRoom`,
         {
-          hostId: "test",
+          hostId: localStorage.getItem("id"),
           title: data.title,
           password: data.pw || null,
           language: data.lang,

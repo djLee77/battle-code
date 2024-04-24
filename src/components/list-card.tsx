@@ -21,7 +21,7 @@ export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardPro
       const response = await axios.post(
         `${serverUrl}v1/gameRoom/enter`,
         {
-          userId: "test",
+          userId: localStorage.getItem("id"),
           roomId: roomId,
         },
         {
