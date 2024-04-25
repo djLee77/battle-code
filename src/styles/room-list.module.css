@@ -23,4 +23,6 @@
 .list {
     padding: 12px;
     overflow-y: auto;
+    height: fit-content;
+    max-height: 600px;
 }

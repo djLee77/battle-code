@@ -23,6 +23,7 @@ const Login = () => {
       const { accessToken, refreshToken } = response.data.data;
       setRefreshToken(refreshToken);
       setAccessToken(accessToken);
+      localStorage.setItem("id", userId);
       navigate("/");
       console.log("로그인 성공");
     } catch (error: any) {

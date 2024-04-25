@@ -34,4 +34,5 @@
     background-color: rgb(26, 23, 23);
     padding: 12px;
     overflow-y: auto;
+    min-width: 500px
 }

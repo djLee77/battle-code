@@ -3,7 +3,7 @@ import styles from "styles/select-field.module.css";
 
 // select option 타입
 type Option = {
-  value: string;
+  value: string | number;
   name: string;
 };
 

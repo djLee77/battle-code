@@ -1,0 +1,26 @@
+.container {
+    border: 1px solid white;
+    border-radius: 14px;
+    padding: 12px;
+    width: 100%;
+    height: fit-content;
+}
+
+.dot-box {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    background-color: #ff2323;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}

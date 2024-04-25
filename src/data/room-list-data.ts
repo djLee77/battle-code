@@ -1,8 +1,6 @@
-import { IRoom } from "../types";
-
-export const roomListData: IRoom[] = [
+export const roomListData: any = [
   {
-    id: 1,
+    roomId: 1,
     title: "1ㄷ1 뜨실 초보만",
     members: "1/2",
     isWait: true,
@@ -18,7 +16,7 @@ export const roomListData: IRoom[] = [
     id: 2,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
-    isWait: false,
+    isWait: true,
     password: null,
     settings: {
       difficulty: "브론즈1",
@@ -28,7 +26,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 3,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -41,7 +39,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 4,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -54,7 +52,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 5,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -67,7 +65,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 6,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -80,7 +78,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 7,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -93,7 +91,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 8,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -106,7 +104,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 9,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
@@ -119,7 +117,7 @@ export const roomListData: IRoom[] = [
     },
   },
   {
-    id: 2,
+    id: 10,
     title: "1ㄷ1 뜨실 초보만",
     members: "3/3",
     isWait: false,
