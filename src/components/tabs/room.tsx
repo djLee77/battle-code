@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { all } from "axios";
 import ModifyRoomModal from "components/modals/modify-room";
 import UserCard from "components/user-card";
 import { useCallback, useEffect, useState } from "react";
@@ -17,9 +17,11 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
   const [userStatus, setUserStatus] = useState(data.userStatus);
+  const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const { webSocketClient, roomSubscribe, publishMessage, setRoomSubscription } = useWebSocketStore();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
+  // 방 나가기 함수
   const handleRoomLeave = async () => {
     const accessToken = getAccessToken();
     try {
@@ -33,8 +35,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         }
       );
       console.log(response);
-      removeTab(dockLayoutRef.current.state.layout.dockbox.children, `${data.roomStatus.roomId}번방`, dockLayoutRef);
-      removeTab(dockLayoutRef.current.state.layout.floatbox.children, `${data.roomStatus.roomId}번방`, dockLayoutRef);
+      removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
       if (roomSubscribe.subscription) {
         roomSubscribe.subscription.unsubscribe(); // 구독 취소
       }
@@ -88,12 +89,22 @@ export default function Room({ data, dockLayoutRef }: IProps) {
       });
 
       setRoomSubscription(subscription);
-
-      return () => {
-        console.log("언마운트");
-      };
     }
   }, []);
+
+  useEffect(() => {
+    // 호스트 유저를 제외한 모든 유저의 isReady 상태 확인
+    const allUsersExceptHost = userStatus.filter((user) => user.userId !== roomStatus.hostId);
+    // 방에 호스트 혼자면 코드 실행 중지
+    if (allUsersExceptHost.length === 0) {
+      return;
+    }
+    const allReady = allUsersExceptHost.every((user) => user.isReady);
+    console.log(allReady);
+
+    // 모든 유저가 준비 상태인지를 판단하여 상태 업데이트
+    setIsAllUsersReady(allReady);
+  }, [userStatus]);
 
   return (
     <div>
@@ -133,9 +144,19 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <button className={styles.button} onClick={handleRoomLeave}>
           나가기
         </button>
-        <button className={styles.button} style={{ marginLeft: "47%" }} onClick={handleReady}>
-          준비 완료
-        </button>
+        {roomStatus.hostId === localStorage.getItem("id") ? (
+          <button
+            className={isAllUsersReady ? styles.button : styles[`button-disabled`]}
+            style={{ marginLeft: "47%" }}
+            onClick={isAllUsersReady ? handleReady : undefined}
+          >
+            게임시작
+          </button>
+        ) : (
+          <button className={styles.button} style={{ marginLeft: "47%" }} onClick={handleReady}>
+            준비완료
+          </button>
+        )}
       </div>
     </div>
   );
