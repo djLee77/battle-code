@@ -22,8 +22,8 @@ export default function MainPage() {
   useEffect(() => {
     if (isConnected) {
       // default room 구독
-      subscribe("/topic/default/room", (message: any) => {
-        console.log("default room : ", message.body);
+      subscribe("/topic/room/0", (message: any) => {
+        console.log("공개 대기실 : ", message.body);
       });
       // 에러 메시지 room 구독 (에러 발생 시 메시지로 알려줌)
       subscribe("/topic/error", (message: any) => {
@@ -32,7 +32,7 @@ export default function MainPage() {
     }
   }, [isConnected]); // 웹 소켓 연결 됐을 때
 
-  const dockLayoutRef = useRef(null); // DockLayout 컴포넌트에 대한 ref 생성
+  const dockLayoutRef = useRef<DockLayout>(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
   const defaultLayout = useMemo<LayoutData>(
     () => ({
