@@ -67,3 +67,12 @@
 .button:hover {
     background-color: #282828;
 }
+
+.button-disabled {
+    padding: 10px 20px;
+    background-color: #969696;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: default;
+}
