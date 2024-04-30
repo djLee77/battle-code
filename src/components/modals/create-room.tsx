@@ -62,6 +62,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
   const handleCreateRoom = async (data: any) => {
     try {
       console.log(roomSubscribe);
+      // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
       if (roomSubscribe.subscription) {
         console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
