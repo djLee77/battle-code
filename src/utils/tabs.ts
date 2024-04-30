@@ -13,7 +13,7 @@ export const getTab = (id: string, component: React.JSX.Element, isClose: boolea
     content: component, // 탭 내용
     title: id, // 탭 제목
     closable: id.includes("번방") ? false : isClose,
-    cached: false,
+    cached: true,
   };
 };
 
@@ -51,10 +51,12 @@ export const addTab = (tabName: string, component: any, dockLayoutRef: React.Ref
   if (tabName.includes("번방")) {
     // '번방' 포함된 탭 제거
     removeTab(dockLayoutRef, "번방");
-    const newTab = getTab(tabName, component, true); // 새로운 탭 생성
 
-    dockLayoutRef?.current?.dockMove(newTab, "my_panel", "middle");
-    console.log("추가");
+    setTimeout(() => {
+      const newTab = getTab(tabName, component, true); // 새로운 탭 생성
+      dockLayoutRef?.current?.dockMove(newTab, "my_panel", "middle");
+      console.log("추가");
+    }, 100); // 0.1초 뒤에 실행
 
     return;
   }
