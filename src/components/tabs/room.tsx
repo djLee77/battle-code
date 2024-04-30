@@ -52,7 +52,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     publishMessage(`/app/room/${data.roomStatus.roomId}/update/user-status`, updateUser);
   };
 
-  // 첫 마운트 될 때 방 구독하기, 언마운트 될 때 구독 취소하기
+  // 첫 마운트 될 때 방 구독하기
   useEffect(() => {
     if (webSocketClient) {
       const subscription = webSocketClient.subscribe(`/topic/room/${data.roomStatus.roomId}`, (message) => {
