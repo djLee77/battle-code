@@ -62,7 +62,7 @@ export default function ModifyRoomModal({ data }: any) {
   const limitTimeSelectList = limitTImeData;
 
   // 방 수정 함수
-  const handleCreateRoom = async (data: any) => {
+  const handleModifyRoom = async (data: any) => {
     publishMessage(`/app/room/1/update/room-status`, data);
     handleClose();
   };
@@ -79,7 +79,7 @@ export default function ModifyRoomModal({ data }: any) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit(handleCreateRoom)}>
+          <form onSubmit={handleSubmit(handleModifyRoom)}>
             <div className={styles.container}>
               <InputField
                 label="방 제목"
