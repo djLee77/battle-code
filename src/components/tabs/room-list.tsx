@@ -16,7 +16,8 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const [roomList, setRoomList] = useState([]);
 
-  const handleGetGameRoomList = async () => {
+  // 대기방 목록 불러오는 함수
+  const getGameRoomList = async () => {
     const accessToken = getAccessToken();
     try {
       const response = await axios.get(`${serverUrl}v1/gameRoomList`, {
@@ -25,6 +26,7 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
         },
       });
       console.log(response);
+      response.data.data.shift(); // default 방 제거
       setRoomList(response.data.data);
     } catch (error) {
       console.error(error);
@@ -32,7 +34,7 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
   };
 
   useEffect(() => {
-    handleGetGameRoomList();
+    getGameRoomList();
   }, []);
 
   return (
@@ -40,7 +42,7 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
       <div className={styles.top}>
         <RoomEntry />
         <div className={styles[`btn-group`]}>
-          <CustomButton type="button" size="small" onClick={handleGetGameRoomList}>
+          <CustomButton type="button" size="small" onClick={getGameRoomList}>
             방 새로고침
           </CustomButton>
           <CreateRoomModal dockLayoutRef={dockLayoutRef} />
