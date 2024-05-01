@@ -1,6 +1,6 @@
 import axios from "axios";
 import ModifyRoomModal from "components/room/modify-room";
-import UserCard from "components/user-card";
+import UserCard from "components/room/user-card";
 import { useEffect, useState } from "react";
 import useWebSocketStore from "store/websocket-store";
 import styles from "styles/room.module.css";

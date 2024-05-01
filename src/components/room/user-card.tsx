@@ -1,5 +1,5 @@
 import styles from "styles/user-card.module.css";
-import { UserCardInfo } from "./ui/user-card-info";
+import { UserCardInfo } from "../ui/user-card-info";
 import React from "react";
 
 const UserCard = ({ data }: any) => (
