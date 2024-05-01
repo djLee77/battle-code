@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CustomButton from "./ui/button";
+import CustomButton from "../ui/button";
 import styles from "styles/room-entry.module.css";
 import useWebSocketStore from "store/websocket-store";
 

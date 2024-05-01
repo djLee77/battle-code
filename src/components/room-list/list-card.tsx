@@ -2,7 +2,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import styles from "styles/list-card.module.css";
 import { IRoomList } from "types";
 import { addTab } from "utils/tabs";
-import Room from "./tabs/room";
+import Room from "../tabs/room";
 import React from "react";
 import axios from "axios";
 import { getAccessToken } from "utils/cookie";

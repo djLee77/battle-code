@@ -1,9 +1,9 @@
-import ListCard from "components/list-card";
+import ListCard from "components/room-list/list-card";
 import { IRoomList } from "types";
 import styles from "styles/room-list.module.css";
-import RoomEntry from "components/room-entry";
+import RoomEntry from "components/room-list/room-entry";
 import CustomButton from "components/ui/button";
-import CreateRoomModal from "components/modals/create-room";
+import CreateRoomModal from "components/room-list/create-room";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getAccessToken } from "utils/cookie";

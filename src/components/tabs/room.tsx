@@ -1,7 +1,7 @@
-import axios, { all } from "axios";
-import ModifyRoomModal from "components/modals/modify-room";
+import axios from "axios";
+import ModifyRoomModal from "components/room/modify-room";
 import UserCard from "components/user-card";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useWebSocketStore from "store/websocket-store";
 import styles from "styles/room.module.css";
 import { IRoomStatus } from "types/room-types";
