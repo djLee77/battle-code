@@ -4,7 +4,7 @@ import UserCard from "components/room/user-card";
 import { useEffect, useState } from "react";
 import useWebSocketStore from "store/websocket-store";
 import styles from "styles/room.module.css";
-import { IRoomStatus } from "types/room-types";
+import { IRoomStatus, IUserStatus } from "types/room-types";
 import { getAccessToken } from "utils/cookie";
 import { removeTab } from "utils/tabs";
 
@@ -44,6 +44,13 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     }
   };
 
+  // 사용자 언어 업데이트 함수
+  const handleLanguageChange = (userId: string, newLanguage: string) => {
+    const updateUser = userStatus.filter((user) => user.userId === userId)[0];
+    updateUser.language = newLanguage;
+    publishMessage(`/app/room/${data.roomStatus.roomId}/update/user-status`, updateUser);
+  };
+
   // 준비 버튼 누르면 누른 유저의 정보 소켓으로 전송
   const handleReady = () => {
     console.log(userStatus);
@@ -77,8 +84,14 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
         // 유저 퇴장 메시지면 상태 변수에 퇴장한 유저 삭제
         if (receivedMessage.leaveUserStatus) {
+          const leaveUserStatus = receivedMessage.leaveUserStatus;
+          if (leaveUserStatus.isHost && leaveUserStatus.userId !== localStorage.getItem("id")) {
+            alert("방장이 나갔습니다 ㅠㅠ");
+            removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
+            return;
+          }
           return setUserStatus((prevUserStatus) =>
-            prevUserStatus.filter((user) => user.userId !== receivedMessage.leaveUserStatus.userId)
+            prevUserStatus.filter((user) => user.userId !== leaveUserStatus.userId)
           );
         }
 
@@ -121,8 +134,8 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <div className={styles[`test-problem`]}>코딩테스트문제</div>
         <div className={styles["room-info"]}>
           <div className={styles["user-list"]}>
-            {userStatus.map((data: any) => (
-              <UserCard key={data.userId} data={data} />
+            {userStatus.map((data) => (
+              <UserCard key={data.userId} data={data} handleLanguageChange={handleLanguageChange} />
             ))}
           </div>
           <div className={styles["room-settings"]}>
