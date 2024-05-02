@@ -18,8 +18,10 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
   const [userStatus, setUserStatus] = useState(data.userStatus);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
+
   const { webSocketClient, roomSubscribe, publishMessage, setRoomSubscription } = useWebSocketStore();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const userId = localStorage.getItem("id");
 
   // 방 나가기 함수
   const handleRoomLeave = async () => {
@@ -54,55 +56,52 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   // 준비 버튼 누르면 누른 유저의 정보 소켓으로 전송
   const handleReady = () => {
     console.log(userStatus);
-    const updateUser = userStatus.filter((user) => user.userId === localStorage.getItem("id"))[0];
+    const updateUser = userStatus.filter((user) => user.userId === userId)[0];
     updateUser.isReady = !updateUser.isReady;
     publishMessage(`/app/room/${data.roomStatus.roomId}/update/user-status`, updateUser);
   };
 
   // 첫 마운트 될 때 방 구독하기
   useEffect(() => {
-    if (webSocketClient) {
-      const subscription = webSocketClient.subscribe(`/topic/room/${data.roomStatus.roomId}`, (message) => {
-        const receivedMessage = JSON.parse(message.body);
-        console.log("Received message:", receivedMessage);
-        // 받은 메시지가 업데이트 유저 상태 객체면 바뀐 유저 상태 업데이트
-        if (receivedMessage.updateUserStatus) {
-          return setUserStatus((prevUserStatus) => {
-            return prevUserStatus.map((user) => {
-              if (user.userId === receivedMessage.updateUserStatus.userId) {
-                return receivedMessage.updateUserStatus; // userId가 같은 경우 업데이트된 객체 반환
-              }
-              return user; // 그 외의 경우는 기존 객체 그대로 반환
-            });
-          });
-        }
+    if (!webSocketClient) return;
+    const subscription = webSocketClient.subscribe(`/topic/room/${data.roomStatus.roomId}`, (message) => {
+      const receivedMessage = JSON.parse(message.body);
+      console.log("Received message:", receivedMessage);
+      // 받은 메시지가 업데이트 유저 상태 객체면 바뀐 유저 상태 업데이트
+      if (receivedMessage.updateUserStatus) {
+        return setUserStatus((prevUserStatus) =>
+          prevUserStatus.map((user) =>
+            user.userId === receivedMessage.updateUserStatus.userId ? receivedMessage.updateUserStatus : user
+          )
+        );
+      }
 
-        // 유저 입장 메시지면 상태 변수에 입장한 유저 추가
-        if (receivedMessage.enterUserStatus) {
-          return setUserStatus((prevUserStatus) => [...prevUserStatus, receivedMessage.enterUserStatus]);
-        }
+      // 유저 입장 메시지면 상태 변수에 입장한 유저 추가
+      if (receivedMessage.enterUserStatus) {
+        return setUserStatus((prevUserStatus) => [...prevUserStatus, receivedMessage.enterUserStatus]);
+      }
 
-        // 유저 퇴장 메시지면 상태 변수에 퇴장한 유저 삭제
-        if (receivedMessage.leaveUserStatus) {
-          const leaveUserStatus = receivedMessage.leaveUserStatus;
-          if (leaveUserStatus.isHost && leaveUserStatus.userId !== localStorage.getItem("id")) {
-            alert("방장이 나갔습니다 ㅠㅠ");
-            removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
-            return;
-          }
-          return setUserStatus((prevUserStatus) =>
-            prevUserStatus.filter((user) => user.userId !== leaveUserStatus.userId)
-          );
+      // 유저 퇴장 메시지면 상태 변수에 퇴장한 유저 삭제
+      if (receivedMessage.leaveUserStatus) {
+        const leaveUserStatus = receivedMessage.leaveUserStatus;
+        // 방장이 나가면 방에 있는 유저들 전부 방에서 퇴장
+        if (leaveUserStatus.isHost && leaveUserStatus.userId !== userId) {
+          alert("방장이 나갔습니다 ㅠㅠ");
+          removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
+          return;
         }
+        return setUserStatus((prevUserStatus) =>
+          prevUserStatus.filter((user) => user.userId !== leaveUserStatus.userId)
+        );
+      }
 
-        // 받은 메시지가 방 상태 객체면 방 상태 업데이트
-        if (receivedMessage.roomStatus) {
-          return setRoomStatus(receivedMessage.roomStatus);
-        }
-      });
+      // 받은 메시지가 방 상태 객체면 방 상태 업데이트
+      if (receivedMessage.roomStatus) {
+        return setRoomStatus(receivedMessage.roomStatus);
+      }
+    });
 
-      setRoomSubscription(subscription);
-    }
+    setRoomSubscription(subscription);
   }, []);
 
   useEffect(() => {
@@ -123,7 +122,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     <div>
       <div className={styles[`title-box`]}>
         <h2 className={styles.title}>{roomStatus.title}</h2>
-        {roomStatus.hostId === localStorage.getItem("id") && <ModifyRoomModal data={data.roomStatus} />}
+        {roomStatus.hostId === userId && <ModifyRoomModal data={data.roomStatus} />}
       </div>
       <div style={!chatIsHide ? { display: "none" } : { display: "block", position: "absolute", right: 10, top: 10 }}>
         <button className={styles.button} onClick={() => setChatIsHide(!chatIsHide)}>
@@ -157,7 +156,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <button className={styles.button} onClick={handleRoomLeave}>
           나가기
         </button>
-        {roomStatus.hostId === localStorage.getItem("id") ? (
+        {roomStatus.hostId === userId ? (
           <button
             className={isAllUsersReady ? styles.button : styles[`button-disabled`]}
             style={{ marginLeft: "47%" }}
