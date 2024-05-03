@@ -4,7 +4,7 @@ import { IUserStatus } from "types/room-types";
 
 interface IProps {
   data: IUserStatus;
-  handleLanguageChange: any;
+  handleLanguageChange: (userId: string, value: string) => void;
 }
 
 const UserCard = ({ data, handleLanguageChange }: IProps) => {
