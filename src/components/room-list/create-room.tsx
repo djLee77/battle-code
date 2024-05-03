@@ -59,7 +59,7 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
   const limitTimeSelectList = limitTImeData;
 
   // 방 생성 함수
-  const handleCreateRoom = async (data: any) => {
+  const handleCreateRoom = async (data: FormValues) => {
     try {
       console.log(roomSubscribe);
       // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
