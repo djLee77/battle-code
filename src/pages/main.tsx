@@ -21,6 +21,7 @@ export default function MainPage() {
 
   useEffect(() => {
     if (isConnected) {
+      console.log(isConnected);
       // default room 구독
       subscribe("/topic/room/0", (message: any) => {
         console.log("공개 대기실 : ", message.body);
@@ -30,7 +31,7 @@ export default function MainPage() {
         console.log("error room : ", message.body);
       });
     }
-  }, [isConnected]); // 웹 소켓 연결 됐을 때
+  }, [isConnected]);
 
   const dockLayoutRef = useRef<DockLayout>(null); // DockLayout 컴포넌트에 대한 ref 생성
   // 초기 레이아웃 설정
