@@ -19,6 +19,7 @@ export default function MainPage() {
     if (accessToken) connectWebSocket(accessToken); // accesstoken 있으면 웹 소켓 연결 시도
   }, []); // 컴포넌트가 마운트될 때 한 번만 호출
 
+  // webscoket 연결 후 default, error방 구독
   useEffect(() => {
     if (isConnected) {
       console.log(isConnected);
