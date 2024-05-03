@@ -24,3 +24,22 @@
     display: flex;
     flex-direction: column;
 }
+
+.var-type-color {
+    color: #569CD6;
+}
+
+.var-name-color {
+    color: #3F8AB3;
+}
+
+.var-data-color {
+    color: #CE9178;
+}
+
+.select {
+    background-color: #1a1a1a;
+    color: #CE9178;
+    border: 1px solid #393939;
+    cursor: pointer;
+}
