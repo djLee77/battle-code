@@ -27,12 +27,14 @@ const getGameRoomList = async () => {
     console.log(response);
     response.data.data.shift(); // default 방 제거
     return response.data.data;
+    // setRoomList(response.data.data);
   } catch (error) {
     console.error(error);
   }
 };
 
 export default function RoomList({ dockLayoutRef }: RoomListProps) {
+  // const [roomList, setRoomList] = useState([])
   const {
     data: roomList,
     isLoading,
@@ -52,6 +54,10 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
   if (isError) {
     return <div>Error occurred!</div>;
   }
+
+  // useEffect(() => {
+  //   getGameRoomList;
+  // }, []);
 
   console.log(isLoading, isFetching);
 
