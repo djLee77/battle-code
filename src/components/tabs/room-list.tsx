@@ -1,13 +1,13 @@
-import ListCard from "components/room-list/list-card";
-import { IRoomList } from "types";
-import styles from "styles/room-list.module.css";
-import RoomEntry from "components/room-list/room-entry";
-import CustomButton from "components/ui/button";
-import CreateRoomModal from "components/room-list/create-room";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { getAccessToken } from "utils/cookie";
-import { useQuery } from "react-query";
+import ListCard from 'components/room-list/list-card';
+import { IRoomList } from 'types';
+import styles from 'styles/room-list.module.css';
+import RoomEntry from 'components/room-list/room-entry';
+import CustomButton from 'components/ui/button';
+import CreateRoomModal from 'components/room-list/create-room';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { getAccessToken } from 'utils/cookie';
+import { useQuery } from 'react-query';
 
 interface RoomListProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
@@ -33,7 +33,17 @@ const getGameRoomList = async () => {
 };
 
 export default function RoomList({ dockLayoutRef }: RoomListProps) {
-  const { data: roomList, isLoading, isError, isFetching, refetch } = useQuery("roomList", getGameRoomList); // 괄호 추가
+  const {
+    data: roomList,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useQuery('roomList', getGameRoomList, {
+    staleTime: 3000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -60,7 +70,13 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
         {!roomList.length ? (
           <p>대기방이 존재하지 않습니다.</p>
         ) : (
-          roomList.map((room: IRoomList) => <ListCard key={room.roomId} room={room} dockLayoutRef={dockLayoutRef} />)
+          roomList.map((room: IRoomList) => (
+            <ListCard
+              key={room.roomId}
+              room={room}
+              dockLayoutRef={dockLayoutRef}
+            />
+          ))
         )}
       </div>
     </div>

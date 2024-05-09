@@ -1,12 +1,12 @@
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { IconButton } from "@mui/material";
-import styles from "../styles/navigation.module.css";
-import { addTab } from "../utils/tabs";
-import User from "./tabs/user";
-import useWebSocketStore from "store/websocket-store";
-import { useNavigate } from "react-router-dom";
-import { removeAccessToken, removeRefreshToken } from "utils/cookie";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { IconButton } from '@mui/material';
+import styles from '../styles/navigation.module.css';
+import { addTab } from '../utils/tabs';
+import User from './tabs/user';
+import useWebSocketStore from 'store/websocket-store';
+import { useNavigate } from 'react-router-dom';
+import { removeAccessToken, removeRefreshToken } from 'utils/cookie';
 
 interface NavigationProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
@@ -17,14 +17,14 @@ export default function Navigation({ dockLayoutRef }: NavigationProps) {
   const navigate = useNavigate();
 
   const handleUserInfo = () => {
-    addTab("유저 정보", <User />, dockLayoutRef);
+    addTab('유저 정보', <User />, dockLayoutRef);
   };
 
   const handleLogout = () => {
     webSocketClient?.deactivate();
     removeAccessToken();
     removeRefreshToken();
-    navigate("/login");
+    navigate('/login');
     console.log(webSocketClient);
   };
   return (

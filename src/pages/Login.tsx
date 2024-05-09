@@ -1,14 +1,20 @@
-import React, { useState } from "react";
-import axios, { AxiosError } from "axios";
-import SignupModal from "../components/SignupModal";
-import { setRefreshToken, removeRefreshToken, getRefreshToken, setAccessToken, getAccessToken } from "../utils/cookie";
-import { useNavigate } from "react-router-dom";
-import styles from "../styles/login.module.css";
+import React, { useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import SignupModal from '../components/SignupModal';
+import {
+  setRefreshToken,
+  removeRefreshToken,
+  getRefreshToken,
+  setAccessToken,
+  getAccessToken,
+} from '../utils/cookie';
+import { useNavigate } from 'react-router-dom';
+import styles from '../styles/login.module.css';
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
@@ -23,9 +29,9 @@ const Login = () => {
       const { accessToken, refreshToken } = response.data.data;
       setRefreshToken(refreshToken);
       setAccessToken(accessToken);
-      localStorage.setItem("id", userId);
-      navigate("/");
-      console.log("로그인 성공");
+      localStorage.setItem('id', userId);
+      navigate('/');
+      console.log('로그인 성공');
     } catch (error: any) {
       // 에러면 error 출력 아니면 log 출력
       if (error instanceof Error) {
@@ -49,7 +55,13 @@ const Login = () => {
       <div className={styles.filter}></div>
       <form onSubmit={handleLogin} className={styles.loginBox}>
         <div className={styles.logo}>
-          <img src="logo-battlecode-removebg.png" alt="logo" width="250px" height="40px" style={{ zIndex: "5" }}></img>
+          <img
+            src="logo-battlecode-removebg.png"
+            alt="logo"
+            width="250px"
+            height="40px"
+            style={{ zIndex: '5' }}
+          ></img>
         </div>
         <div className={styles.intro}>
           <pre>실시간으로 상대방과 코딩테스트 대결을 펼쳐 보세요!</pre>
@@ -81,13 +93,19 @@ const Login = () => {
         </div>
         <div className={styles.signup}>
           <pre>아직 계정이 없으신가요? </pre>
-          <pre onClick={() => setIsSignupModalOpen(true)} style={{ cursor: "pointer", color: "#fff" }}>
+          <pre
+            onClick={() => setIsSignupModalOpen(true)}
+            style={{ cursor: 'pointer', color: '#fff' }}
+          >
             회원가입
           </pre>
         </div>
       </form>
       <div>
-        <SignupModal isOpen={isSignupModalOpen} onClose={() => setIsSignupModalOpen(false)} />
+        <SignupModal
+          isOpen={isSignupModalOpen}
+          onClose={() => setIsSignupModalOpen(false)}
+        />
       </div>
     </div>
   );
