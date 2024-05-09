@@ -7,6 +7,7 @@ import styles from 'styles/room.module.css';
 import { IRoomStatus, IUserStatus } from 'types/room-types';
 import { getAccessToken } from 'utils/cookie';
 import { removeTab } from 'utils/tabs';
+import CodeEditor from 'components/code-editor';
 
 interface IProps {
   data: IRoomStatus;
@@ -18,6 +19,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
   const [userStatus, setUserStatus] = useState(data.userStatus);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
+  const [isGameStart, setIsGameStart] = useState<boolean>(false);
 
   const {
     webSocketClient,
@@ -70,6 +72,10 @@ export default function Room({ data, dockLayoutRef }: IProps) {
       `/app/room/${data.roomStatus.roomId}/update/user-status`,
       updateUser
     );
+  };
+
+  const handleGameStart = () => {
+    setIsGameStart(true);
   };
 
   // 첫 마운트 될 때 방 구독하기
@@ -165,24 +171,30 @@ export default function Room({ data, dockLayoutRef }: IProps) {
       </div>
       <div className={styles.container}>
         <div className={styles[`test-problem`]}>코딩테스트문제</div>
-        <div className={styles['room-info']}>
-          <div className={styles['user-list']}>
-            {userStatus.map((data) => (
-              <UserCard
-                key={data.userId}
-                data={data}
-                handleLanguageChange={handleLanguageChange}
-              />
-            ))}
+        {isGameStart ? (
+          <div className={styles['room-info']}>
+            <CodeEditor />
           </div>
-          <div className={styles['room-settings']}>
-            <div>
-              <p>난이도 : {roomStatus.problemLevel}</p>
-              <p>제출 횟수 : {roomStatus.maxSubmitCount}</p>
-              <p>언어 설정 : {roomStatus.language}</p>
+        ) : (
+          <div className={styles['room-info']}>
+            <div className={styles['user-list']}>
+              {userStatus.map((data) => (
+                <UserCard
+                  key={data.userId}
+                  data={data}
+                  handleLanguageChange={handleLanguageChange}
+                />
+              ))}
+            </div>
+            <div className={styles['room-settings']}>
+              <div>
+                <p>난이도 : {roomStatus.problemLevel}</p>
+                <p>제출 횟수 : {roomStatus.maxSubmitCount}</p>
+                <p>언어 설정 : {roomStatus.language}</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div
           className={styles[`chat`]}
           style={chatIsHide ? { display: 'none' } : { display: 'block' }}
@@ -206,7 +218,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
               isAllUsersReady ? styles.button : styles[`button-disabled`]
             }
             style={{ marginLeft: '47%' }}
-            onClick={isAllUsersReady ? handleReady : undefined}
+            onClick={isAllUsersReady ? handleGameStart : undefined}
           >
             게임시작
           </button>
@@ -219,6 +231,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
             준비완료
           </button>
         )}
+        <button onClick={handleGameStart}>임시시작</button>
       </div>
     </div>
   );

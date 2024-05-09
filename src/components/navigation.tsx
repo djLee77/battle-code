@@ -15,7 +15,6 @@ interface NavigationProps {
 export default function Navigation({ dockLayoutRef }: NavigationProps) {
   const navigate = useNavigate();
   const { webSocketClient } = useWebSocketStore();
-  const navigate = useNavigate();
 
   const handleUserInfo = () => {
     addTab('유저 정보', <User />, dockLayoutRef);
