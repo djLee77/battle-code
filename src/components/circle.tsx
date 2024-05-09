@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 interface CircleProgressProps {
   progress: number; // 진행 상태 (0 ~ 100)
   size: number; // 프로그레스 바의 크기 (너비와 높이가 같음)
@@ -6,7 +6,13 @@ interface CircleProgressProps {
   circleColor: string; // 원의 색상
   progressColor: string; // 진행 상태의 색상
 }
-const CircleProgress = ({ progress, size, strokeWidth, circleColor, progressColor }: CircleProgressProps) => {
+const CircleProgress = ({
+  progress,
+  size,
+  strokeWidth,
+  circleColor,
+  progressColor,
+}: CircleProgressProps) => {
   // 원의 중심 좌표와 반지름 계산
   const radius = (size - strokeWidth) / 2;
   const centerX = size / 2;
@@ -20,7 +26,14 @@ const CircleProgress = ({ progress, size, strokeWidth, circleColor, progressColo
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <circle cx={centerX} cy={centerY} r={radius} fill="none" stroke={circleColor} strokeWidth={strokeWidth} />
+      <circle
+        cx={centerX}
+        cy={centerY}
+        r={radius}
+        fill="none"
+        stroke={circleColor}
+        strokeWidth={strokeWidth}
+      />
       <circle
         cx={centerX}
         cy={centerY}
@@ -39,7 +52,7 @@ const CircleProgress = ({ progress, size, strokeWidth, circleColor, progressColo
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize="16"
-        fill={progressOffset > 50 ? "#3278FF" : "#FF5F58"}
+        fill={progressOffset > 50 ? '#3278FF' : '#FF5F58'}
       >
         {progress}%
       </text>

@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import * as StompJs from "@stomp/stompjs";
+import { create } from 'zustand';
+import * as StompJs from '@stomp/stompjs';
 
 interface WebSocketStoreState {
   webSocketClient: StompJs.Client | null;
@@ -22,19 +22,19 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
   // 소켓 연결
   connectWebSocket: (accessToken: string | undefined) => {
     const client = new StompJs.Client({
-      brokerURL: process.env.REACT_APP_WS_URL || "",
+      brokerURL: process.env.REACT_APP_WS_URL || '',
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
       reconnectDelay: 0, // 0은 자동 재연결 비활성화
       // 연결 됐을 때
       onConnect: () => {
-        console.log("연결 성공");
+        console.log('연결 성공');
         // 연결 됐으면 연결 상태 true로 변경
         set((state) => ({ ...state, isConnected: true }));
         // 연결 성공 후 default room 구독
-        client.subscribe("/topic/public/room", (message) => {
-          console.log("받은 메시지:", message.body);
+        client.subscribe('/topic/public/room', (message) => {
+          console.log('받은 메시지:', message.body);
           // 원하는 작업을 수행
         });
       },
@@ -45,7 +45,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
 
       // 연결 끊어졌을 때
       onDisconnect: () => {
-        console.log("연결 해제");
+        console.log('연결 해제');
       },
     });
 
@@ -58,7 +58,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
   publishMessage: (destination: string, messageBody: any) => {
     set((state) => {
       const { webSocketClient } = state;
-      console.log("메시지 전송 ", messageBody);
+      console.log('메시지 전송 ', messageBody);
       // 클라이언트 정보가 있으면 메시지 전송하기
       if (webSocketClient) {
         webSocketClient.publish({
@@ -79,11 +79,14 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
       const { webSocketClient } = state;
       // 클라이언트 정보가 있으면 채널 구독, 콜백 함수로 메시지 수신
       if (webSocketClient) {
-        const subscription = webSocketClient.subscribe(destination, (message) => {
-          callback(message); // 새 메시지 수신 시 콜백 함수 호출
-        });
+        const subscription = webSocketClient.subscribe(
+          destination,
+          (message) => {
+            callback(message); // 새 메시지 수신 시 콜백 함수 호출
+          }
+        );
 
-        console.log("새 구독:", subscription);
+        console.log('새 구독:', subscription);
       }
       return state;
     });

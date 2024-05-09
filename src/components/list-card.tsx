@@ -1,23 +1,26 @@
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import styles from "styles/list-card.module.css";
-import { IRoomList } from "types";
-import { addTab } from "utils/tabs";
-import Room from "./tabs/room";
-import React from "react";
-import axios from "axios";
-import { getAccessToken } from "utils/cookie";
-import useWebSocketStore from "store/websocket-store";
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import styles from 'styles/list-card.module.css';
+import { IRoomList } from 'types';
+import { addTab } from 'utils/tabs';
+import Room from './tabs/room';
+import React from 'react';
+import axios from 'axios';
+import { getAccessToken } from 'utils/cookie';
+import useWebSocketStore from 'store/websocket-store';
 
 interface ListCardProps {
   room: IRoomList;
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardProps) {
+export default React.memo(function ListCard({
+  room,
+  dockLayoutRef,
+}: ListCardProps) {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const { roomSubscribe } = useWebSocketStore();
   const handleEnterRoom = async (roomId: number) => {
-    console.log("click");
+    console.log('click');
     try {
       console.log(roomSubscribe);
       if (roomSubscribe.subscription) {
@@ -28,7 +31,7 @@ export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardPro
       const response = await axios.post(
         `${serverUrl}v1/gameRoom/enter`,
         {
-          userId: localStorage.getItem("id"),
+          userId: localStorage.getItem('id'),
           roomId: roomId,
         },
         {
@@ -39,9 +42,13 @@ export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardPro
       );
       console.log(response);
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
-      addTab(`${roomId}번방`, <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />, dockLayoutRef);
+      addTab(
+        `${roomId}번방`,
+        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+        dockLayoutRef
+      );
     } catch (error: any) {
-      console.error("요청 실패:", error.response);
+      console.error('요청 실패:', error.response);
     }
   };
 
@@ -52,11 +59,11 @@ export default React.memo(function ListCard({ room, dockLayoutRef }: ListCardPro
     >
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
-          <LockOpenIcon sx={{ marginRight: "12px" }} />
+          <LockOpenIcon sx={{ marginRight: '12px' }} />
           {`#${room.roomId}. ${room.title}`}
         </h3>
         <div className={styles[`status-box`]}>
-          <span>{!room.isStarted ? "대기중" : "게임중"}</span>
+          <span>{!room.isStarted ? '대기중' : '게임중'}</span>
           <h4>
             {room.countUsersInRoom} / {room.maxUserCount}
           </h4>

@@ -1,25 +1,29 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import CustomButton from "../ui/button";
-import styles from "../../styles/create-room.module.css";
-import React, { useState } from "react";
-import { langData, levelData, limitTImeData } from "../../data/room-setting-data";
-import { useForm } from "react-hook-form";
-import InputField from "components/input-field";
-import SelectField from "components/select-field";
-import useWebSocketStore from "store/websocket-store";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import CustomButton from '../ui/button';
+import styles from '../../styles/create-room.module.css';
+import React, { useState } from 'react';
+import {
+  langData,
+  levelData,
+  limitTImeData,
+} from '../../data/room-setting-data';
+import { useForm } from 'react-hook-form';
+import InputField from 'components/input-field';
+import SelectField from 'components/select-field';
+import useWebSocketStore from 'store/websocket-store';
 
 // 모달 창 스타일
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 360,
-  backgroundColor: "#2D2C2C",
-  border: "1px solid #000",
-  borderRadius: "24px",
-  color: "white",
+  backgroundColor: '#2D2C2C',
+  border: '1px solid #000',
+  borderRadius: '24px',
+  color: 'white',
   boxShadow: 24,
   p: 4,
 };
@@ -84,9 +88,12 @@ export default function ModifyRoomModal({ data }: any) {
               <InputField
                 label="방 제목"
                 type="text"
-                register={register("title", {
-                  required: "방 제목을 입력해주세요",
-                  maxLength: { value: 10, message: "방 제목은 10글자 이하여야합니다." },
+                register={register('title', {
+                  required: '방 제목을 입력해주세요',
+                  maxLength: {
+                    value: 10,
+                    message: '방 제목은 10글자 이하여야합니다.',
+                  },
                 })}
                 defaultValue=""
                 error={errors.title}
@@ -94,7 +101,7 @@ export default function ModifyRoomModal({ data }: any) {
               <InputField
                 label="비밀번호"
                 type="password"
-                register={register("password")}
+                register={register('password')}
                 defaultValue=""
                 error={errors.password}
               />
@@ -102,30 +109,48 @@ export default function ModifyRoomModal({ data }: any) {
               <InputField
                 label="인원 수"
                 type="number"
-                register={register("maxUserCount", {
-                  required: "인원수는 필수 입력 항목입니다.",
-                  min: { value: 2, message: "인원수는 최소 2명입니다." },
-                  max: { value: 4, message: "인원수는 최대 4명입니다." },
+                register={register('maxUserCount', {
+                  required: '인원수는 필수 입력 항목입니다.',
+                  min: { value: 2, message: '인원수는 최소 2명입니다.' },
+                  max: { value: 4, message: '인원수는 최대 4명입니다.' },
                 })}
                 defaultValue={2}
                 error={errors.maxUserCount}
               />
 
-              <SelectField label="난이도" register={register("problemLevel")} options={levelSelectList} />
-              <SelectField label="언어 설정" register={register("language")} options={langSelectList} />
+              <SelectField
+                label="난이도"
+                register={register('problemLevel')}
+                options={levelSelectList}
+              />
+              <SelectField
+                label="언어 설정"
+                register={register('language')}
+                options={langSelectList}
+              />
 
               <InputField
                 label="제출 횟수"
                 type="number"
-                register={register("maxSubmitCount", {
-                  required: "제출 횟수는 필수 입력 항목입니다.",
-                  min: { value: 1, message: "제출 횟수는 최소 1 이어야 합니다." },
-                  max: { value: 5, message: "제출 횟수는 최대 5 이어야 합니다." },
+                register={register('maxSubmitCount', {
+                  required: '제출 횟수는 필수 입력 항목입니다.',
+                  min: {
+                    value: 1,
+                    message: '제출 횟수는 최소 1 이어야 합니다.',
+                  },
+                  max: {
+                    value: 5,
+                    message: '제출 횟수는 최대 5 이어야 합니다.',
+                  },
                 })}
                 defaultValue={5}
                 error={errors.maxSubmitCount}
               />
-              <SelectField label="제한 시간" register={register("limitTime")} options={limitTimeSelectList} />
+              <SelectField
+                label="제한 시간"
+                register={register('limitTime')}
+                options={limitTimeSelectList}
+              />
             </div>
             <div className={styles[`btn-group`]}>
               <CustomButton type="submit">수정</CustomButton>

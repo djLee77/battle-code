@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainPage from "./pages/main";
-import Login from "./pages/Login";
-import "./styles/global-style.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './pages/main';
+import Login from './pages/Login';
+import './styles/global-style.css';
 
 const App = () => {
   return (

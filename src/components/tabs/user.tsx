@@ -1,9 +1,9 @@
-import CircleProgress from "components/circle";
-import RecordCard from "components/record-card";
-import CustomButton from "components/ui/button";
-import { userData } from "data/user-data";
-import { useEffect, useMemo, useState } from "react";
-import styles from "styles/user.module.css";
+import CircleProgress from 'components/circle';
+import RecordCard from 'components/record-card';
+import CustomButton from 'components/ui/button';
+import { userData } from 'data/user-data';
+import { useEffect, useMemo, useState } from 'react';
+import styles from 'styles/user.module.css';
 
 interface BattleRecord {
   otherUser: string;
@@ -22,15 +22,15 @@ interface UserTestData {
 
 export default function User() {
   const [userTestData, setUserTestData] = useState<UserTestData>({
-    name: "",
+    name: '',
     rank: 0,
-    useTheme: "",
+    useTheme: '',
     battleRecordList: [],
   });
 
   useEffect(() => {
     setUserTestData(userData);
-    console.log("첫마운트");
+    console.log('첫마운트');
   }, []);
 
   const { winCount, drawCount, lossCount } = useMemo(() => {
@@ -40,14 +40,14 @@ export default function User() {
 
     for (const record of userTestData.battleRecordList) {
       switch (record.result) {
-        case "Perfect Win":
-        case "Win":
+        case 'Perfect Win':
+        case 'Win':
           wins++;
           break;
-        case "Draw":
+        case 'Draw':
           draws++;
           break;
-        case "Lose":
+        case 'Lose':
           losses++;
           break;
         default:
@@ -73,7 +73,8 @@ export default function User() {
       <div className={styles[`record-container`]}>
         <div className={styles[`circle-box`]}>
           <h4>
-            {userTestData.battleRecordList.length}전 {winCount}승 {drawCount}무 {lossCount}패
+            {userTestData.battleRecordList.length}전 {winCount}승 {drawCount}무{' '}
+            {lossCount}패
           </h4>
           <CircleProgress
             progress={(winCount / userTestData.battleRecordList.length) * 100}
