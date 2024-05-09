@@ -46,6 +46,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
       // 연결 끊어졌을 때
       onDisconnect: () => {
         console.log('연결 해제');
+        set((state) => ({ ...state, isConnected: false }));
       },
     });
 

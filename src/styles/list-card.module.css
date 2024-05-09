@@ -9,6 +9,7 @@
     color: white;
     margin-bottom: 12px;
     border: 1px solid rgb(93, 93, 93);
+    cursor: pointer;
 }
 
 .wrapper-disabled {

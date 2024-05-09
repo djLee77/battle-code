@@ -5,8 +5,8 @@ import styles from '../styles/navigation.module.css';
 import { addTab } from '../utils/tabs';
 import User from './tabs/user';
 import useWebSocketStore from 'store/websocket-store';
-import { removeRefreshToken, removeAccessToken } from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
+import { removeAccessToken, removeRefreshToken } from 'utils/cookie';
 
 interface NavigationProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
@@ -15,6 +15,7 @@ interface NavigationProps {
 export default function Navigation({ dockLayoutRef }: NavigationProps) {
   const navigate = useNavigate();
   const { webSocketClient } = useWebSocketStore();
+  const navigate = useNavigate();
 
   const handleUserInfo = () => {
     addTab('유저 정보', <User />, dockLayoutRef);
@@ -22,6 +23,9 @@ export default function Navigation({ dockLayoutRef }: NavigationProps) {
 
   const handleLogout = () => {
     webSocketClient?.deactivate();
+    removeAccessToken();
+    removeRefreshToken();
+    navigate('/login');
     console.log(webSocketClient);
     removeRefreshToken();
     removeAccessToken();
@@ -33,8 +37,8 @@ export default function Navigation({ dockLayoutRef }: NavigationProps) {
       <IconButton size="large" onClick={handleUserInfo}>
         <AccountCircleIcon />
       </IconButton>
-      <IconButton size="large">
-        <LogoutIcon onClick={handleLogout} />
+      <IconButton size="large" onClick={handleLogout}>
+        <LogoutIcon />
       </IconButton>
     </nav>
   );

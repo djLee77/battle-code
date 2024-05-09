@@ -21,7 +21,7 @@ export interface IRoomStatus {
 }
 
 // UserStatus 인터페이스 정의
-interface IUserStatus {
+export interface IUserStatus {
   userId: string;
   isReady: boolean;
   language: string;
