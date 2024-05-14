@@ -7,14 +7,10 @@ import {
 } from './cookie';
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
-const accessToken = getAccessToken();
 
 // api 인스턴스 생성 및 기본 헤더 설정
 const api = axios.create({
-  baseURL: baseURL,
-  headers: {
-    Authorization: `Bearer ${accessToken}`,
-  },
+  baseURL,
 });
 
 // 새로운 AccessToken을 발급받는 함수
@@ -26,14 +22,11 @@ const refreshAccessToken = async () => {
         Authorization: `Bearer ${refreshToken}`,
       },
     });
-    console.log('토큰 재발급');
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       response.data.data;
-    console.log(response);
+    console.log('토큰 재발급', response);
     setRefreshToken(newRefreshToken);
     setAccessToken(newAccessToken);
-    // 새로운 AccessToken으로 api 인스턴스 헤더 업데이트
-    api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
     return newAccessToken;
   } catch (error) {
     console.error(error);
