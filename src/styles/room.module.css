@@ -33,11 +33,6 @@
     flex: 0.4
 }
 
-.chat {
-    border: 1px solid black;
-    flex: 0.5;
-}
-
 .button-container {
     display: flex;
     justify-content: space-between;
