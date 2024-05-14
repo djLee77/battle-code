@@ -8,39 +8,43 @@ interface SignupModalProps {
 }
 
 const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
-  const [username, setUsername] = useState('');
+  const [language, setLanguage] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [checkingUserId, setCheckingUserId] = useState(false);
-  const [userIdAvailable, setUserIdAvailable] = useState(true);
+  const [userIdAvailable, setUserIdAvailable] = useState(false);
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   const checkUserIdAvailability = async () => {
-    setCheckingUserId(true);
     try {
       // 서버에 중복 검사 요청을 보냅니다.
       // 이 예제에서는 요청 URL과 응답 형식이 가정되어 있습니다.
       const response = await axios.get(
-        `${serverUrl}/api/checkUserId?userId=${userId}`
+        `${serverUrl}v1/oauth/check-userId/${userId}`
       );
       // 서버에서 중복된 아이디가 없다고 응답하면 true, 중복되었다면 false를 반환한다고 가정
-      setUserIdAvailable(response.data.available);
+      console.log(response.data);
+      console.log();
+      if (response.data.status === 200) {
+        setUserIdAvailable(true);
+        alert('사용 가능한 아이디입니다!');
+      }
     } catch (error) {
       console.error('아이디 중복 검사 중 오류가 발생했습니다.', error);
-      setUserIdAvailable(false); // 오류 발생 시 사용 가능하지 않다고 가정
+      alert('중복된 아이디가 존재합니다.');
     }
-    setCheckingUserId(false);
+
+    console.log(userIdAvailable);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // if (!checkingUserId || !userIdAvailable) {
-    //   alert("아이디 중복검사를 실시해주세요.");
-    //   return;
-    // }
+    if (!userIdAvailable) {
+      alert('아이디 중복검사를 실시해주세요.');
+      return;
+    }
 
     if (password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
@@ -48,11 +52,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     }
 
     // 회원가입 로직
-    console.log(username, userId, password);
+    console.log(language, userId, password);
     try {
       await axios.post(`${serverUrl}v1/oauth/sign-up`, {
         userId: userId,
-        nickname: username,
+        language: language,
         password: password,
         passwordCheck: passwordConfirm,
       });
@@ -96,30 +100,36 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                   value={userId}
                   onChange={(e) => {
                     setUserId(e.target.value);
-                    setUserIdAvailable(true);
+                    setUserIdAvailable(false);
                   }}
                   placeholder="User ID"
                   required
                 />
-                {/* <button
+                <button
                   type="button"
                   onClick={checkUserIdAvailability}
-                  disabled={checkingUserId}
-                  className={`${styles.customBtn} ${styles.btn2}`}
+                  disabled={userIdAvailable}
+                  className={styles.customBtn}
                 >
-                  중복 검사
-                </button> */}
+                  중복검사
+                </button>
               </div>
             </div>
             <div className={styles.item}>
-              <input
-                className={styles.input}
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
+              <select
+                className={styles.selectBox}
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
                 required
-              />
+              >
+                <option value="" disabled hidden>
+                  Language
+                </option>
+                <option value="javascript">Javascript</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+                <option value="c">C</option>
+              </select>
             </div>
             <div className={styles.item}>
               <input
@@ -141,7 +151,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 required
               />
             </div>
-            <div className={styles.modalActions}>
+            <div className={styles.item}>
               <button
                 type="submit"
                 className={`${styles.customBtn} ${styles.btn2}`}
