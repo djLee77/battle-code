@@ -65,7 +65,6 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
   // 준비 버튼 누르면 누른 유저의 정보 소켓으로 전송
   const handleReady = () => {
-    console.log(userStatus);
     const updateUser = userStatus.filter((user) => user.userId === userId)[0];
     updateUser.isReady = !updateUser.isReady;
     publishMessage(
@@ -76,6 +75,11 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
   const handleGameStart = () => {
     setIsGameStart(true);
+  };
+
+  const playerLanguage = () => {
+    const player = userStatus.filter((user) => user.userId === userId)[0];
+    return player.language;
   };
 
   // 첫 마운트 될 때 방 구독하기
@@ -141,7 +145,6 @@ export default function Room({ data, dockLayoutRef }: IProps) {
       return;
     }
     const allReady = allUsersExceptHost.every((user) => user.isReady);
-    console.log(allReady);
 
     // 모든 유저가 준비 상태인지를 판단하여 상태 업데이트
     setIsAllUsersReady(allReady);
@@ -173,7 +176,8 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <div className={styles[`test-problem`]}>코딩테스트문제</div>
         {isGameStart ? (
           <div className={styles['room-info']}>
-            <CodeEditor />
+            {/*Todo : lang props 서버에서 받은 user lang으로 받아서*/}
+            <CodeEditor language={playerLanguage()} />
           </div>
         ) : (
           <div className={styles['room-info']}>
