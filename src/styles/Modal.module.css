@@ -14,7 +14,7 @@
   left: 50%;
   width: 30%;
   transform: translate(-50%, -50%);
-  background-color: #2D2D2D;
+  background-color: #2d2d2d;
   padding: 20px;
   z-index: 4;
   border-radius: 30px;
@@ -47,7 +47,7 @@
 }
 
 .input {
-  width: 100%;
+  width: 230px;
   height: 2.875rem;
   padding: 0.5rem 2.5rem 0.5rem 0.875rem;
   margin: 8px;
@@ -57,8 +57,21 @@
   border-radius: 0.75rem;
 }
 
-.modalActions {
-  text-align: right;
+.selectBox {
+  width: 230px;
+  height: 2.875rem;
+  padding: 0.5rem 2.5rem 0.5rem 0.875rem;
+  margin: 8px;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+.selectBox option {
+  color: #fff;
+  background-color: #575a65;
 }
 
 .customBtn {
@@ -74,7 +87,7 @@
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
-  font-family: "RM Neue", sans-serif;
+  font-family: 'RM Neue', sans-serif;
   font-size: 100%;
   line-height: 1.15;
   margin-top: 20px;
@@ -97,4 +110,38 @@
 
 .customBtn:hover {
   background-color: #a3a8b9;
+}
+
+.customBtn:disabled {
+  align-items: center;
+  appearance: button;
+  background-color: #a3a8b9;
+  border-radius: 8px;
+  border-style: none;
+  box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: default;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  font-family: 'RM Neue', sans-serif;
+  font-size: 100%;
+  line-height: 1.15;
+  margin-top: 20px;
+  padding: 10px 21px;
+  text-align: center;
+  text-transform: none;
+  transition: color 0.13s ease-in-out, background 0.13s ease-in-out,
+    opacity 0.13s ease-in-out, box-shadow 0.13s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  min-width: 220px;
+  padding-left: 82px;
+  margin-left: 12px;
+}
+
+.closeButton {
+  cursor: pointer;
 }

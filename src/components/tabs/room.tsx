@@ -77,7 +77,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     setIsGameStart(true);
   };
 
-  const playerLanguage = () => {
+  const searchMyLanguage = () => {
     const player = userStatus.filter((user) => user.userId === userId)[0];
     return player.language;
   };
@@ -177,7 +177,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         {isGameStart ? (
           <div className={styles['room-info']}>
             {/*Todo : lang props 서버에서 받은 user lang으로 받아서*/}
-            <CodeEditor language={playerLanguage()} />
+            <CodeEditor language={searchMyLanguage()} />
           </div>
         ) : (
           <div className={styles['room-info']}>
