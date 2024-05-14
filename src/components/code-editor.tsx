@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
-import { useState } from 'react';
 import styles from 'styles/code-editor.module.css';
 
-const CodeEditor: React.FC = (): JSX.Element => {
+const CodeEditor = (props: { language: string }): JSX.Element => {
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   );
-  const [language, setLanguage] = useState<string>('javascript');
+  useEffect(() => {
+    console.log(props.language);
+  });
 
   const editorOptions: EditorProps['options'] = {
     inlineSuggest: { enabled: true },
@@ -23,36 +24,17 @@ const CodeEditor: React.FC = (): JSX.Element => {
     }
   };
 
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setLanguage(event.target.value);
-  };
-
   const handleSubmit = () => {
     console.log(code);
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <select
-          onChange={handleLanguageChange}
-          value={language}
-          className={styles.languageMenu}
-        >
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="c">C</option>
-          <option value="cpp">C++</option>
-          <option value="csharp">C#</option>
-        </select>
-      </div>
+      <div className={styles.header}></div>
       <div className={styles.body}>
         <Editor
           height="300px"
-          language={language}
+          language={props.language}
           theme="vs-dark"
           value={code}
           options={editorOptions}
