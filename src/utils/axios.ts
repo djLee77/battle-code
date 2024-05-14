@@ -8,7 +8,7 @@ import {
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
 
-// api 인스턴스 생성 및 기본 헤더 설정
+// api 인스턴스 생성
 const api = axios.create({
   baseURL,
 });
