@@ -1,4 +1,5 @@
-import axios from 'axios';
+import api from 'utils/axios';
+import Chat from 'components/room/chat';
 import ModifyRoomModal from 'components/room/modify-room';
 import RoomSettings from 'components/room/room-settings';
 import UserList from 'components/room/user-list';
@@ -7,7 +8,6 @@ import { useEffect, useState } from 'react';
 import useWebSocketStore from 'store/websocket-store';
 import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
-import { getAccessToken } from 'utils/cookie';
 import { removeTab } from 'utils/tabs';
 
 interface IProps {
@@ -33,16 +33,10 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
   // 방 나가기 함수
   const handleRoomLeave = async () => {
-    const accessToken = getAccessToken();
     try {
-      const response = await axios.post(
-        `${serverUrl}v1/gameRoom/leave/${data.roomStatus.roomId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+      const response = await api.post(
+        `v1/gameRoom/leave/${data.roomStatus.roomId}`,
+        {}
       );
       console.log(response);
       removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
@@ -80,19 +74,12 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   };
 
   const handleGameStart = async () => {
-    const accessToken = getAccessToken();
     try {
-      const response = await axios.post(
-        `${serverUrl}v1/game/start`,
-        {
-          roomId: data.roomStatus.roomId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await api.post(`${serverUrl}v1/game/start`, {
+        roomId: data.roomStatus.roomId,
+      });
+
+      response.status === 201 && setIsGameStart(true);
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -192,7 +179,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
           {isGameStart ? (
             <div></div>
           ) : (
-            <span>게임이 시작되면 문제가 나옵니다!</span>
+            <span>게임이 시작되면 문제가 표시됩니다!</span>
           )}
         </div>
         <div className={styles['room-info']}>
@@ -208,15 +195,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
             </>
           )}
         </div>
-        <div
-          className={styles[`chat`]}
-          style={chatIsHide ? { display: 'none' } : { display: 'block' }}
-        >
-          <RoomCustomButton onClick={() => setChatIsHide(!chatIsHide)}>
-            채팅 Off
-          </RoomCustomButton>
-          채팅창
-        </div>
+        <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
       </div>
       <div className={styles[`button-container`]}>
         <RoomCustomButton onClick={handleRoomLeave}>나가기</RoomCustomButton>
