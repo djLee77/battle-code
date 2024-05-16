@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import styles from 'styles/code-editor.module.css';
 
-const CodeEditor = (props: { language: string }): JSX.Element => {
-  const [code, setCode] = useState<string>(
-    "var message = 'Monaco Editor!' \nconsole.log(message);"
-  );
+interface IProps {
+  language: string;
+  code: string;
+  setCode: (str: string) => void;
+}
+
+const CodeEditor = ({ language, code, setCode }: IProps): JSX.Element => {
   useEffect(() => {
-    console.log(props.language);
+    console.log(language);
   });
 
   const editorOptions: EditorProps['options'] = {
@@ -34,7 +37,7 @@ const CodeEditor = (props: { language: string }): JSX.Element => {
       <div className={styles.body}>
         <Editor
           height="300px"
-          language={props.language}
+          language={language}
           theme="vs-dark"
           value={code}
           options={editorOptions}

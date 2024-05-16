@@ -10,6 +10,7 @@ import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
 import { removeTab } from 'utils/tabs';
 import CodeEditor from 'components/code-editor';
+import ProgressBar from '@ramonak/react-progress-bar';
 
 interface IProps {
   data: IRoomStatus;
@@ -22,7 +23,9 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [userStatus, setUserStatus] = useState(data.userStatus);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
-
+  const [code, setCode] = useState<string>(
+    "var message = 'Monaco Editor!' \nconsole.log(message);"
+  );
   const {
     webSocketClient,
     roomSubscribe,
@@ -74,6 +77,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   };
 
   const handleGameStart = async () => {
+    setIsGameStart(true);
     try {
       const response = await api.post(`${serverUrl}v1/game/start`, {
         roomId: data.roomStatus.roomId,
@@ -161,9 +165,23 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   return (
     <div>
       <div className={styles[`title-box`]}>
-        <h2 className={styles.title}>{roomStatus.title}</h2>
-        {roomStatus.hostId === userId && (
-          <ModifyRoomModal data={data.roomStatus} />
+        {isGameStart ? (
+          <>
+            <h2 className={styles.title}>{roomStatus.title}</h2>
+            <ProgressBar
+              completed={50}
+              bgColor="#F4A261"
+              height="20px"
+              isLabelVisible={false}
+            />
+          </>
+        ) : (
+          <>
+            <h2 className={styles.title}>{roomStatus.title}</h2>
+            {roomStatus.hostId === userId && (
+              <ModifyRoomModal data={data.roomStatus} />
+            )}
+          </>
         )}
       </div>
       <div
@@ -188,7 +206,11 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <div className={styles['room-info']}>
           {isGameStart ? (
             <div>
-              <CodeEditor language={searchMyLanguage()} />
+              <CodeEditor
+                language={searchMyLanguage()}
+                code={code}
+                setCode={setCode}
+              />
             </div>
           ) : (
             <>
