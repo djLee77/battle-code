@@ -4,8 +4,7 @@ import { IRoomList } from 'types';
 import { addTab } from 'utils/tabs';
 import Room from '../tabs/room';
 import React from 'react';
-import axios from 'axios';
-import { getAccessToken } from 'utils/cookie';
+import api from 'utils/axios';
 import useWebSocketStore from 'store/websocket-store';
 
 interface ListCardProps {
@@ -17,7 +16,6 @@ export default React.memo(function ListCard({
   room,
   dockLayoutRef,
 }: ListCardProps) {
-  const serverUrl = process.env.REACT_APP_SERVER_URL;
   const { roomSubscribe } = useWebSocketStore();
   const handleEnterRoom = async (roomId: number) => {
     console.log('click');
@@ -27,19 +25,10 @@ export default React.memo(function ListCard({
         console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
       }
-      const accessToken = getAccessToken();
-      const response = await axios.post(
-        `${serverUrl}v1/gameRoom/enter`,
-        {
-          userId: localStorage.getItem('id'),
-          roomId: roomId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await api.post(`v1/gameRoom/enter`, {
+        userId: localStorage.getItem('id'),
+        roomId: roomId,
+      });
       console.log(response);
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
       addTab(

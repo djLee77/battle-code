@@ -11,8 +11,7 @@ import {
 import { useForm } from 'react-hook-form';
 import InputField from 'components/input-field';
 import SelectField from 'components/select-field';
-import axios from 'axios';
-import { getAccessToken } from 'utils/cookie';
+import api from 'utils/axios';
 import { addTab } from 'utils/tabs';
 import Room from 'components/tabs/room';
 import useWebSocketStore from 'store/websocket-store';
@@ -47,7 +46,6 @@ interface IProps {
 }
 
 export default function CreateRoomModal({ dockLayoutRef }: IProps) {
-  const serverUrl = process.env.REACT_APP_SERVER_URL;
   const {
     register,
     handleSubmit,
@@ -71,25 +69,17 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
         console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
       }
-      const accessToken = getAccessToken();
-      const response = await axios.post(
-        `${serverUrl}v1/gameRoom`,
-        {
-          hostId: localStorage.getItem('id'),
-          title: data.title,
-          password: data.pw || null,
-          language: data.lang,
-          problemLevel: Number(data.level),
-          maxUserCount: Number(data.memberCount),
-          maxSubmitCount: Number(data.submissionCount),
-          limitTime: Number(data.limitTime),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+
+      const response = await api.post(`v1/gameRoom`, {
+        hostId: localStorage.getItem('id'),
+        title: data.title,
+        password: data.pw || null,
+        language: data.lang,
+        problemLevel: Number(data.level),
+        maxUserCount: Number(data.memberCount),
+        maxSubmitCount: Number(data.submissionCount),
+        limitTime: Number(data.limitTime),
+      });
       console.log(response);
       const roomId = response.data.data.roomStatus.roomId;
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
