@@ -22,10 +22,8 @@ const refreshAccessToken = async () => {
         Authorization: `Bearer ${refreshToken}`,
       },
     });
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-      response.data.data;
+    const { accessToken: newAccessToken } = response.data.data;
     console.log('토큰 재발급', response);
-    setRefreshToken(newRefreshToken);
     setAccessToken(newAccessToken);
     return newAccessToken;
   } catch (error) {
