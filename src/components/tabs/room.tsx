@@ -10,6 +10,12 @@ import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
 import { removeTab } from 'utils/tabs';
 import CodeEditor from 'components/code-editor';
+import {
+  handleRoomLeave,
+  handleReady,
+  handleGameStart,
+  searchMyLanguage,
+} from '../../handler/room';
 
 interface IProps {
   data: IRoomStatus;
@@ -29,66 +35,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     publishMessage,
     setRoomSubscription,
   } = useWebSocketStore();
-  const serverUrl = process.env.REACT_APP_SERVER_URL;
   const userId = localStorage.getItem('id');
-
-  // 방 나가기 함수
-  const handleRoomLeave = async () => {
-    try {
-      const response = await api.post(
-        `v1/gameRoom/leave/${data.roomStatus.roomId}`,
-        {}
-      );
-      console.log(response);
-      removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
-      if (roomSubscribe.subscription) {
-        roomSubscribe.subscription.unsubscribe(); // 구독 취소
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // 사용자 언어 업데이트 함수
-  const handleLanguageChange = (userId: string, newLanguage: string) => {
-    const updateUser = userStatus.filter((user) => user.userId === userId)[0];
-    updateUser.language = newLanguage;
-    publishMessage(
-      `/app/room/${data.roomStatus.roomId}/update/user-status`,
-      updateUser
-    );
-  };
-
-  // 준비 버튼 누르면 누른 유저의 정보 소켓으로 전송
-  /**
-   * 이 함수는 room 컴포넌트 전용 함수입니다.
-   *
-   */
-  const handleReady = () => {
-    const updateUser = userStatus.filter((user) => user.userId === userId)[0];
-    updateUser.isReady = !updateUser.isReady;
-    publishMessage(
-      `/app/room/${data.roomStatus.roomId}/update/user-status`,
-      updateUser
-    );
-  };
-
-  const handleGameStart = async () => {
-    try {
-      const response = await api.post(`${serverUrl}v1/game/start`, {
-        roomId: data.roomStatus.roomId,
-      });
-
-      response.status === 201 && setIsGameStart(true);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const searchMyLanguage = () => {
-    const player = userStatus.filter((user) => user.userId === userId)[0];
-    return player.language;
-  };
 
   // 첫 마운트 될 때 방 구독하기
   useEffect(() => {
@@ -162,9 +109,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     <div>
       <div className={styles[`title-box`]}>
         <h2 className={styles.title}>{roomStatus.title}</h2>
-        {roomStatus.hostId === userId && (
-          <ModifyRoomModal data={data.roomStatus} />
-        )}
+        {roomStatus.hostId === userId && <ModifyRoomModal data={roomStatus} />}
       </div>
       <div
         style={
@@ -188,13 +133,14 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <div className={styles['room-info']}>
           {isGameStart ? (
             <div>
-              <CodeEditor language={searchMyLanguage()} />
+              <CodeEditor language={searchMyLanguage(userId, userStatus)} />
             </div>
           ) : (
             <>
               <UserList
                 userStatus={userStatus}
-                handleLanguageChange={handleLanguageChange}
+                publishMessage={publishMessage}
+                data={data}
               />
               <RoomSettings roomStatus={roomStatus} />
             </>
@@ -203,7 +149,18 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
       </div>
       <div className={styles[`button-container`]}>
-        <RoomCustomButton onClick={handleRoomLeave}>나가기</RoomCustomButton>
+        <RoomCustomButton
+          onClick={() =>
+            handleRoomLeave(
+              data.roomStatus.roomId,
+              dockLayoutRef,
+              roomSubscribe,
+              removeTab
+            )
+          }
+        >
+          나가기
+        </RoomCustomButton>
         {isGameStart ? (
           <div></div>
         ) : (
@@ -211,18 +168,35 @@ export default function Room({ data, dockLayoutRef }: IProps) {
             {roomStatus.hostId === userId ? (
               <RoomCustomButton
                 disabled={!isAllUsersReady}
-                onClick={handleGameStart}
+                onClick={() =>
+                  handleGameStart(data.roomStatus.roomId, setIsGameStart)
+                }
               >
                 게임시작
               </RoomCustomButton>
             ) : (
-              <RoomCustomButton onClick={handleReady}>
+              <RoomCustomButton
+                onClick={() =>
+                  handleReady(
+                    userId,
+                    userStatus,
+                    data.roomStatus.roomId,
+                    publishMessage
+                  )
+                }
+              >
                 준비완료
               </RoomCustomButton>
             )}
           </>
         )}
-        <button onClick={handleGameStart}>임시시작</button>
+        <button
+          onClick={() =>
+            handleGameStart(data.roomStatus.roomId, setIsGameStart)
+          }
+        >
+          임시시작
+        </button>
       </div>
     </div>
   );
