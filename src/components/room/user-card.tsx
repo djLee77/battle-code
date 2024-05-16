@@ -10,14 +10,14 @@ interface IProps {
   publishMessage: (destination: string, payload: any) => void;
 }
 
-const UserCard = ({ data, userStatus, userData, publishMessage }: IProps) => {
+const UserCard = (props: IProps) => {
   return (
     <div className={styles.container}>
       <div className={styles[`dot-box`]}>
         <span
           className={styles.dot}
           style={
-            userData.isReady
+            props.userData.isReady
               ? { backgroundColor: 'green' }
               : { backgroundColor: 'yellow' }
           }
@@ -28,22 +28,25 @@ const UserCard = ({ data, userStatus, userData, publishMessage }: IProps) => {
         <div>
           <span className={styles['var-type-color']}>const</span>{' '}
           <span className={styles['var-name-color']}>name</span> ={' '}
-          <span className={styles['var-data-color']}>'{userData.userId}'</span>;
+          <span className={styles['var-data-color']}>
+            '{props.userData.userId}'
+          </span>
+          ;
         </div>
         <div>
           <span className={styles['var-type-color']}>const</span>{' '}
           <span className={styles['var-name-color']}>lang</span> ={' '}
-          {userData.userId === localStorage.getItem('id') ? (
+          {props.userData.userId === localStorage.getItem('id') ? (
             <select
               className={styles.select}
-              value={userData.language}
+              value={props.userData.language}
               onChange={(event) =>
                 handleLanguageChange(
-                  userData.userId,
+                  props.userData.userId,
                   event.target.value,
-                  userStatus,
-                  data.roomStatus.roomId,
-                  publishMessage
+                  props.userStatus,
+                  props.data.roomStatus.roomId,
+                  props.publishMessage
                 )
               }
             >
@@ -53,7 +56,7 @@ const UserCard = ({ data, userStatus, userData, publishMessage }: IProps) => {
             </select>
           ) : (
             <span className={styles['var-data-color']}>
-              '{userData.language}'
+              '{props.userData.language}'
             </span>
           )}
           ;
@@ -62,7 +65,7 @@ const UserCard = ({ data, userStatus, userData, publishMessage }: IProps) => {
           <span className={styles['var-type-color']}>let</span>{' '}
           <span className={styles['var-name-color']}>isReady</span> ={' '}
           <span className={styles['var-data-color']}>
-            '{userData.isReady ? 'true' : 'false'}'
+            '{props.userData.isReady ? 'true' : 'false'}'
           </span>
           ;
         </div>

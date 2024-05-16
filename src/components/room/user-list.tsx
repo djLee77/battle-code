@@ -8,16 +8,16 @@ interface IProps {
   publishMessage: (destination: string, payload: any) => void;
 }
 
-const UserList = ({ userStatus, data, publishMessage }: IProps) => {
+const UserList = (props: IProps) => {
   return (
     <div className={styles['user-list']}>
-      {userStatus.map((userData) => (
+      {props.userStatus.map((userData) => (
         <UserCard
           key={userData.userId}
-          data={data}
+          data={props.data}
           userData={userData}
-          userStatus={userStatus}
-          publishMessage={publishMessage}
+          userStatus={props.userStatus}
+          publishMessage={props.publishMessage}
         />
       ))}
     </div>
