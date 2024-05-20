@@ -6,14 +6,8 @@ import RoomCustomButton from 'components/ui/room-custom-btn';
 import { useState } from 'react';
 import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
-import { removeTab } from 'utils/tabs';
 import CodeEditor from 'components/code-editor';
-import {
-  handleRoomLeave,
-  handleReady,
-  handleGameStart,
-  searchMyLanguage,
-} from '../../handler/room';
+import { searchMyLanguage } from '../../handler/room';
 import useRoomWebSocket from 'hooks/useRoomWebSocket';
 
 interface IProps {
@@ -76,16 +70,7 @@ export default function Room(props: IProps) {
         <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
       </div>
       <div className={styles[`button-container`]}>
-        <RoomCustomButton
-          onClick={() =>
-            handleRoomLeave(
-              props.data.roomStatus.roomId,
-              props.dockLayoutRef,
-              room.roomSubscribe,
-              removeTab
-            )
-          }
-        >
+        <RoomCustomButton onClick={room.handleRoomLeave}>
           나가기
         </RoomCustomButton>
         {room.isGameStart ? (
@@ -95,38 +80,18 @@ export default function Room(props: IProps) {
             {room.roomStatus.hostId === room.userId ? (
               <RoomCustomButton
                 disabled={!room.isAllUsersReady}
-                onClick={() =>
-                  handleGameStart(
-                    props.data.roomStatus.roomId,
-                    room.setIsGameStart
-                  )
-                }
+                onClick={room.handleGameStart}
               >
                 게임시작
               </RoomCustomButton>
             ) : (
-              <RoomCustomButton
-                onClick={() =>
-                  handleReady(
-                    room.userId,
-                    room.userStatus,
-                    props.data.roomStatus.roomId,
-                    room.publishMessage
-                  )
-                }
-              >
+              <RoomCustomButton onClick={room.handleReady}>
                 준비완료
               </RoomCustomButton>
             )}
           </>
         )}
-        <button
-          onClick={() =>
-            handleGameStart(props.data.roomStatus.roomId, room.setIsGameStart)
-          }
-        >
-          임시시작
-        </button>
+        <button onClick={room.handleGameStart}>임시시작</button>
       </div>
     </div>
   );
