@@ -94,6 +94,10 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     return player.language;
   };
 
+  const handleSubmit = () => {
+    console.log(code);
+  };
+
   // 첫 마운트 될 때 방 구독하기
   useEffect(() => {
     if (!webSocketClient) return;
@@ -164,7 +168,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
   return (
     <div>
-      <div className={styles[`title-box`]}>
+      <div className={styles.titleBox}>
         {isGameStart ? (
           <>
             <h2 className={styles.title}>{roomStatus.title}</h2>
@@ -196,55 +200,67 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         </RoomCustomButton>
       </div>
       <div className={styles.container}>
-        <div className={styles[`test-problem`]}>
-          {isGameStart ? (
-            <div></div>
-          ) : (
-            <span>게임이 시작되면 문제가 표시됩니다!</span>
-          )}
+        <div className={styles.leftSide}>
+          <div className={styles.leftBody}>
+            {isGameStart ? (
+              <div></div>
+            ) : (
+              <span>게임이 시작되면 문제가 표시됩니다!</span>
+            )}
+          </div>
+          <div className={styles.leftFooter}>
+            <RoomCustomButton onClick={handleRoomLeave}>
+              나가기
+            </RoomCustomButton>
+          </div>
         </div>
-        <div className={styles['room-info']}>
-          {isGameStart ? (
-            <div>
-              <CodeEditor
-                language={searchMyLanguage()}
-                code={code}
-                setCode={setCode}
-              />
-            </div>
-          ) : (
-            <>
-              <UserList
-                userStatus={userStatus}
-                handleLanguageChange={handleLanguageChange}
-              />
-              <RoomSettings roomStatus={roomStatus} />
-            </>
-          )}
-        </div>
-        <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
-      </div>
-      <div className={styles[`button-container`]}>
-        <RoomCustomButton onClick={handleRoomLeave}>나가기</RoomCustomButton>
-        {isGameStart ? (
-          <div></div>
-        ) : (
-          <>
-            {roomStatus.hostId === userId ? (
-              <RoomCustomButton
-                disabled={!isAllUsersReady}
-                onClick={handleGameStart}
-              >
-                게임시작
+        <div className={styles.center}>
+          <div className={styles.centerBody}>
+            {isGameStart ? (
+              <div className={styles.flexGrow}>
+                <CodeEditor
+                  className={styles.flexGrow}
+                  language={searchMyLanguage()}
+                  code={code}
+                  setCode={setCode}
+                />
+                <RoomSettings roomStatus={roomStatus} />
+              </div>
+            ) : (
+              <div className={styles.flexGrow}>
+                <UserList
+                  className={styles.flexGrow}
+                  userStatus={userStatus}
+                  handleLanguageChange={handleLanguageChange}
+                />
+                <RoomSettings roomStatus={roomStatus} />
+              </div>
+            )}
+          </div>
+          <div className={styles.centerFooter}>
+            {isGameStart ? (
+              <RoomCustomButton onClick={handleSubmit}>
+                제출하기
               </RoomCustomButton>
             ) : (
-              <RoomCustomButton onClick={handleReady}>
-                준비완료
-              </RoomCustomButton>
+              <>
+                {roomStatus.hostId === userId ? (
+                  <RoomCustomButton
+                    // disabled={!isAllUsersReady}
+                    onClick={handleGameStart}
+                  >
+                    게임시작
+                  </RoomCustomButton>
+                ) : (
+                  <RoomCustomButton onClick={handleReady}>
+                    준비완료
+                  </RoomCustomButton>
+                )}
+              </>
             )}
-          </>
-        )}
-        <button onClick={handleGameStart}>임시시작</button>
+          </div>
+        </div>
+        <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
       </div>
     </div>
   );
