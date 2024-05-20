@@ -3,6 +3,7 @@ import Editor, { EditorProps } from '@monaco-editor/react';
 import styles from 'styles/code-editor.module.css';
 
 interface IProps {
+  className?: string;
   language: string;
   code: string;
   setCode: (str: string) => void;
@@ -27,10 +28,6 @@ const CodeEditor = ({ language, code, setCode }: IProps): JSX.Element => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log(code);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.header}></div>
@@ -43,9 +40,6 @@ const CodeEditor = ({ language, code, setCode }: IProps): JSX.Element => {
           options={editorOptions}
           onChange={handleEditorChange}
         />
-      </div>
-      <div className={styles.footer}>
-        <button onClick={handleSubmit}>submit</button>
       </div>
     </div>
   );

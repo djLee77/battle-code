@@ -3,6 +3,7 @@ import styles from 'styles/user-list.module.css';
 import { IUserStatus } from 'types/room-types';
 
 interface IProps {
+  className?: string;
   userStatus: IUserStatus[];
   handleLanguageChange: (userId: string, newLanguage: string) => void;
 }
