@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useWebSocketStore from 'store/websocket-store';
-import { IRoomStatus, IUserStatus } from 'types/room-types';
+import { IRoomStatus } from 'types/room-types';
 import { removeTab } from 'utils/tabs';
 import { handleRoomLeave, handleReady, handleGameStart } from 'handler/room';
 
@@ -9,9 +9,9 @@ interface IUseRoomWebSocket {
   dockLayoutRef: React.RefObject<any>;
 }
 
-const useRoomWebSocket = ({ data, dockLayoutRef }: IUseRoomWebSocket) => {
-  const [roomStatus, setRoomStatus] = useState(data.roomStatus);
-  const [userStatus, setUserStatus] = useState(data.userStatus);
+const useRoomWebSocket = (props: IUseRoomWebSocket) => {
+  const [roomStatus, setRoomStatus] = useState(props.data.roomStatus);
+  const [userStatus, setUserStatus] = useState(props.data.userStatus);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
 
@@ -23,57 +23,67 @@ const useRoomWebSocket = ({ data, dockLayoutRef }: IUseRoomWebSocket) => {
   } = useWebSocketStore();
   const userId = localStorage.getItem('id');
 
+  /**
+   * 웹소켓에서 받은 메시지 핸들링 함수
+   */
+  const handleMessage = useCallback(
+    (message: any) => {
+      const receivedMessage = JSON.parse(message.body);
+      console.log('Received message:', receivedMessage);
+
+      // 유저 상태 업데이트
+      if (receivedMessage.updateUserStatus) {
+        setUserStatus((prevUserStatus) =>
+          prevUserStatus.map((user) =>
+            user.userId === receivedMessage.updateUserStatus.userId
+              ? receivedMessage.updateUserStatus
+              : user
+          )
+        );
+      }
+
+      // 유저 입장
+      if (receivedMessage.enterUserStatus) {
+        setUserStatus((prevUserStatus) => [
+          ...prevUserStatus,
+          receivedMessage.enterUserStatus,
+        ]);
+      }
+
+      // 유저 퇴장
+      if (receivedMessage.leaveUserStatus) {
+        const leaveUserStatus = receivedMessage.leaveUserStatus;
+        // 방장이 퇴장할시
+        if (leaveUserStatus.isHost && leaveUserStatus.userId !== userId) {
+          alert('방장이 나갔습니다 ㅠㅠ');
+          removeTab(props.dockLayoutRef, `${props.data.roomStatus.roomId}번방`);
+          return;
+        }
+        // 유저가 퇴장할시
+        setUserStatus((prevUserStatus) =>
+          prevUserStatus.filter(
+            (user) => user.userId !== leaveUserStatus.userId
+          )
+        );
+      }
+
+      // 방 설정 변경
+      if (receivedMessage.roomStatus) {
+        setRoomStatus(receivedMessage.roomStatus);
+      }
+    },
+    [userId, props.data.roomStatus.roomId, props.dockLayoutRef]
+  );
+
   useEffect(() => {
     if (!webSocketClient) return;
     const subscription = webSocketClient.subscribe(
-      `/topic/room/${data.roomStatus.roomId}`,
-      (message) => {
-        const receivedMessage = JSON.parse(message.body);
-        console.log('Received message:', receivedMessage);
-        // 받은 메시지가 업데이트 유저 상태 객체면 바뀐 유저 상태 업데이트
-        if (receivedMessage.updateUserStatus) {
-          return setUserStatus((prevUserStatus) =>
-            prevUserStatus.map((user) =>
-              user.userId === receivedMessage.updateUserStatus.userId
-                ? receivedMessage.updateUserStatus
-                : user
-            )
-          );
-        }
-
-        // 유저 입장 메시지면 상태 변수에 입장한 유저 추가
-        if (receivedMessage.enterUserStatus) {
-          return setUserStatus((prevUserStatus) => [
-            ...prevUserStatus,
-            receivedMessage.enterUserStatus,
-          ]);
-        }
-
-        // 유저 퇴장 메시지면 상태 변수에 퇴장한 유저 삭제
-        if (receivedMessage.leaveUserStatus) {
-          const leaveUserStatus = receivedMessage.leaveUserStatus;
-          // 방장이 나가면 방에 있는 유저들 전부 방에서 퇴장
-          if (leaveUserStatus.isHost && leaveUserStatus.userId !== userId) {
-            alert('방장이 나갔습니다 ㅠㅠ');
-            removeTab(dockLayoutRef, `${data.roomStatus.roomId}번방`);
-            return;
-          }
-          return setUserStatus((prevUserStatus) =>
-            prevUserStatus.filter(
-              (user) => user.userId !== leaveUserStatus.userId
-            )
-          );
-        }
-
-        // 받은 메시지가 방 상태 객체면 방 상태 업데이트
-        if (receivedMessage.roomStatus) {
-          return setRoomStatus(receivedMessage.roomStatus);
-        }
-      }
+      `/topic/room/${props.data.roomStatus.roomId}`,
+      handleMessage
     );
 
     setRoomSubscription(subscription);
-  }, []);
+  }, [webSocketClient, handleMessage]);
 
   useEffect(() => {
     // 호스트 유저를 제외한 모든 유저의 isReady 상태 확인
@@ -99,6 +109,30 @@ const useRoomWebSocket = ({ data, dockLayoutRef }: IUseRoomWebSocket) => {
     setIsGameStart,
     publishMessage,
     roomSubscribe,
+    handleRoomLeave: useCallback(
+      () =>
+        handleRoomLeave(
+          props.data.roomStatus.roomId,
+          props.dockLayoutRef,
+          roomSubscribe,
+          removeTab
+        ),
+      [props.data.roomStatus.roomId, props.dockLayoutRef, roomSubscribe]
+    ),
+    handleReady: useCallback(
+      () =>
+        handleReady(
+          userId,
+          userStatus,
+          props.data.roomStatus.roomId,
+          publishMessage
+        ),
+      [userId, userStatus, props.data.roomStatus.roomId, publishMessage]
+    ),
+    handleGameStart: useCallback(
+      () => handleGameStart(props.data.roomStatus.roomId, setIsGameStart),
+      [props.data.roomStatus.roomId, setIsGameStart]
+    ),
   };
 };
 
