@@ -8,6 +8,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
+    "@ramonak/react-progress-bar": "^5.2.0",
     "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
