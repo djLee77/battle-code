@@ -12,7 +12,7 @@ interface NavigationProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function Navigation({ dockLayoutRef }: NavigationProps) {
+const Navigation = ({ dockLayoutRef }: NavigationProps) => {
   const navigate = useNavigate();
   const { webSocketClient } = useWebSocketStore();
 
@@ -38,4 +38,6 @@ export default function Navigation({ dockLayoutRef }: NavigationProps) {
       </IconButton>
     </nav>
   );
-}
+};
+
+export default Navigation;

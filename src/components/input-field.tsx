@@ -9,7 +9,7 @@ interface IProps {
   error: any;
 }
 
-export default function InputField(props: IProps) {
+const InputField = (props: IProps) => {
   return (
     <div className={styles['input-box']}>
       <div className={styles.input}>
@@ -29,4 +29,6 @@ export default function InputField(props: IProps) {
       </span>
     </div>
   );
-}
+};
+
+export default InputField;

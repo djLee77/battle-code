@@ -13,7 +13,7 @@ type Option = {
   name: string;
 };
 
-export default function SelectField(props: IProps) {
+const SelectField = (props: IProps) => {
   return (
     <div className={styles['select-box']}>
       <div className={styles.select}>
@@ -28,4 +28,6 @@ export default function SelectField(props: IProps) {
       </div>
     </div>
   );
-}
+};
+
+export default SelectField;
