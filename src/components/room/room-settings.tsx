@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from 'styles/room-settings.module.css';
 
 interface IProps {
@@ -21,4 +22,4 @@ const RoomSettings = ({ roomStatus }: IProps) => {
   );
 };
 
-export default RoomSettings;
+export default React.memo(RoomSettings);
