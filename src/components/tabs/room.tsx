@@ -9,12 +9,13 @@ import { IRoomStatus } from 'types/room-types';
 import CodeEditor from 'components/code-editor';
 import { searchMyLanguage } from '../../handler/room';
 import useRoomWebSocket from 'hooks/useRoomWebSocket';
+import DockLayout from 'rc-dock';
 
 interface IProps {
   data: IRoomStatus;
-  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
+  dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
-export default function Room(props: IProps) {
+const Room = (props: IProps) => {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
 
   const room = useRoomWebSocket({
@@ -95,4 +96,6 @@ export default function Room(props: IProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Room;

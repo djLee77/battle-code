@@ -13,7 +13,7 @@ interface RoomListProps {
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function RoomList({ dockLayoutRef }: RoomListProps) {
+const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const [roomList, setRoomList] = useState([]);
   // const {
   //   data: roomList,
@@ -84,4 +84,6 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
       </div>
     </div>
   );
-}
+};
+
+export default RoomList;
