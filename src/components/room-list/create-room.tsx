@@ -45,7 +45,7 @@ interface IProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function CreateRoomModal({ dockLayoutRef }: IProps) {
+const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   const {
     register,
     handleSubmit,
@@ -190,4 +190,6 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
       </Modal>
     </div>
   );
-}
+};
+
+export default CreateRoomModal;

@@ -43,7 +43,7 @@ interface Level {
   [key: string]: number;
 }
 
-export default function ModifyRoomModal({ data }: any) {
+const ModifyRoomModal = ({ data }: any) => {
   const {
     register,
     handleSubmit,
@@ -179,4 +179,6 @@ export default function ModifyRoomModal({ data }: any) {
       </Modal>
     </div>
   );
-}
+};
+
+export default ModifyRoomModal;
