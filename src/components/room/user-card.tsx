@@ -1,5 +1,4 @@
 import styles from 'styles/user-card.module.css';
-import React from 'react';
 import { IRoomStatus, IUserStatus } from 'types/room-types';
 import { handleLanguageChange } from 'handler/room';
 
@@ -73,4 +72,4 @@ const UserCard = (props: IProps) => {
     </div>
   );
 };
-export default React.memo(UserCard);
+export default UserCard;
