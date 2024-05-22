@@ -39,6 +39,10 @@ type FormValues = {
   limitTime: number;
 };
 
+interface Level {
+  [key: string]: number;
+}
+
 export default function ModifyRoomModal({ data }: any) {
   const {
     register,
@@ -64,10 +68,22 @@ export default function ModifyRoomModal({ data }: any) {
   const levelSelectList = levelData;
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
-
+  const levelObj: Level = {
+    BRONZE1: 1,
+    BRONZE2: 2,
+    BRONZE3: 3,
+    BRONZE4: 4,
+    BRONZE5: 5,
+    SILVER1: 6,
+    SILVER2: 7,
+    SILVER3: 8,
+    SILVER4: 9,
+    SILVER5: 10,
+  };
   // 방 수정 함수
-  const handleModifyRoom = async (data: any) => {
-    publishMessage(`/app/room/1/update/room-status`, data);
+  const handleModifyRoom = async (inputData: any) => {
+    inputData.problemLevel = levelObj[inputData.problemLevel];
+    publishMessage(`/app/room/${data.roomId}/update/room-status`, inputData);
     handleClose();
   };
 
