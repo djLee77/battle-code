@@ -89,8 +89,12 @@ export default function CreateRoomModal({ dockLayoutRef }: IProps) {
         dockLayoutRef
       );
       handleClose();
-    } catch (error: any) {
-      console.error('요청 실패:', error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
     }
   };
 
