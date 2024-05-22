@@ -7,9 +7,10 @@ import CreateRoomModal from 'components/room-list/create-room';
 import api from 'utils/axios';
 import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
+import DockLayout from 'rc-dock';
 
 interface RoomListProps {
-  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
+  dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 export default function RoomList({ dockLayoutRef }: RoomListProps) {
