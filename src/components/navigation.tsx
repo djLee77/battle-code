@@ -22,9 +22,6 @@ export default function Navigation({ dockLayoutRef }: NavigationProps) {
 
   const handleLogout = () => {
     webSocketClient?.deactivate();
-    removeAccessToken();
-    removeRefreshToken();
-    navigate('/login');
     console.log(webSocketClient);
     removeRefreshToken();
     removeAccessToken();
