@@ -42,8 +42,12 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
       response.data.data.shift(); // default 방 제거
       setRoomList(response.data.data);
       return response.data.data;
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
     }
   };
 

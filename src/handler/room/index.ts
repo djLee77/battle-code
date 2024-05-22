@@ -31,8 +31,12 @@ export const handleRoomLeave = async (
       console.log(roomSubscribe);
       roomSubscribe.subscription.unsubscribe(); // 구독 취소
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+    } else {
+      console.error('알 수 없는 에러:', error);
+    }
   }
 };
 
@@ -86,8 +90,12 @@ export const handleGameStart = async (
       setIsGameStart(true);
     }
     console.log(response);
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+    } else {
+      console.error('알 수 없는 에러:', error);
+    }
   }
 };
 
