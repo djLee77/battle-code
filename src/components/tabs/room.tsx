@@ -240,7 +240,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
               <div key={result.id}>
                 {result.id}
                 <div>
-            <ProgressBar
+                  <ProgressBar
                     completed={result.percent}
                     roundedValue={Math.round(result.percent)}
                   />
@@ -358,7 +358,17 @@ export default function Room({ data, dockLayoutRef }: IProps) {
             )}
           </div>
         </div>
-        <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
+        <div className={styles.rightSide}>
+          <div className={styles.rightBody}>
+            <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
+          </div>
+          <div
+            style={chatIsHide ? { display: 'none' } : { display: 'block' }}
+            className={styles.rightFooter}
+          >
+            입력창
+          </div>
+        </div>
       </div>
     </div>
   );
