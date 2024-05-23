@@ -17,6 +17,22 @@ interface IProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
+interface type {
+  id: string;
+  percent: number;
+}
+
+interface IProblem {
+  id: number;
+  title: string;
+  algorithmClassification: string;
+  problemLevel: string;
+  problemDescription: string;
+  inputDescription: string;
+  outputDescription: string;
+  hint: string;
+}
+
 export default function Room({ data, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
