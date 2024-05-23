@@ -79,16 +79,13 @@ export const handleReady = (
  */
 export const handleGameStart = async (
   roomId: number,
-  setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>,
-  setProblems: (data: any) => void
+  setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<void> => {
-  setIsGameStart(true);
   try {
     const response: AxiosResponse = await api.post(`v1/game/start`, {
       roomId: roomId,
     });
     setIsGameStart(true);
-    setProblems(response.data.data);
     console.log(response);
   } catch (error: unknown) {
     if (error instanceof Error) {
