@@ -79,16 +79,16 @@ export const handleReady = (
  */
 export const handleGameStart = async (
   roomId: number,
-  setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>
+  setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>,
+  setProblems: (data: any) => void
 ): Promise<void> => {
   setIsGameStart(true);
   try {
     const response: AxiosResponse = await api.post(`v1/game/start`, {
       roomId: roomId,
     });
-    if (response.status === 201) {
-      setIsGameStart(true);
-    }
+    setIsGameStart(true);
+    setProblems(response.data.data);
     console.log(response);
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -105,4 +105,31 @@ export const searchMyLanguage = (
 ): string => {
   const player = userStatus.find((user) => user.userId === userId);
   return player ? player.language : '';
+};
+
+export const handleSubmit = (
+  setTestResults: any,
+  userId: string | null,
+  problems: any,
+  roomId: number,
+  userStatus: any,
+  code: string
+) => {
+  setTestResults((prevResults: any) =>
+    prevResults.map((result: any) =>
+      result.id === userId
+        ? {
+            id: userId,
+            percent: 0,
+          }
+        : result
+    )
+  );
+  api.post(`$v1/judge`, {
+    problemId: problems[0].id,
+    roomId: roomId,
+    userId: userId,
+    language: searchMyLanguage(userId, userStatus),
+    code: code,
+  });
 };
