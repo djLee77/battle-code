@@ -39,6 +39,8 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [userStatus, setUserStatus] = useState(data.userStatus);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
+  const [problems, setProblems] = useState<IProblem[]>([]);
+
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   );
@@ -111,7 +113,23 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   };
 
   const handleSubmit = () => {
-    console.log(code);
+    setTestResults((prevResults) =>
+      prevResults.map((result) =>
+        result.id === userId
+          ? {
+              id: userId,
+              percent: 0,
+            }
+          : result
+      )
+    );
+    api.post(`${serverUrl}v1/judge`, {
+      problemId: problems[0].id,
+      roomId: data.roomStatus.roomId,
+      userId: userId,
+      language: searchMyLanguage(),
+      code: code,
+    });
   };
 
   // 첫 마운트 될 때 방 구독하기
@@ -219,7 +237,36 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
             {isGameStart ? (
-              <div></div>
+              problems.map((problem) => (
+                <div key={problem.id} className={styles.problem}>
+                  <h3>{problem.title}</h3>
+                  <p>
+                    <strong>Algorithm Classification:</strong>{' '}
+                    {problem.algorithmClassification}
+                  </p>
+                  <p>
+                    <strong>Level:</strong> {problem.problemLevel}
+                  </p>
+                  <div className={styles.description}>
+                    <h4>Description</h4>
+                    <p>{problem.problemDescription}</p>
+                  </div>
+                  <div className={styles.description}>
+                    <h4>Input</h4>
+                    <p>{problem.inputDescription}</p>
+                  </div>
+                  <div className={styles.description}>
+                    <h4>Output</h4>
+                    <p>{problem.outputDescription}</p>
+                  </div>
+                  {problem.hint && (
+                    <div className={styles.description}>
+                      <h4>Hint</h4>
+                      <p>{problem.hint}</p>
+                    </div>
+                  )}
+                </div>
+              ))
             ) : (
               <span>게임이 시작되면 문제가 표시됩니다!</span>
             )}
