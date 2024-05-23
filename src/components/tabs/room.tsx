@@ -37,9 +37,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
   const [userStatus, setUserStatus] = useState(data.userStatus);
-  const [testResults, setTestResults] = useState<type[]>([
-    { id: data.roomStatus.hostId, percent: 10 },
-  ]);
+  const [testResults, setTestResults] = useState<type[]>([]);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
   const [problems, setProblems] = useState<IProblem[]>([]);
@@ -99,16 +97,10 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
   const handleGameStart = async () => {
     console.log(`userStatus : ${userStatus}`);
-    setIsGameStart(true);
     try {
       const response = await api.post(`v1/game/start`, {
         roomId: data.roomStatus.roomId,
       });
-
-      console.log('gameStart');
-      console.log(response);
-      setProblems(response.data.data);
-      setIsGameStart(true);
     } catch (error) {
       console.error(error);
     }
@@ -167,7 +159,7 @@ export default function Room({ data, dockLayoutRef }: IProps) {
 
           setTestResults((prevResults) => [
             ...prevResults,
-            { id: receivedMessage.enterUserStatus.userId, percent: 40 },
+            { id: receivedMessage.enterUserStatus.userId, percent: 0 },
           ]);
 
           return;
@@ -194,6 +186,11 @@ export default function Room({ data, dockLayoutRef }: IProps) {
           return setRoomStatus(receivedMessage.roomStatus);
         }
 
+        if (receivedMessage.gameStartInfo) {
+          setProblems(receivedMessage.gameStartInfo);
+          setIsGameStart(true);
+        }
+
         //테스트 케이스 통과율
         if (receivedMessage.judgeResult) {
           const { userId, currentTest, totalTests } =
@@ -211,6 +208,11 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         }
       }
     );
+
+    data.userStatus.map((value) => {
+      const obj = { id: value.userId, percent: 0 };
+      setTestResults((prev: any) => [...prev, obj]);
+    });
 
     setRoomSubscription(subscription);
   }, []);
