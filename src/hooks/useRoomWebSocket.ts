@@ -2,18 +2,44 @@ import { useCallback, useEffect, useState } from 'react';
 import useWebSocketStore from 'store/websocket-store';
 import { IRoomStatus } from 'types/room-types';
 import { removeTab } from 'utils/tabs';
-import { handleRoomLeave, handleReady, handleGameStart } from 'handler/room';
+import {
+  handleRoomLeave,
+  handleReady,
+  handleGameStart,
+  handleSubmit,
+} from 'handler/room';
 
 interface IUseRoomWebSocket {
   data: IRoomStatus;
   dockLayoutRef: React.RefObject<any>;
 }
 
+interface type {
+  id: string;
+  percent: number;
+}
+
+interface IProblem {
+  id: number;
+  title: string;
+  algorithmClassification: string;
+  problemLevel: string;
+  problemDescription: string;
+  inputDescription: string;
+  outputDescription: string;
+  hint: string;
+}
+
 const useRoomWebSocket = (props: IUseRoomWebSocket) => {
   const [roomStatus, setRoomStatus] = useState(props.data.roomStatus);
   const [userStatus, setUserStatus] = useState(props.data.userStatus);
+  const [code, setCode] = useState<string>(
+    "var message = 'Monaco Editor!' \nconsole.log(message);"
+  );
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
+  const [testResults, setTestResults] = useState<type[]>([]);
+  const [problems, setProblems] = useState<IProblem[]>([]);
 
   const {
     webSocketClient,
@@ -48,6 +74,11 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
           ...prevUserStatus,
           receivedMessage.enterUserStatus,
         ]);
+
+        setTestResults((prevResults) => [
+          ...prevResults,
+          { id: receivedMessage.enterUserStatus.userId, percent: 0 },
+        ]);
       }
 
       // 유저 퇴장
@@ -70,6 +101,26 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
       // 방 설정 변경
       if (receivedMessage.roomStatus) {
         setRoomStatus(receivedMessage.roomStatus);
+      }
+
+      if (receivedMessage.gameStartInfo) {
+        setProblems(receivedMessage.gameStartInfo);
+        setIsGameStart(true);
+      }
+
+      //테스트 케이스 통과율
+      if (receivedMessage.judgeResult) {
+        const { userId, currentTest, totalTests } = receivedMessage.judgeResult;
+        setTestResults((prevResults) =>
+          prevResults.map((result) =>
+            result.id === userId
+              ? {
+                  id: userId,
+                  percent: (currentTest / totalTests) * 100,
+                }
+              : result
+          )
+        );
       }
     },
     [userId, props.data.roomStatus.roomId, props.dockLayoutRef]
@@ -100,12 +151,23 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
     setIsAllUsersReady(allReady);
   }, [userStatus]);
 
+  useEffect(() => {
+    props.data.userStatus.map((value) => {
+      const obj = { id: value.userId, percent: 0 };
+      setTestResults((prev: any) => [...prev, obj]);
+    });
+  }, []);
+
   return {
     userId,
     roomStatus,
     userStatus,
     isAllUsersReady,
     isGameStart,
+    testResults,
+    code,
+    setCode,
+    problems,
     setIsGameStart,
     publishMessage,
     roomSubscribe,
@@ -132,6 +194,18 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
     handleGameStart: useCallback(
       () => handleGameStart(props.data.roomStatus.roomId, setIsGameStart),
       [props.data.roomStatus.roomId, setIsGameStart]
+    ),
+    handleSubmit: useCallback(
+      () =>
+        handleSubmit(
+          setTestResults,
+          userId,
+          problems,
+          roomStatus.roomId,
+          userStatus,
+          code
+        ),
+      [setTestResults, userId, problems, roomStatus.roomId, userStatus, code]
     ),
   };
 };
