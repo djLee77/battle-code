@@ -10,7 +10,7 @@ import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
 import { removeTab } from 'utils/tabs';
 import CodeEditor from 'components/code-editor';
-import ProgressBar from '@ramonak/react-progress-bar';
+import ProgressBar from 'components/progress-bar';
 
 interface IProps {
   data: IRoomStatus;
@@ -37,6 +37,9 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
   const [roomStatus, setRoomStatus] = useState(data.roomStatus);
   const [userStatus, setUserStatus] = useState(data.userStatus);
+  const [testResults, setTestResults] = useState<type[]>([
+    { id: data.roomStatus.hostId, percent: 10 },
+  ]);
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
   const [problems, setProblems] = useState<IProblem[]>([]);
@@ -95,14 +98,17 @@ export default function Room({ data, dockLayoutRef }: IProps) {
   };
 
   const handleGameStart = async () => {
+    console.log(`userStatus : ${userStatus}`);
     setIsGameStart(true);
     try {
-      const response = await api.post(`${serverUrl}v1/game/start`, {
+      const response = await api.post(`v1/game/start`, {
         roomId: data.roomStatus.roomId,
       });
 
-      response.status === 201 && setIsGameStart(true);
+      console.log('gameStart');
       console.log(response);
+      setProblems(response.data.data);
+      setIsGameStart(true);
     } catch (error) {
       console.error(error);
     }
@@ -142,21 +148,29 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         console.log('Received message:', receivedMessage);
         // 받은 메시지가 업데이트 유저 상태 객체면 바뀐 유저 상태 업데이트
         if (receivedMessage.updateUserStatus) {
-          return setUserStatus((prevUserStatus) =>
+          setUserStatus((prevUserStatus) =>
             prevUserStatus.map((user) =>
               user.userId === receivedMessage.updateUserStatus.userId
                 ? receivedMessage.updateUserStatus
                 : user
             )
           );
+          return;
         }
 
         // 유저 입장 메시지면 상태 변수에 입장한 유저 추가
         if (receivedMessage.enterUserStatus) {
-          return setUserStatus((prevUserStatus) => [
+          setUserStatus((prevUserStatus) => [
             ...prevUserStatus,
             receivedMessage.enterUserStatus,
           ]);
+
+          setTestResults((prevResults) => [
+            ...prevResults,
+            { id: receivedMessage.enterUserStatus.userId, percent: 40 },
+          ]);
+
+          return;
         }
 
         // 유저 퇴장 메시지면 상태 변수에 퇴장한 유저 삭제
@@ -178,6 +192,22 @@ export default function Room({ data, dockLayoutRef }: IProps) {
         // 받은 메시지가 방 상태 객체면 방 상태 업데이트
         if (receivedMessage.roomStatus) {
           return setRoomStatus(receivedMessage.roomStatus);
+        }
+
+        //테스트 케이스 통과율
+        if (receivedMessage.judgeResult) {
+          const { userId, currentTest, totalTests } =
+            receivedMessage.judgeResult;
+          setTestResults((prevResults) =>
+            prevResults.map((result) =>
+              result.id === userId
+                ? {
+                    id: userId,
+                    percent: (currentTest / totalTests) * 100,
+                  }
+                : result
+            )
+          );
         }
       }
     );
@@ -204,15 +234,20 @@ export default function Room({ data, dockLayoutRef }: IProps) {
     <div>
       <div className={styles.titleBox}>
         {isGameStart ? (
-          <>
+          <div style={{ display: 'flex', width: '100%' }}>
             <h2 className={styles.title}>{roomStatus.title}</h2>
+            {testResults.map((result) => (
+              <div key={result.id}>
+                {result.id}
+                <div>
             <ProgressBar
-              completed={50}
-              bgColor="#F4A261"
-              height="20px"
-              isLabelVisible={false}
-            />
-          </>
+                    completed={result.percent}
+                    roundedValue={Math.round(result.percent)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <>
             <h2 className={styles.title}>{roomStatus.title}</h2>
