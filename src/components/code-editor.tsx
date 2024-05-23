@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import styles from 'styles/code-editor.module.css';
 
-const CodeEditor = (props: { language: string }): JSX.Element => {
-  const [code, setCode] = useState<string>(
-    "var message = 'Monaco Editor!' \nconsole.log(message);"
-  );
+interface IProps {
+  className?: string;
+  language: string;
+  code: string;
+  setCode: (str: string) => void;
+}
+
+const CodeEditor = ({ language, code, setCode }: IProps): JSX.Element => {
   useEffect(() => {
-    console.log(props.language);
+    console.log(language);
   });
 
   const editorOptions: EditorProps['options'] = {
@@ -24,25 +28,18 @@ const CodeEditor = (props: { language: string }): JSX.Element => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log(code);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.header}></div>
       <div className={styles.body}>
         <Editor
           height="300px"
-          language={props.language}
+          language={language}
           theme="vs-dark"
           value={code}
           options={editorOptions}
           onChange={handleEditorChange}
         />
-      </div>
-      <div className={styles.footer}>
-        <button onClick={handleSubmit}>submit</button>
       </div>
     </div>
   );

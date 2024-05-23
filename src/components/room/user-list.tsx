@@ -3,6 +3,7 @@ import styles from 'styles/user-list.module.css';
 import { IRoomStatus, IUserStatus } from 'types/room-types';
 
 interface IProps {
+  className?: string;
   userStatus: IUserStatus[];
   data: IRoomStatus;
   publishMessage: (destination: string, payload: any) => void;

@@ -8,8 +8,8 @@ import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
 import CodeEditor from 'components/code-editor';
 import { searchMyLanguage } from '../../handler/room';
-import useRoomWebSocket from 'hooks/useRoomWebSocket';
 import DockLayout from 'rc-dock';
+import ProgressBar from '@ramonak/react-progress-bar';
 
 interface IProps {
   data: IRoomStatus;
@@ -25,10 +25,24 @@ const Room = (props: IProps) => {
 
   return (
     <div>
-      <div className={styles[`title-box`]}>
-        <h2 className={styles.title}>{room.roomStatus.title}</h2>
-        {room.roomStatus.hostId === room.userId && (
-          <ModifyRoomModal data={room.roomStatus} />
+      <div className={styles.titleBox}>
+        {isGameStart ? (
+          <>
+            <h2 className={styles.title}>{roomStatus.title}</h2>
+            <ProgressBar
+              completed={50}
+              bgColor="#F4A261"
+              height="20px"
+              isLabelVisible={false}
+            />
+          </>
+        ) : (
+          <>
+            <h2 className={styles.title}>{roomStatus.title}</h2>
+            {roomStatus.hostId === userId && (
+              <ModifyRoomModal data={data.roomStatus} />
+            )}
+          </>
         )}
       </div>
       <div
@@ -43,56 +57,67 @@ const Room = (props: IProps) => {
         </RoomCustomButton>
       </div>
       <div className={styles.container}>
-        <div className={styles[`test-problem`]}>
-          {room.isGameStart ? (
-            <div></div>
-          ) : (
-            <span>게임이 시작되면 문제가 표시됩니다!</span>
-          )}
+        <div className={styles.leftSide}>
+          <div className={styles.leftBody}>
+            {isGameStart ? (
+              <div></div>
+            ) : (
+              <span>게임이 시작되면 문제가 표시됩니다!</span>
+            )}
+          </div>
+          <div className={styles.leftFooter}>
+            <RoomCustomButton onClick={handleRoomLeave}>
+              나가기
+            </RoomCustomButton>
+          </div>
         </div>
-        <div className={styles['room-info']}>
-          {room.isGameStart ? (
-            <div>
-              <CodeEditor
-                language={searchMyLanguage(room.userId, room.userStatus)}
-              />
-            </div>
-          ) : (
-            <>
-              <UserList
-                userStatus={room.userStatus}
-                publishMessage={room.publishMessage}
-                data={props.data}
-              />
-              <RoomSettings roomStatus={room.roomStatus} />
-            </>
-          )}
-        </div>
-        <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
-      </div>
-      <div className={styles[`button-container`]}>
-        <RoomCustomButton onClick={room.handleRoomLeave}>
-          나가기
-        </RoomCustomButton>
-        {room.isGameStart ? (
-          <div></div>
-        ) : (
-          <>
-            {room.roomStatus.hostId === room.userId ? (
-              <RoomCustomButton
-                disabled={!room.isAllUsersReady}
-                onClick={room.handleGameStart}
-              >
-                게임시작
+        <div className={styles.center}>
+          <div className={styles.centerBody}>
+            {isGameStart ? (
+              <div className={styles.flexGrow}>
+                <CodeEditor
+                  className={styles.flexGrow}
+                  language={searchMyLanguage()}
+                  code={code}
+                  setCode={setCode}
+                />
+                <RoomSettings roomStatus={roomStatus} />
+              </div>
+            ) : (
+              <div className={styles.flexGrow}>
+                <UserList
+                  className={styles.flexGrow}
+                  userStatus={userStatus}
+                  handleLanguageChange={handleLanguageChange}
+                />
+                <RoomSettings roomStatus={roomStatus} />
+              </div>
+            )}
+          </div>
+          <div className={styles.centerFooter}>
+            {isGameStart ? (
+              <RoomCustomButton onClick={handleSubmit}>
+                제출하기
               </RoomCustomButton>
             ) : (
-              <RoomCustomButton onClick={room.handleReady}>
-                준비완료
-              </RoomCustomButton>
+              <>
+                {roomStatus.hostId === userId ? (
+                  <RoomCustomButton
+                    // disabled={!isAllUsersReady}
+                    onClick={handleGameStart}
+                  >
+                    게임시작
+                  </RoomCustomButton>
+                ) : (
+                  <RoomCustomButton onClick={handleReady}>
+                    준비완료
+                  </RoomCustomButton>
+                )}
+              </>
             )}
-          </>
-        )}
-        <button onClick={room.handleGameStart}>임시시작</button>
+          </div>
+        </div>
+        <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
       </div>
     </div>
   );
