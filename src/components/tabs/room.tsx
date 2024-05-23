@@ -7,9 +7,10 @@ import { useState } from 'react';
 import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
 import CodeEditor from 'components/code-editor';
-import { searchMyLanguage } from '../../handler/room';
+import { handleLanguageChange, searchMyLanguage } from '../../handler/room';
 import DockLayout from 'rc-dock';
-import ProgressBar from '@ramonak/react-progress-bar';
+import useRoomWebSocket from 'hooks/useRoomWebSocket';
+import ProgressBarComponent from 'components/progress-bar';
 
 interface IProps {
   data: IRoomStatus;
@@ -26,21 +27,26 @@ const Room = (props: IProps) => {
   return (
     <div>
       <div className={styles.titleBox}>
-        {isGameStart ? (
-          <>
-            <h2 className={styles.title}>{roomStatus.title}</h2>
-            <ProgressBar
-              completed={50}
-              bgColor="#F4A261"
-              height="20px"
-              isLabelVisible={false}
-            />
-          </>
+        {room.isGameStart ? (
+          <div style={{ display: 'flex', width: '100%' }}>
+            <h2 className={styles.title}>{room.roomStatus.title}</h2>
+            {room.testResults.map((result) => (
+              <div key={result.id}>
+                {result.id}
+                <div>
+                  <ProgressBarComponent
+                    completed={result.percent}
+                    roundedValue={Math.round(result.percent)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <>
-            <h2 className={styles.title}>{roomStatus.title}</h2>
-            {roomStatus.hostId === userId && (
-              <ModifyRoomModal data={data.roomStatus} />
+            <h2 className={styles.title}>{room.roomStatus.title}</h2>
+            {room.roomStatus.hostId === room.userId && (
+              <ModifyRoomModal data={props.data.roomStatus} />
             )}
           </>
         )}
@@ -59,57 +65,86 @@ const Room = (props: IProps) => {
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
-            {isGameStart ? (
-              <div></div>
+            {room.isGameStart ? (
+              room.problems.map((problem) => (
+                <div key={problem.id} className={styles.problem}>
+                  <h3>{problem.title}</h3>
+                  <p>
+                    <strong>Algorithm Classification:</strong>{' '}
+                    {problem.algorithmClassification}
+                  </p>
+                  <p>
+                    <strong>Level:</strong> {problem.problemLevel}
+                  </p>
+                  <div className={styles.description}>
+                    <h4>Description</h4>
+                    <p>{problem.problemDescription}</p>
+                  </div>
+                  <div className={styles.description}>
+                    <h4>Input</h4>
+                    <p>{problem.inputDescription}</p>
+                  </div>
+                  <div className={styles.description}>
+                    <h4>Output</h4>
+                    <p>{problem.outputDescription}</p>
+                  </div>
+                  {problem.hint && (
+                    <div className={styles.description}>
+                      <h4>Hint</h4>
+                      <p>{problem.hint}</p>
+                    </div>
+                  )}
+                </div>
+              ))
             ) : (
               <span>게임이 시작되면 문제가 표시됩니다!</span>
             )}
           </div>
           <div className={styles.leftFooter}>
-            <RoomCustomButton onClick={handleRoomLeave}>
+            <RoomCustomButton onClick={room.handleRoomLeave}>
               나가기
             </RoomCustomButton>
           </div>
         </div>
         <div className={styles.center}>
           <div className={styles.centerBody}>
-            {isGameStart ? (
+            {room.isGameStart ? (
               <div className={styles.flexGrow}>
                 <CodeEditor
                   className={styles.flexGrow}
-                  language={searchMyLanguage()}
-                  code={code}
-                  setCode={setCode}
+                  language={searchMyLanguage(room.userId, room.userStatus)}
+                  code={room.code}
+                  setCode={room.setCode}
                 />
-                <RoomSettings roomStatus={roomStatus} />
+                <RoomSettings roomStatus={room.roomStatus} />
               </div>
             ) : (
               <div className={styles.flexGrow}>
                 <UserList
-                  className={styles.flexGrow}
-                  userStatus={userStatus}
-                  handleLanguageChange={handleLanguageChange}
+                  userStatus={room.userStatus}
+                  publishMessage={room.publishMessage}
+                  data={props.data}
                 />
-                <RoomSettings roomStatus={roomStatus} />
+                <RoomSettings roomStatus={room.roomStatus} />
               </div>
             )}
           </div>
           <div className={styles.centerFooter}>
-            {isGameStart ? (
-              <RoomCustomButton onClick={handleSubmit}>
+            {room.isGameStart ? (
+              <RoomCustomButton onClick={room.handleSubmit}>
                 제출하기
               </RoomCustomButton>
             ) : (
               <>
-                {roomStatus.hostId === userId ? (
+                {room.roomStatus.hostId === room.userId ? (
                   <RoomCustomButton
                     // disabled={!isAllUsersReady}
-                    onClick={handleGameStart}
+                    onClick={room.handleGameStart}
                   >
                     게임시작
                   </RoomCustomButton>
                 ) : (
-                  <RoomCustomButton onClick={handleReady}>
+                  <RoomCustomButton onClick={room.handleReady}>
                     준비완료
                   </RoomCustomButton>
                 )}
