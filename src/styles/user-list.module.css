@@ -1,5 +1,5 @@
 .user-list {
-    border: 1px solid black;
+    border: 1px solid white;
     flex: 1;
     display: grid;
     gap: 24px;

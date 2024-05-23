@@ -19,19 +19,49 @@
     display: flex;
     flex-direction: column;
     justify-content: start;
-    height: 97vh;
+    height: 70vh;
 }
 
-.leftBody {
-    border: 1px solid black;
+/* .leftBody {
+    border: 1px solid white;
     flex: 0.7;
     min-width: 400px;
-    min-height: 90vh;
+    min-height: 63vh;
+} */
+
+.leftBody {
+    border: 1px solid white;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    max-width: 400px;
+    overflow-y: scroll;
+}
+
+.problem {
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.description {
+    margin-top: 10px;
+}
+
+.description h4 {
+    margin-bottom: 5px;
+}
+
+.leftFooter {
+    height: 60px; /* 원하는 높이로 설정 */
+    display: flex;
+    justify-content: start;
+    align-items: center;
 }
 
 .center {
     flex: 1;
-    width: 97vh;
+    width: 70vh;
     display: flex;
     flex-direction: column;
   }
@@ -45,15 +75,36 @@
 .centerFooter {
     height: 60px; /* 원하는 높이로 설정 */
     display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.rightSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 70vh;
+}
+
+.rightBody {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+  
+.rightFooter {
+    height: 60px; /* 원하는 높이로 설정 */
+    display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid white;
 }
 
 .flexGrow {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-  }
+}
 
 .roomSettings {
     border: 1px solid black;
