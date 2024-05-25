@@ -1,11 +1,17 @@
-import React from "react";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './pages/main';
+import Login from './pages/login';
+import './styles/global-style.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h4>ㅎㅇ</h4>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

@@ -1,0 +1,38 @@
+.user-container {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 12px;
+    padding: 12px;
+    flex-direction: column;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info h2 {
+    margin-right: 12px;
+}
+
+.record-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.circle-box h4 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 18px;
+}
+
+.record-box {
+    width: 70%;
+    border: 1px solid black;
+    height: 500px;
+    background-color: rgb(26, 23, 23);
+    padding: 12px;
+    overflow-y: auto;
+    min-width: 500px
+}
