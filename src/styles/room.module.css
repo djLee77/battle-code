@@ -20,8 +20,11 @@
     flex-direction: column;
     justify-content: start;
     height: 70vh;
+    height: 70vh;
 }
 
+/* .leftBody {
+    border: 1px solid white;
 /* .leftBody {
     border: 1px solid white;
     flex: 0.7;
@@ -62,16 +65,17 @@
 .center {
     flex: 1;
     width: 70vh;
+    width: 70vh;
     display: flex;
     flex-direction: column;
-  }
+}
 
 .centerBody {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
-  
+
 .centerFooter {
     height: 60px; /* 원하는 높이로 설정 */
     display: flex;
@@ -98,12 +102,14 @@
     justify-content: center;
     align-items: center;
     border: 1px solid white;
+    border: 1px solid white;
 }
 
 .flexGrow {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+}
 }
 
 .roomSettings {

@@ -1,20 +1,22 @@
 import styles from 'styles/user-card.module.css';
-import React from 'react';
-import { IUserStatus } from 'types/room-types';
+import { IRoomStatus, IUserStatus } from 'types/room-types';
+import { handleLanguageChange } from 'handler/room';
 
 interface IProps {
-  data: IUserStatus;
-  handleLanguageChange: (userId: string, value: string) => void;
+  data: IRoomStatus;
+  userStatus: IUserStatus[];
+  userData: IUserStatus;
+  publishMessage: (destination: string, payload: any) => void;
 }
 
-const UserCard = ({ data, handleLanguageChange }: IProps) => {
+const UserCard = (props: IProps) => {
   return (
     <div className={styles.container}>
       <div className={styles[`dot-box`]}>
         <span
           className={styles.dot}
           style={
-            data.isReady
+            props.userData.isReady
               ? { backgroundColor: 'green' }
               : { backgroundColor: 'yellow' }
           }
@@ -25,17 +27,26 @@ const UserCard = ({ data, handleLanguageChange }: IProps) => {
         <div>
           <span className={styles['var-type-color']}>const</span>{' '}
           <span className={styles['var-name-color']}>name</span> ={' '}
-          <span className={styles['var-data-color']}>'{data.userId}'</span>;
+          <span className={styles['var-data-color']}>
+            '{props.userData.userId}'
+          </span>
+          ;
         </div>
         <div>
           <span className={styles['var-type-color']}>const</span>{' '}
           <span className={styles['var-name-color']}>lang</span> ={' '}
-          {data.userId === localStorage.getItem('id') ? (
+          {props.userData.userId === localStorage.getItem('id') ? (
             <select
               className={styles.select}
-              value={data.language}
+              value={props.userData.language}
               onChange={(event) =>
-                handleLanguageChange(data.userId, event.target.value)
+                handleLanguageChange(
+                  props.userData.userId,
+                  event.target.value,
+                  props.userStatus,
+                  props.data.roomStatus.roomId,
+                  props.publishMessage
+                )
               }
             >
               <option value="java">java</option>
@@ -43,7 +54,9 @@ const UserCard = ({ data, handleLanguageChange }: IProps) => {
               <option value="javascript">javascript</option>
             </select>
           ) : (
-            <span className={styles['var-data-color']}>'{data.language}'</span>
+            <span className={styles['var-data-color']}>
+              '{props.userData.language}'
+            </span>
           )}
           ;
         </div>
@@ -51,7 +64,7 @@ const UserCard = ({ data, handleLanguageChange }: IProps) => {
           <span className={styles['var-type-color']}>let</span>{' '}
           <span className={styles['var-name-color']}>isReady</span> ={' '}
           <span className={styles['var-data-color']}>
-            '{data.isReady ? 'true' : 'false'}'
+            '{props.userData.isReady ? 'true' : 'false'}'
           </span>
           ;
         </div>
@@ -59,4 +72,4 @@ const UserCard = ({ data, handleLanguageChange }: IProps) => {
     </div>
   );
 };
-export default React.memo(UserCard);
+export default UserCard;

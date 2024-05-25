@@ -7,17 +7,15 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const CustomButton = ({
-  size = 'small',
-  type = 'button',
-  children,
-  onClick,
-}: ButtonProps) => {
+const CustomButton = (props: ButtonProps) => {
+  // 기본값 할당
+  const size = props.size || 'small';
+  const type = props.type || 'button';
   const buttonClassName = `${styles.btn} ${styles[size]}`;
 
   return (
-    <button type={type} className={buttonClassName} onClick={onClick}>
-      {children}
+    <button type={type} className={buttonClassName} onClick={props.onClick}>
+      {props.children}
     </button>
   );
 };

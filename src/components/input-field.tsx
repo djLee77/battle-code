@@ -1,36 +1,34 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 import styles from 'styles/input-field.module.css';
 
-export default function InputField({
-  label,
-  type,
-  register,
-  defaultValue,
-  error,
-}: {
+interface IProps {
   label: string;
   type: string;
   register: UseFormRegisterReturn;
   defaultValue: any;
   error: any;
-}) {
+}
+
+const InputField = (props: IProps) => {
   return (
     <div className={styles['input-box']}>
       <div className={styles.input}>
-        <label htmlFor={register.name}>{label}</label>
+        <label htmlFor={props.register.name}>{props.label}</label>
         <input
-          id={register.name}
-          {...register}
-          defaultValue={defaultValue}
-          type={type}
+          id={props.register.name}
+          {...props.register}
+          defaultValue={props.defaultValue}
+          type={props.type}
         />
       </div>
       <span
-        style={error ? { display: 'block' } : { display: 'hidden' }}
+        style={props.error ? { display: 'block' } : { display: 'hidden' }}
         className={styles.error}
       >
-        {error?.message}
+        {props.error?.message}
       </span>
     </div>
   );
-}
+};
+
+export default InputField;

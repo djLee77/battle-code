@@ -1,21 +1,24 @@
 import UserCard from './user-card';
 import styles from 'styles/user-list.module.css';
-import { IUserStatus } from 'types/room-types';
+import { IRoomStatus, IUserStatus } from 'types/room-types';
 
 interface IProps {
   className?: string;
   userStatus: IUserStatus[];
-  handleLanguageChange: (userId: string, newLanguage: string) => void;
+  data: IRoomStatus;
+  publishMessage: (destination: string, payload: any) => void;
 }
 
-const UserList = ({ userStatus, handleLanguageChange }: IProps) => {
+const UserList = (props: IProps) => {
   return (
     <div className={styles['user-list']}>
-      {userStatus.map((data) => (
+      {props.userStatus.map((userData) => (
         <UserCard
-          key={data.userId}
-          data={data}
-          handleLanguageChange={handleLanguageChange}
+          key={userData.userId}
+          data={props.data}
+          userData={userData}
+          userStatus={props.userStatus}
+          publishMessage={props.publishMessage}
         />
       ))}
     </div>

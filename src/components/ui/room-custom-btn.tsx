@@ -9,14 +9,16 @@ interface IProps {
   children: string;
 }
 
-const RoomCustomButton = ({ onClick, disabled = false, children }: IProps) => {
+const RoomCustomButton = (props: IProps) => {
+  const disabled = props.disabled || false;
+
   return (
     <button
       className={disabled ? styles['button-disabled'] : styles.button}
-      onClick={onClick}
+      onClick={props.onClick}
       disabled={disabled}
     >
-      {children}
+      {props.children}
     </button>
   );
 };
