@@ -6,6 +6,14 @@ interface IProps {
 }
 
 export default function ProgressBarComponent(props: IProps) {
+  const calculateColor = (completed: number): string => {
+    const r = Math.floor((100 - completed) * 2.55); // 255에서 0으로
+    const g = Math.floor(completed * 2.55); // 0에서 255로
+    return `rgb(${r},${g},0)`; // 빨간색에서 녹색으로
+  };
+
+  const bgColor = calculateColor(props.completed);
+
   return (
     <div>
       <div>
