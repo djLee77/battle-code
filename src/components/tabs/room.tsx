@@ -7,7 +7,7 @@ import { useState } from 'react';
 import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/room-types';
 import CodeEditor from 'components/code-editor';
-import { handleLanguageChange, searchMyLanguage } from '../../handler/room';
+import { searchMyLanguage } from '../../handler/room';
 import DockLayout from 'rc-dock';
 import useRoomWebSocket from 'hooks/useRoomWebSocket';
 import ProgressBarComponent from 'components/progress-bar';
@@ -123,7 +123,7 @@ const Room = (props: IProps) => {
                 <UserList
                   userStatus={room.userStatus}
                   publishMessage={room.publishMessage}
-                  data={props.data}
+                  roomId={props.data.roomStatus.roomId}
                 />
                 <RoomSettings roomStatus={room.roomStatus} />
               </div>
