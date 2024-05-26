@@ -1,17 +1,16 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import CustomButton from '../ui/button';
+import CustomButton from '../ui/CustomButton';
 import styles from '../../styles/create-room.module.css';
 import React, { useState } from 'react';
-import {
-  langData,
-  levelData,
-  limitTImeData,
-} from '../../data/room-setting-data';
+import { langData, levelData, limitTImeData } from '../../data/roomSettingData';
 import { useForm } from 'react-hook-form';
-import InputField from 'components/input-field';
-import SelectField from 'components/select-field';
-import useWebSocketStore from 'store/websocket-store';
+import InputField from 'components/InputField';
+import SelectField from 'components/SelectField';
+import api from 'utils/axios';
+import { addTab } from 'utils/tabs';
+import Room from 'components/tabs/Room';
+import useWebSocketStore from 'store/useWebSocketStore';
 
 // 모달 창 스타일
 const style = {
@@ -29,68 +28,76 @@ const style = {
 };
 
 type FormValues = {
-  hostId: string;
   title: string;
-  password: string;
-  maxUserCount: number;
-  problemLevel: string;
-  language: string;
-  maxSubmitCount: number;
+  pw: string;
+  memberCount: number;
+  level: string;
+  lang: string;
+  submissionCount: number;
   limitTime: number;
 };
 
-interface Level {
-  [key: string]: number;
+interface IProps {
+  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-const ModifyRoomModal = ({ data }: any) => {
+const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: {
-      hostId: data.hostId,
-      title: data.title,
-      password: data.password,
-      maxUserCount: data.maxUserCount,
-      problemLevel: data.problemLevel,
-      maxSubmitCount: data.maxSubmitCount,
-      limitTime: data.limitTime,
-      language: data.language,
-    },
-  });
+  } = useForm<FormValues>();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { publishMessage } = useWebSocketStore();
+  const { roomSubscribe } = useWebSocketStore();
 
   const levelSelectList = levelData;
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
-  const levelObj: Level = {
-    BRONZE1: 1,
-    BRONZE2: 2,
-    BRONZE3: 3,
-    BRONZE4: 4,
-    BRONZE5: 5,
-    SILVER1: 6,
-    SILVER2: 7,
-    SILVER3: 8,
-    SILVER4: 9,
-    SILVER5: 10,
-  };
-  // 방 수정 함수
-  const handleModifyRoom = async (inputData: any) => {
-    inputData.problemLevel = levelObj[inputData.problemLevel];
-    publishMessage(`/app/room/${data.roomId}/update/room-status`, inputData);
-    handleClose();
+
+  // 방 생성 함수
+  const handleCreateRoom = async (data: FormValues) => {
+    try {
+      console.log(roomSubscribe);
+      // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
+      if (roomSubscribe.subscription) {
+        console.log(roomSubscribe.subscription);
+        roomSubscribe.subscription.unsubscribe();
+      }
+
+      const response = await api.post(`v1/gameRoom`, {
+        hostId: localStorage.getItem('id'),
+        title: data.title,
+        password: data.pw || null,
+        language: data.lang,
+        problemLevel: Number(data.level),
+        maxUserCount: Number(data.memberCount),
+        maxSubmitCount: Number(data.submissionCount),
+        limitTime: Number(data.limitTime),
+      });
+      console.log(response);
+      const roomId = response.data.data.roomStatus.roomId;
+      // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+      addTab(
+        `${roomId}번방`,
+        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+        dockLayoutRef
+      );
+      handleClose();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
+    }
   };
 
   return (
     <div>
       <CustomButton type="button" onClick={handleOpen}>
-        방 설정
+        방 만들기
       </CustomButton>
       <Modal
         open={open}
@@ -99,7 +106,7 @@ const ModifyRoomModal = ({ data }: any) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit(handleModifyRoom)}>
+          <form onSubmit={handleSubmit(handleCreateRoom)}>
             <div className={styles.container}>
               <InputField
                 label="방 제목"
@@ -117,50 +124,50 @@ const ModifyRoomModal = ({ data }: any) => {
               <InputField
                 label="비밀번호"
                 type="password"
-                register={register('password')}
+                register={register('pw')}
                 defaultValue=""
-                error={errors.password}
+                error={errors.pw}
               />
 
               <InputField
                 label="인원 수"
                 type="number"
-                register={register('maxUserCount', {
+                register={register('memberCount', {
                   required: '인원수는 필수 입력 항목입니다.',
                   min: { value: 2, message: '인원수는 최소 2명입니다.' },
                   max: { value: 4, message: '인원수는 최대 4명입니다.' },
                 })}
                 defaultValue={2}
-                error={errors.maxUserCount}
+                error={errors.memberCount}
               />
 
               <SelectField
                 label="난이도"
-                register={register('problemLevel')}
+                register={register('level')}
                 options={levelSelectList}
               />
               <SelectField
                 label="언어 설정"
-                register={register('language')}
+                register={register('lang')}
                 options={langSelectList}
               />
 
               <InputField
                 label="제출 횟수"
                 type="number"
-                register={register('maxSubmitCount', {
+                register={register('submissionCount', {
                   required: '제출 횟수는 필수 입력 항목입니다.',
                   min: {
                     value: 1,
                     message: '제출 횟수는 최소 1 이어야 합니다.',
                   },
                   max: {
-                    value: 5,
-                    message: '제출 횟수는 최대 5 이어야 합니다.',
+                    value: 10,
+                    message: '제출 횟수는 최대 10 이어야 합니다.',
                   },
                 })}
                 defaultValue={5}
-                error={errors.maxSubmitCount}
+                error={errors.submissionCount}
               />
               <SelectField
                 label="제한 시간"
@@ -169,7 +176,7 @@ const ModifyRoomModal = ({ data }: any) => {
               />
             </div>
             <div className={styles[`btn-group`]}>
-              <CustomButton type="submit">수정</CustomButton>
+              <CustomButton type="submit">생성</CustomButton>
               <CustomButton size="small" type="button" onClick={handleClose}>
                 취소
               </CustomButton>
@@ -181,4 +188,4 @@ const ModifyRoomModal = ({ data }: any) => {
   );
 };
 
-export default ModifyRoomModal;
+export default CreateRoomModal;

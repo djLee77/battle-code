@@ -2,10 +2,10 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import styles from 'styles/list-card.module.css';
 import { IRoomList } from 'types';
 import { addTab } from 'utils/tabs';
-import Room from '../tabs/room';
+import Room from '../tabs/Room';
 import React from 'react';
 import api from 'utils/axios';
-import useWebSocketStore from 'store/websocket-store';
+import useWebSocketStore from 'store/useWebSocketStore';
 
 interface ListCardProps {
   room: IRoomList;

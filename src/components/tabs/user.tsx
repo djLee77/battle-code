@@ -1,7 +1,7 @@
-import CircleProgress from 'components/user/circle';
-import RecordCard from 'components/user/record-card';
-import CustomButton from 'components/ui/button';
-import { userData } from 'data/user-data';
+import CircleProgress from 'components/user/CircleProgress';
+import RecordCard from 'components/user/RecordCard';
+import CustomButton from 'components/ui/CustomButton';
+import { userData } from 'data/userData';
 import { useEffect, useMemo, useState } from 'react';
 import styles from 'styles/user.module.css';
 

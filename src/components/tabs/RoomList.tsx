@@ -1,11 +1,11 @@
-import ListCard from 'components/room-list/list-card';
+import ListCard from 'components/room-list/ListCard';
 import { IRoomList } from 'types';
 import styles from 'styles/room-list.module.css';
-import RoomEntry from 'components/room-list/room-entry';
-import CustomButton from 'components/ui/button';
-import CreateRoomModal from 'components/room-list/create-room';
+import RoomEntry from 'components/room-list/RoomEntry';
+import CustomButton from 'components/ui/CustomButton';
+import CreateRoomModal from 'components/room-list/CreateRoomModal';
 import api from 'utils/axios';
-import { useQuery } from 'react-query';
+// import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
 import DockLayout from 'rc-dock';
 

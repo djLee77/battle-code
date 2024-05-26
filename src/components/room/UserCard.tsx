@@ -1,5 +1,5 @@
 import styles from 'styles/user-card.module.css';
-import { IRoomStatus, IUserStatus } from 'types/room-types';
+import { IUserStatus } from 'types/roomType';
 import { handleLanguageChange } from 'handler/room';
 
 interface IProps {

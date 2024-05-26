@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import useWebSocketStore from 'store/websocket-store';
-import { IRoomStatus } from 'types/room-types';
+import useWebSocketStore from 'store/useWebSocketStore';
+import { IRoomStatus } from 'types/roomType';
 import { removeTab } from 'utils/tabs';
 import {
   handleRoomLeave,
@@ -30,7 +30,7 @@ interface IProblem {
   hint: string;
 }
 
-const useRoomWebSocket = (props: IUseRoomWebSocket) => {
+const useRoom = (props: IUseRoomWebSocket) => {
   const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
   const [userStatus, setUserStatus] = useState(props.data.userStatus); // 유저들 상태
   const [code, setCode] = useState<string>(
@@ -210,4 +210,4 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
   };
 };
 
-export default useRoomWebSocket;
+export default useRoom;

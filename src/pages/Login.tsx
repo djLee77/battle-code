@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import SignupModal from '../components/signup-modal';
+import SignupModal from '../components/SignupModal';
 import {
   setRefreshToken,
   removeRefreshToken,
