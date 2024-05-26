@@ -31,15 +31,15 @@ interface IProblem {
 }
 
 const useRoomWebSocket = (props: IUseRoomWebSocket) => {
-  const [roomStatus, setRoomStatus] = useState(props.data.roomStatus);
-  const [userStatus, setUserStatus] = useState(props.data.userStatus);
+  const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
+  const [userStatus, setUserStatus] = useState(props.data.userStatus); // 유저들 상태
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
-  );
-  const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false);
-  const [isGameStart, setIsGameStart] = useState<boolean>(false);
-  const [testResults, setTestResults] = useState<type[]>([]);
-  const [problems, setProblems] = useState<IProblem[]>([]);
+  ); // 작성 코드
+  const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
+  const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
+  const [testResults, setTestResults] = useState<type[]>([]); // 테스트케이스 결과
+  const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
 
   const {
     webSocketClient,
