@@ -11,6 +11,7 @@ import { searchMyLanguage } from '../../handler/room';
 import DockLayout from 'rc-dock';
 import useRoom from 'hooks/useRoom';
 import ProgressBarComponent from 'components/ProgressBar';
+import GameResultModal from 'components/room/GameResultModal';
 
 interface IProps {
   data: IRoomStatus;
@@ -131,9 +132,14 @@ const Room = (props: IProps) => {
           </div>
           <div className={styles.centerFooter}>
             {room.isGameStart ? (
-              <RoomCustomButton onClick={room.handleSubmit}>
-                제출하기
-              </RoomCustomButton>
+              <>
+                <RoomCustomButton onClick={room.handleSubmit}>
+                  제출하기
+                </RoomCustomButton>
+                <RoomCustomButton onClick={room.handleEarlyEnd}>
+                  난 끝났어요!
+                </RoomCustomButton>
+              </>
             ) : (
               <>
                 {room.roomStatus.hostId === room.userId ? (
@@ -154,6 +160,13 @@ const Room = (props: IProps) => {
         </div>
         <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
       </div>
+      <GameResultModal
+        winner={room.winner}
+        winnerCode={room.winnerCode}
+        open={room.isGameEnd}
+        setOpen={room.setIsGameEnd}
+        setIsGameStart={room.setIsGameStart}
+      />
     </div>
   );
 };
