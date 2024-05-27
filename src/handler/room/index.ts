@@ -104,6 +104,12 @@ export const searchMyLanguage = (
   return player ? player.language : '';
 };
 
+export const handleEarlyEnd = async (roomId: number) => {
+  await api.post(`v1/game/end`, {
+    roomId: roomId,
+  });
+};
+
 export const handleSubmit = (
   setTestResults: any,
   userId: string | null,
@@ -122,7 +128,7 @@ export const handleSubmit = (
         : result
     )
   );
-  api.post(`$v1/judge`, {
+  api.post(`v1/judge`, {
     problemId: problems[0].id,
     roomId: roomId,
     userId: userId,
