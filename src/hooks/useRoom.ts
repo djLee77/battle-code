@@ -7,6 +7,7 @@ import {
   handleReady,
   handleGameStart,
   handleSubmit,
+  handleEarlyEnd,
 } from 'handler/room';
 
 interface IUseRoomWebSocket {
@@ -17,6 +18,7 @@ interface IUseRoomWebSocket {
 interface type {
   id: string;
   percent: number;
+  isEarlyEnd: boolean;
 }
 
 interface IProblem {
@@ -31,15 +33,23 @@ interface IProblem {
 }
 
 const useRoom = (props: IUseRoomWebSocket) => {
+  // room.tsx
+  const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
   const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
   const [userStatus, setUserStatus] = useState(props.data.userStatus); // 유저들 상태
+
+  // waitingRoom.tsx
+  const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
+
+  // gamingRoom.tsx
+  const [inGameUserStatus, setInGameUserStatus] = useState<type[]>([]); // 게임 진행중일때 유저 상태
+  const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   ); // 작성 코드
-  const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
-  const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
-  const [testResults, setTestResults] = useState<type[]>([]); // 테스트케이스 결과
-  const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
+  const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
+  const [winner, setWinner] = useState<string>('');
+  const [winnerCode, setWinnerCode] = useState<string>('');
 
   const {
     webSocketClient,
@@ -75,9 +85,13 @@ const useRoom = (props: IUseRoomWebSocket) => {
           receivedMessage.enterUserStatus,
         ]);
 
-        setTestResults((prevResults) => [
+        setInGameUserStatus((prevResults) => [
           ...prevResults,
-          { id: receivedMessage.enterUserStatus.userId, percent: 0 },
+          {
+            id: receivedMessage.enterUserStatus.userId,
+            percent: 0,
+            isEarlyEnd: false,
+          },
         ]);
       }
 
@@ -111,16 +125,24 @@ const useRoom = (props: IUseRoomWebSocket) => {
       //테스트 케이스 통과율
       if (receivedMessage.judgeResult) {
         const { userId, currentTest, totalTests } = receivedMessage.judgeResult;
-        setTestResults((prevResults) =>
+        setInGameUserStatus((prevResults) =>
           prevResults.map((result) =>
             result.id === userId
               ? {
                   id: userId,
                   percent: (currentTest / totalTests) * 100,
+                  isEarlyEnd: false,
                 }
               : result
           )
         );
+      }
+
+      // 게임 결과
+      if (receivedMessage.gameEnd) {
+        setWinner(receivedMessage.gameEnd.userId);
+        setWinnerCode(receivedMessage.gameEnd.code);
+        setIsGameEnd(true);
       }
     },
     [userId, props.data.roomStatus.roomId, props.dockLayoutRef]
@@ -154,7 +176,7 @@ const useRoom = (props: IUseRoomWebSocket) => {
   useEffect(() => {
     props.data.userStatus.map((value) => {
       const obj = { id: value.userId, percent: 0 };
-      setTestResults((prev: any) => [...prev, obj]);
+      setInGameUserStatus((prev: any) => [...prev, obj]);
     });
   }, []);
 
@@ -164,13 +186,18 @@ const useRoom = (props: IUseRoomWebSocket) => {
     userStatus,
     isAllUsersReady,
     isGameStart,
-    testResults,
+    testResults: inGameUserStatus,
     code,
     setCode,
     problems,
     setIsGameStart,
     publishMessage,
     roomSubscribe,
+    isGameEnd,
+    setIsGameEnd,
+    winner,
+    setWinner,
+    winnerCode,
     handleRoomLeave: useCallback(
       () =>
         handleRoomLeave(
@@ -198,14 +225,26 @@ const useRoom = (props: IUseRoomWebSocket) => {
     handleSubmit: useCallback(
       () =>
         handleSubmit(
-          setTestResults,
+          setInGameUserStatus,
           userId,
           problems,
           roomStatus.roomId,
           userStatus,
           code
         ),
-      [setTestResults, userId, problems, roomStatus.roomId, userStatus, code]
+      [
+        setInGameUserStatus,
+        userId,
+        problems,
+        roomStatus.roomId,
+        userStatus,
+        code,
+      ]
+    ),
+
+    handleEarlyEnd: useCallback(
+      () => handleEarlyEnd(roomStatus.roomId),
+      [roomStatus.roomId]
     ),
   };
 };
