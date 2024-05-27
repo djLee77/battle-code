@@ -1,5 +1,5 @@
 import styles from 'styles/record-card.module.css';
-import CustomButton from 'components/ui/Button';
+import CustomButton from 'components/ui/CustomButton';
 
 interface RecordProps {
   record: {
