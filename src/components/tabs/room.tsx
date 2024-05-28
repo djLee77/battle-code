@@ -28,8 +28,6 @@ const Room = (props: IProps) => {
     <div>
       {room.isGameStart ? (
       <div className={styles.titleBox}>
-        {room.isGameStart ? (
-          <div style={{ display: 'flex', width: '100%' }}>
             <h2 className={styles.title}>{room.roomStatus.title}</h2>
           <div className={styles.boards}>
             {room.testResults.map((item) => (
