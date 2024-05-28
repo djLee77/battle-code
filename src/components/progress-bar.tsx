@@ -9,19 +9,20 @@ interface IProps {
 }
 
 const shake_success = keyframes`
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(-1px, -1px); }
-  50% { transform: translate(1px, 1px); }
-  75% { transform: translate(-1px, 1px); }
-  100% { transform: translate(0, 0); }
-`;
-
-const shake_fail = keyframes`
+  
   0% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   50% { transform: translateX(5px); }
   75% { transform: translateX(-5px); }
   100% { transform: translateX(0); }
+`;
+
+const shake_fail = keyframes`
+0% { transform: translate(0, 0); }
+25% { transform: translate(-1px, -1px); }
+50% { transform: translate(1px, 1px); }
+75% { transform: translate(-1px, 1px); }
+100% { transform: translate(0, 0); }
 `;
 
 // styled-component로 ProgressBarContainer 정의
