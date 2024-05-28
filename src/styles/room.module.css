@@ -1,45 +1,91 @@
-.titleBox {
-    display: flex;
-    align-items: center;
-}
-
-.title {
-    font-size: 18px;
-    padding: 10px;
-}
-
 .container {
     display: flex;
     justify-content: center;
+    align-items: stretch;
     padding: 10px;
-    grid-gap: 8px;
+    gap: 8px;
+}
+
+.titleBox {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.boards{
+    display: flex;
+    margin-right: 10px;
+}
+
+.score-board {
+    margin-right: 5px;
+    background-color: #3c3c3c;
+    margin-top: 10px;
+    padding : 0px 10px 5px 10px;
+    border-radius: 10px;
+    height: 50px;
+}
+
+.percent-box {
+    display: flex;
+}
+
+.title {
+    font-size: 30px;
+    padding: 10px;
+}
+
+.leftSide,
+.center,
+.rightSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 70vh;
 }
 
 .leftSide {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    height: 70vh;
-    height: 70vh;
+    flex: 1; /* 너비를 자동으로 조정 */
 }
 
-/* .leftBody {
-    border: 1px solid white;
-/* .leftBody {
-    border: 1px solid white;
-    flex: 0.7;
-    min-width: 400px;
-    min-height: 63vh;
-} */
+.center {
+    flex: 2; /* 너비를 자동으로 조정 */
+}
 
-.leftBody {
-    border: 1px solid white;
+.rightSide {
+    width: 250px; /* 채팅창 역할을 할 수 있을 정도로 넓이 설정 */
+}
+
+.leftBody,
+.centerBody,
+.rightBody {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    min-width: 400px;
-    max-width: 400px;
-    overflow-y: scroll;
+    border: 2px solid #3c3c3c;
+    overflow-y: auto;
+}
+
+.leftFooter,
+.centerFooter,
+.rightFooter {
+    height: 60px;
+    display: flex;
+    align-items: end;
+    margin-top: 10px;
+    border: 2px solid #3c3c3c;
+}
+
+.leftFooter {
+    justify-content: start;
+}
+
+.centerFooter {
+    justify-content: end;
+}
+
+.rightFooter {
+    justify-content: center;
 }
 
 .problem {
@@ -53,56 +99,6 @@
 
 .description h4 {
     margin-bottom: 5px;
-}
-
-.leftFooter {
-    height: 60px; /* 원하는 높이로 설정 */
-    display: flex;
-    justify-content: start;
-    align-items: center;
-}
-
-.center {
-    flex: 1;
-    width: 70vh;
-    width: 70vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.centerBody {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.centerFooter {
-    height: 60px; /* 원하는 높이로 설정 */
-    display: flex;
-    justify-content: end;
-    align-items: center;
-}
-
-.rightSide {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    height: 70vh;
-}
-
-.rightBody {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-  
-.rightFooter {
-    height: 60px; /* 원하는 높이로 설정 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid white;
-    border: 1px solid white;
 }
 
 .flexGrow {
