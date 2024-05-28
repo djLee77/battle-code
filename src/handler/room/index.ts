@@ -122,7 +122,7 @@ export const handleSubmit = (
         : result
     )
   );
-  api.post(`$v1/judge`, {
+  api.post(`v1/judge`, {
     problemId: problems[0].id,
     roomId: roomId,
     userId: userId,

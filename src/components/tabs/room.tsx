@@ -27,15 +27,15 @@ const Room = (props: IProps) => {
   return (
     <div>
       {room.isGameStart ? (
-      <div className={styles.titleBox}>
-            <h2 className={styles.title}>{room.roomStatus.title}</h2>
+        <div className={styles.titleBox}>
+          <h2 className={styles.title}>{room.roomStatus.title}</h2>
           <div className={styles.boards}>
             {room.testResults.map((item) => (
               <div key={item.id} className={styles['score-board']}>
                 <div>{item.id}</div>
                 <div className={styles['percent-box']}>
                   <div style={{ paddingTop: '4px' }}>
-                  <ProgressBarComponent
+                    <ProgressBarComponent
                       completed={item.percent}
                       roundedValue={Math.round(item.percent)}
                       result={item.result}
@@ -55,15 +55,15 @@ const Room = (props: IProps) => {
               </div>
             ))}
           </div>
-          </div>
-        ) : (
-          <>
+        </div>
+      ) : (
+        <>
           <h1 className={styles.title}>{room.roomStatus.title}</h1>
-            {room.roomStatus.hostId === room.userId && (
-              <ModifyRoomModal data={props.data.roomStatus} />
-            )}
-          </>
-        )}
+          {room.roomStatus.hostId === room.userId && (
+            <ModifyRoomModal data={props.data.roomStatus} />
+          )}
+        </>
+      )}
 
       <div
         style={
