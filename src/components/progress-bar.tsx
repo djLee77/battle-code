@@ -57,9 +57,8 @@ export default function ProgressBarComponent(props: IProps) {
           height="15px"
           width="150px"
           borderRadius="10px"
-          transitionDuration="0.3s"
-          customLabel={`${props.roundedValue}%`}
-          isLabelVisible={true}
+          transitionDuration="0.25s"
+          isLabelVisible={false}
         />
       </ProgressBarContainer>
     </div>
