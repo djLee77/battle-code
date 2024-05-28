@@ -17,6 +17,7 @@ interface IUseRoomWebSocket {
 interface type {
   id: string;
   percent: number;
+  result: string;
 }
 
 interface IProblem {
@@ -77,7 +78,11 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
 
         setTestResults((prevResults) => [
           ...prevResults,
-          { id: receivedMessage.enterUserStatus.userId, percent: 0 },
+          {
+            id: receivedMessage.enterUserStatus.userId,
+            percent: 0,
+            result: 'PASS',
+          },
         ]);
       }
 
@@ -110,15 +115,17 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
 
       //테스트 케이스 통과율
       if (receivedMessage.judgeResult) {
-        const { userId, currentTest, totalTests } = receivedMessage.judgeResult;
+        const { userId, currentTest, totalTests, result } =
+          receivedMessage.judgeResult;
         setTestResults((prevResults) =>
-          prevResults.map((result) =>
-            result.id === userId
+          prevResults.map((item) =>
+            item.id === userId
               ? {
                   id: userId,
                   percent: (currentTest / totalTests) * 100,
+                  result: result,
                 }
-              : result
+              : item
           )
         );
       }
@@ -153,7 +160,7 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
 
   useEffect(() => {
     props.data.userStatus.map((value) => {
-      const obj = { id: value.userId, percent: 0 };
+      const obj = { id: value.userId, percent: 0, result: 'PASS' };
       setTestResults((prev: any) => [...prev, obj]);
     });
   }, []);
