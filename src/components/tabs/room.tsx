@@ -26,14 +26,17 @@ const Room = (props: IProps) => {
 
   return (
     <div>
+      {room.isGameStart ? (
       <div className={styles.titleBox}>
         {room.isGameStart ? (
           <div style={{ display: 'flex', width: '100%' }}>
             <h2 className={styles.title}>{room.roomStatus.title}</h2>
-            {room.testResults.map((result) => (
-              <div key={result.id}>
-                {result.id}
-                <div>
+          <div className={styles.boards}>
+            {room.testResults.map((item) => (
+              <div key={item.id} className={styles['score-board']}>
+                <div>{item.id}</div>
+                <div className={styles['percent-box']}>
+                  <div style={{ paddingTop: '4px' }}>
                   <ProgressBarComponent
                     completed={result.percent}
                     roundedValue={Math.round(result.percent)}
@@ -41,6 +44,7 @@ const Room = (props: IProps) => {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         ) : (
           <>
@@ -50,7 +54,7 @@ const Room = (props: IProps) => {
             )}
           </>
         )}
-      </div>
+
       <div
         style={
           !chatIsHide
@@ -116,7 +120,6 @@ const Room = (props: IProps) => {
                   code={room.code}
                   setCode={room.setCode}
                 />
-                <RoomSettings roomStatus={room.roomStatus} />
               </div>
             ) : (
               <div className={styles.flexGrow}>
