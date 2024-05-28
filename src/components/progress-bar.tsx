@@ -5,6 +5,7 @@ import ProgressBar from '@ramonak/react-progress-bar';
 interface IProps {
   completed: number;
   roundedValue: number;
+  result: string;
 }
 
 const shake_success = keyframes`
@@ -24,32 +25,31 @@ const shake_fail = keyframes`
 `;
 
 // styled-component로 ProgressBarContainer 정의
-const ProgressBarContainer = styled.div<{ completed: number }>`
-  ${({ completed }) =>
+const ProgressBarContainer = styled.div<{ result: string; completed: Number }>`
+  ${({ result, completed }) =>
+    result === 'PASS' &&
     completed === 100 &&
     css`
       animation: ${shake_success} 0.5s ease-in-out;
     `}
 
-  ${({ completed }) =>
-    completed === 0 &&
+  ${({ result }) =>
+    result === 'FAIL' &&
     css`
       animation: ${shake_fail} 0.5s ease-in;
     `}
 `;
 
 export default function ProgressBarComponent(props: IProps) {
-  const calculateColor = (completed: number): string => {
-    const r = Math.floor((100 - completed) * 2.55); // 255에서 0으로
-    const g = Math.floor(completed * 2.55); // 0에서 255로
-    return `rgb(${r},${g},0)`; // 빨간색에서 녹색으로
+  const calculateColor = (result: string): string => {
+    return result === 'FAIL' ? `rgb(255,0,0)` : `rgb(0,215,0)`;
   };
 
-  const bgColor = calculateColor(props.completed);
+  const bgColor = calculateColor(props.result);
 
   return (
     <div>
-      <ProgressBarContainer completed={props.completed}>
+      <ProgressBarContainer result={props.result} completed={props.completed}>
         <ProgressBar
           completed={props.completed}
           bgColor={bgColor}
