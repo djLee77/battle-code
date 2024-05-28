@@ -38,9 +38,21 @@ const Room = (props: IProps) => {
                 <div className={styles['percent-box']}>
                   <div style={{ paddingTop: '4px' }}>
                   <ProgressBarComponent
-                    completed={result.percent}
-                    roundedValue={Math.round(result.percent)}
-                  />
+                      completed={item.percent}
+                      roundedValue={Math.round(item.percent)}
+                      result={item.result}
+                    />
+                  </div>
+                  <div style={{ marginLeft: '5px' }}>
+                    {Math.round(item.percent)}%
+                    {item.percent === 0
+                      ? ''
+                      : item.result === 'FAIL'
+                      ? '틀렸습니다'
+                      : item.result === 'PASS' && item.percent === 100
+                      ? '맞았습니다'
+                      : '채점중'}
+                  </div>
                 </div>
               </div>
             ))}
