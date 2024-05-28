@@ -60,7 +60,7 @@ const Room = (props: IProps) => {
           </div>
         ) : (
           <>
-            <h2 className={styles.title}>{room.roomStatus.title}</h2>
+          <h1 className={styles.title}>{room.roomStatus.title}</h1>
             {room.roomStatus.hostId === room.userId && (
               <ModifyRoomModal data={props.data.roomStatus} />
             )}
