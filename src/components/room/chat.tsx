@@ -12,10 +12,15 @@ const Chat = ({ chatIsHide, setChatIsHide }: IProps) => {
       className={styles[`chat`]}
       style={chatIsHide ? { display: 'none' } : { display: 'block' }}
     >
-      <RoomCustomButton onClick={() => setChatIsHide(!chatIsHide)}>
-        {chatIsHide ? '채팅 On' : '채팅 Off'}
-      </RoomCustomButton>
-      채팅창
+      <p style={{ cursor: 'pointer' }}>
+        <span
+          onClick={() => setChatIsHide(true)}
+          role="img"
+          aria-label="arrow-open"
+        >
+          ▶
+        </span>
+      </p>
     </div>
   );
 };

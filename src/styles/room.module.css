@@ -56,6 +56,10 @@
     width: 250px; /* 채팅창 역할을 할 수 있을 정도로 넓이 설정 */
 }
 
+.hideRight {
+    width: 20px; 
+}
+
 .leftBody,
 .centerBody,
 .rightBody {

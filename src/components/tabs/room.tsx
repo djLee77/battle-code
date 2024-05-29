@@ -64,18 +64,6 @@ const Room = (props: IProps) => {
           )}
         </>
       )}
-
-      <div
-        style={
-          !chatIsHide
-            ? { display: 'none' }
-            : { display: 'block', position: 'absolute', right: 10, top: 10 }
-        }
-      >
-        <RoomCustomButton onClick={() => setChatIsHide(!chatIsHide)}>
-          채팅 On
-        </RoomCustomButton>
-      </div>
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
@@ -165,16 +153,27 @@ const Room = (props: IProps) => {
             )}
           </div>
         </div>
-        <div className={styles.rightSide}>
-          <div className={styles.rightBody}>
-            <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
-          </div>
-          <div
-            style={chatIsHide ? { display: 'none' } : { display: 'block' }}
-            className={styles.rightFooter}
-          >
-            입력창
-          </div>
+        <div>
+          {!chatIsHide ? (
+            <div className={styles.rightSide}>
+              <div className={styles.rightBody}>
+                <Chat chatIsHide={chatIsHide} setChatIsHide={setChatIsHide} />
+              </div>
+              <div className={styles.rightFooter}>입력창</div>
+            </div>
+          ) : (
+            <div className={styles.hideRight}>
+              <p style={{ cursor: 'pointer' }}>
+                <span
+                  onClick={() => setChatIsHide(false)}
+                  role="img"
+                  aria-label="arrow-open"
+                >
+                  ◀
+                </span>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
