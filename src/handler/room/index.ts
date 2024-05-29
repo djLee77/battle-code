@@ -82,9 +82,10 @@ export const handleGameStart = async (
   setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<void> => {
   try {
-    const response: AxiosResponse = await api.post(`v1/game/start`, {
-      roomId: roomId,
-    });
+    const response: AxiosResponse = await api.post(
+      `v1/game/${roomId}/start`,
+      {}
+    );
     setIsGameStart(true);
     console.log(response);
   } catch (error: unknown) {
