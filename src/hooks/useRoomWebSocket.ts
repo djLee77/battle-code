@@ -7,6 +7,7 @@ import {
   handleReady,
   handleGameStart,
   handleSubmit,
+  handleGameEnd,
 } from 'handler/room';
 
 interface IUseRoomWebSocket {
@@ -41,6 +42,7 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
   const [testResults, setTestResults] = useState<type[]>([]);
   const [problems, setProblems] = useState<IProblem[]>([]);
+  const [timeLeft, setTimeLeft] = useState(15);
 
   const {
     webSocketClient,
@@ -108,9 +110,20 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
         setRoomStatus(receivedMessage.roomStatus);
       }
 
+      // 게임 시작
       if (receivedMessage.gameStartInfo) {
         setProblems(receivedMessage.gameStartInfo);
         setIsGameStart(true);
+        const timerId = setInterval(() => {
+          setTimeLeft((prevTime) => {
+            if (prevTime <= 1) {
+              clearInterval(timerId);
+              handleGameEnd(props.data.roomStatus.roomId);
+              return 0;
+            }
+            return prevTime - 1;
+          });
+        }, 1000);
       }
 
       //테스트 케이스 통과율
@@ -178,6 +191,7 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
     setIsGameStart,
     publishMessage,
     roomSubscribe,
+    timeLeft,
     handleRoomLeave: useCallback(
       () =>
         handleRoomLeave(
