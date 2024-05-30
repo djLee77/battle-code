@@ -137,7 +137,7 @@ const Room = (props: IProps) => {
                   제출하기
                 </RoomCustomButton>
                 <RoomCustomButton onClick={room.handleEarlyEnd}>
-                  난 끝났어요!
+                  항복
                 </RoomCustomButton>
               </>
             ) : (
