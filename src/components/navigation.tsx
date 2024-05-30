@@ -3,8 +3,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { IconButton } from '@mui/material';
 import styles from '../styles/navigation.module.css';
 import { addTab } from '../utils/tabs';
-import User from './tabs/user';
-import useWebSocketStore from 'store/websocket-store';
+import User from './tabs/User';
+import useWebSocketStore from 'store/useWebSocketStore';
 import { useNavigate } from 'react-router-dom';
 import { removeAccessToken, removeRefreshToken } from 'utils/cookie';
 

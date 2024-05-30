@@ -1,11 +1,11 @@
-import UserCard from './user-card';
+import UserCard from './UserCard';
 import styles from 'styles/user-list.module.css';
-import { IRoomStatus, IUserStatus } from 'types/room-types';
+import { IUserStatus } from 'types/roomType';
 
 interface IProps {
   className?: string;
   userStatus: IUserStatus[];
-  data: IRoomStatus;
+  roomId: number;
   publishMessage: (destination: string, payload: any) => void;
 }
 
@@ -15,7 +15,7 @@ const UserList = (props: IProps) => {
       {props.userStatus.map((userData) => (
         <UserCard
           key={userData.userId}
-          data={props.data}
+          roomId={props.roomId}
           userData={userData}
           userStatus={props.userStatus}
           publishMessage={props.publishMessage}

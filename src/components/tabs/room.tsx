@@ -1,16 +1,17 @@
-import Chat from 'components/room/chat';
-import ModifyRoomModal from 'components/room/modify-room';
-import RoomSettings from 'components/room/room-settings';
-import UserList from 'components/room/user-list';
-import RoomCustomButton from 'components/ui/room-custom-btn';
+import Chat from 'components/room/Chat';
+import ModifyRoomModal from 'components/room/ModifyRoomModal';
+import RoomSettings from 'components/room/RoomSettings';
+import UserList from 'components/room/UserList';
+import RoomCustomButton from 'components/ui/RoomCustomButton';
 import { useState } from 'react';
 import styles from 'styles/room.module.css';
-import { IRoomStatus } from 'types/room-types';
-import CodeEditor from 'components/code-editor';
-import { handleLanguageChange, searchMyLanguage } from '../../handler/room';
+import { IRoomStatus } from 'types/roomType';
+import CodeEditor from 'components/CodeEditor';
+import { searchMyLanguage } from '../../handler/room';
 import DockLayout from 'rc-dock';
-import useRoomWebSocket from 'hooks/useRoomWebSocket';
-import ProgressBarComponent from 'components/progress-bar';
+import useRoom from 'hooks/useRoom';
+import ProgressBarComponent from 'components/ProgressBar';
+import GameResultModal from 'components/room/GameResultModal';
 
 interface IProps {
   data: IRoomStatus;
@@ -19,7 +20,7 @@ interface IProps {
 const Room = (props: IProps) => {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false);
 
-  const room = useRoomWebSocket({
+  const room = useRoom({
     data: props.data,
     dockLayoutRef: props.dockLayoutRef,
   });
@@ -128,7 +129,7 @@ const Room = (props: IProps) => {
                 <UserList
                   userStatus={room.userStatus}
                   publishMessage={room.publishMessage}
-                  data={props.data}
+                  roomId={props.data.roomStatus.roomId}
                 />
                 <RoomSettings roomStatus={room.roomStatus} />
               </div>
@@ -136,9 +137,14 @@ const Room = (props: IProps) => {
           </div>
           <div className={styles.centerFooter}>
             {room.isGameStart ? (
-              <RoomCustomButton onClick={room.handleSubmit}>
-                제출하기
-              </RoomCustomButton>
+              <>
+                <RoomCustomButton onClick={room.handleSubmit}>
+                  제출하기
+                </RoomCustomButton>
+                <RoomCustomButton onClick={room.handleEarlyEnd}>
+                  항복
+                </RoomCustomButton>
+              </>
             ) : (
               <>
                 {room.roomStatus.hostId === room.userId ? (
@@ -180,6 +186,13 @@ const Room = (props: IProps) => {
           )}
         </div>
       </div>
+      <GameResultModal
+        winner={room.winner}
+        winnerCode={room.winnerCode}
+        open={room.isGameEnd}
+        setOpen={room.setIsGameEnd}
+        setIsGameStart={room.setIsGameStart}
+      />
     </div>
   );
 };

@@ -1,6 +1,4 @@
 // CustomButton.js
-
-import React from 'react';
 import styles from 'styles/room-button.module.css';
 
 interface IProps {

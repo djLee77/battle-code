@@ -1,9 +1,9 @@
 import styles from 'styles/user-card.module.css';
-import { IRoomStatus, IUserStatus } from 'types/room-types';
+import { IUserStatus } from 'types/roomType';
 import { handleLanguageChange } from 'handler/room';
 
 interface IProps {
-  data: IRoomStatus;
+  roomId: number;
   userStatus: IUserStatus[];
   userData: IUserStatus;
   publishMessage: (destination: string, payload: any) => void;
@@ -44,7 +44,7 @@ const UserCard = (props: IProps) => {
                   props.userData.userId,
                   event.target.value,
                   props.userStatus,
-                  props.data.roomStatus.roomId,
+                  props.roomId,
                   props.publishMessage
                 )
               }
