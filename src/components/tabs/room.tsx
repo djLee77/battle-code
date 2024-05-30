@@ -29,7 +29,10 @@ const Room = (props: IProps) => {
       {room.isGameStart ? (
         <div className={styles.titleBox}>
           <h2 className={styles.title}>{room.roomStatus.title}</h2>
-          {room.timeLeft}
+          <div className={styles.timerBox}>
+            <div>{Math.floor(room.timeLeft / 60)} : </div>
+            <div>{room.timeLeft % 60}</div>
+          </div>
           <div className={styles.boards}>
             {room.testResults.map((item) => (
               <div key={item.id} className={styles['score-board']}>

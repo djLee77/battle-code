@@ -12,6 +12,10 @@
     justify-content: space-between;
 }
 
+.timerBox{
+    display: flex;
+}
+
 .boards{
     display: flex;
     margin-right: 10px;

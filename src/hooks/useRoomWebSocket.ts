@@ -42,7 +42,7 @@ const useRoomWebSocket = (props: IUseRoomWebSocket) => {
   const [isGameStart, setIsGameStart] = useState<boolean>(false);
   const [testResults, setTestResults] = useState<type[]>([]);
   const [problems, setProblems] = useState<IProblem[]>([]);
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(30 * 60);
 
   const {
     webSocketClient,
