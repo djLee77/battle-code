@@ -141,9 +141,7 @@ const Room = (props: IProps) => {
                 <RoomCustomButton onClick={room.handleSubmit}>
                   제출하기
                 </RoomCustomButton>
-                <RoomCustomButton onClick={room.handleEarlyEnd}>
-                  항복
-                </RoomCustomButton>
+                <RoomCustomButton onClick={() => {}}>항복</RoomCustomButton>
               </>
             ) : (
               <>

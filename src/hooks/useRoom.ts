@@ -7,7 +7,7 @@ import {
   handleSurrender,
   handleGameStart,
   handleSubmit,
-  handleEarlyEnd,
+  handleGameEnd,
 } from 'handler/room';
 
 interface IUseRoomWebSocket {
@@ -52,6 +52,7 @@ const useRoom = (props: IUseRoomWebSocket) => {
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winner, setWinner] = useState<string>(''); // 승자 ID
   const [winnerCode, setWinnerCode] = useState<string>(''); // 승자 코드
+  const [timeLeft, setTimeLeft] = useState(15);
 
   const {
     webSocketClient,
@@ -110,9 +111,21 @@ const useRoom = (props: IUseRoomWebSocket) => {
         setRoomStatus(receivedMessage.roomStatus);
       }
 
+      //게임시작
+      // 게임 시작
       if (receivedMessage.gameStartInfo) {
         setProblems(receivedMessage.gameStartInfo);
         setIsGameStart(true);
+        const timerId = setInterval(() => {
+          setTimeLeft((prevTime) => {
+            if (prevTime <= 1) {
+              clearInterval(timerId);
+              handleGameEnd(props.data.roomStatus.roomId);
+              return 0;
+            }
+            return prevTime - 1;
+          });
+        }, 1000);
       }
 
       //테스트 케이스 통과율
@@ -195,6 +208,7 @@ const useRoom = (props: IUseRoomWebSocket) => {
     setIsGameStart,
     publishMessage,
     roomSubscribe,
+    timeLeft,
     isGameEnd,
     setIsGameEnd,
     winner,
@@ -250,11 +264,6 @@ const useRoom = (props: IUseRoomWebSocket) => {
           code
         ),
       [setTestResults, userId, problems, roomStatus.roomId, userStatus, code]
-    ),
-
-    handleEarlyEnd: useCallback(
-      () => handleEarlyEnd(roomStatus.roomId),
-      [roomStatus.roomId]
     ),
   };
 };
