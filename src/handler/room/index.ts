@@ -75,15 +75,59 @@ export const handleReady = (
 };
 
 /**
+ * 게임 항복 함수 *이 함수는 Room 컴포넌트에서 쓰이는 함수입니다.
+ */
+export const handleSurrender = (
+  userId: string | null,
+  surrenders: any,
+  roomId: number,
+  publishMessage: (destination: string, payload: any) => void
+): void => {
+  const updateUser = surrenders.find((user: any) => user.userId === userId);
+  if (updateUser) {
+    updateUser.isSurrender = true;
+    publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+  }
+};
+
+/**
  * 게임 시작 함수 *이 함수는 Room 컴포넌트에서 쓰이는 함수입니다.
  */
 export const handleGameStart = async (
   roomId: number,
-  setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>
+  userStatus: IUserStatus[],
+  setIsGameStart: React.Dispatch<React.SetStateAction<boolean>>,
+  setTestResults: React.Dispatch<React.SetStateAction<any>>,
+  setSurrenders: React.Dispatch<React.SetStateAction<any>>,
+  setIsSuccess: React.Dispatch<React.SetStateAction<any>>
 ): Promise<void> => {
   try {
     const response: AxiosResponse = await api.post(`v1/game/start`, {
       roomId: roomId,
+    });
+    userStatus.map((user) => {
+      setTestResults((prevResult: any) => [
+        ...prevResult,
+        {
+          id: user.userId,
+          percent: 0,
+          result: 'PASS',
+        },
+      ]);
+      setSurrenders((prevSurrender: any) => [
+        ...prevSurrender,
+        {
+          id: user.userId,
+          isSurrender: false,
+        },
+      ]);
+      setIsSuccess((prevSuccess: any) => [
+        ...prevSuccess,
+        {
+          id: user.userId,
+          isSuccess: false,
+        },
+      ]);
     });
     setIsGameStart(true);
     console.log(response);
