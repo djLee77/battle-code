@@ -6,7 +6,6 @@ interface IProps {
   className?: string;
   userStatus: IUserStatus[];
   roomId: number;
-  publishMessage: (destination: string, payload: any) => void;
 }
 
 const UserList = (props: IProps) => {
@@ -18,7 +17,6 @@ const UserList = (props: IProps) => {
           roomId={props.roomId}
           userData={userData}
           userStatus={props.userStatus}
-          publishMessage={props.publishMessage}
         />
       ))}
     </div>

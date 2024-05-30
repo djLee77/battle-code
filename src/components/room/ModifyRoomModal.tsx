@@ -29,7 +29,7 @@ type FormValues = {
   title: string;
   password: string;
   maxUserCount: number;
-  problemLevel: string;
+  problemLevel: number;
   language: string;
   maxSubmitCount: number;
   limitTime: number;
@@ -40,6 +40,18 @@ interface Level {
 }
 
 const ModifyRoomModal = ({ data }: any) => {
+  const levelObj: Level = {
+    BRONZE1: 1,
+    BRONZE2: 2,
+    BRONZE3: 3,
+    BRONZE4: 4,
+    BRONZE5: 5,
+    SILVER1: 6,
+    SILVER2: 7,
+    SILVER3: 8,
+    SILVER4: 9,
+    SILVER5: 10,
+  };
   const {
     register,
     handleSubmit,
@@ -50,7 +62,7 @@ const ModifyRoomModal = ({ data }: any) => {
       title: data.title,
       password: data.password,
       maxUserCount: data.maxUserCount,
-      problemLevel: data.problemLevel,
+      problemLevel: levelObj[data.problemLevel],
       maxSubmitCount: data.maxSubmitCount,
       limitTime: data.limitTime,
       language: data.language,
@@ -64,18 +76,7 @@ const ModifyRoomModal = ({ data }: any) => {
   const levelSelectList = levelData;
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
-  const levelObj: Level = {
-    BRONZE1: 1,
-    BRONZE2: 2,
-    BRONZE3: 3,
-    BRONZE4: 4,
-    BRONZE5: 5,
-    SILVER1: 6,
-    SILVER2: 7,
-    SILVER3: 8,
-    SILVER4: 9,
-    SILVER5: 10,
-  };
+
   // 방 수정 함수
   const handleModifyRoom = async (inputData: any) => {
     inputData.problemLevel = levelObj[inputData.problemLevel];
