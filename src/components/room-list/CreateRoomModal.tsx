@@ -51,7 +51,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { roomSubscribe, unsubscribe } = useWebSocketStore();
+  const { roomSubscribe } = useWebSocketStore();
 
   const levelSelectList = levelData;
   const langSelectList = langData;
@@ -63,7 +63,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       console.log(roomSubscribe);
       // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
       if (roomSubscribe.subscription) {
-        unsubscribe();
+        roomSubscribe.subscription.unsubscribe();
       }
 
       console.log(data);
