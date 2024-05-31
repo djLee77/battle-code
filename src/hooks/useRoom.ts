@@ -111,7 +111,6 @@ const useRoom = (props: IUseRoomWebSocket) => {
         setRoomStatus(receivedMessage.roomStatus);
       }
 
-      //게임시작
       // 게임 시작
       if (receivedMessage.gameStartInfo) {
         setProblems(receivedMessage.gameStartInfo);
