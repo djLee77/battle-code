@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IRoomStatus, IUserStatus } from 'types/roomType';
 import DockLayout from 'rc-dock';
 import InGameRoom from 'components/ingame-room/InGameRoom';
@@ -14,28 +14,29 @@ const RoomCopy = (props: IProps) => {
   const [chatIsHide, setChatIsHide] = useState<boolean>(false); // 채팅 표시 여부
   const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
   const [userStatus, setUserStatus] = useState(props.data.userStatus); // 유저들 상태
-  const { webSocketClient, setRoomSubscription, setMessage } =
-    useWebSocketStore();
+  const [message, setMessage] = useState(null);
+  const { webSocketClient, setRoomSubscription } = useWebSocketStore();
   const userId = localStorage.getItem('id');
-
-  const handleMessage = (message: any) => {
-    const receivedMessage = JSON.parse(message.body);
-    setMessage(receivedMessage);
-  };
 
   useEffect(() => {
     if (!webSocketClient) return;
+
     const subscription = webSocketClient.subscribe(
       `/topic/room/${props.data.roomStatus.roomId}`,
-      handleMessage
+      (message: any) => {
+        const receivedMessage = JSON.parse(message.body);
+        console.log(receivedMessage);
+        setMessage(receivedMessage);
+      }
     );
 
     setRoomSubscription(subscription);
-  }, [webSocketClient]);
+  }, [webSocketClient, props.data.roomStatus.roomId, setRoomSubscription]);
 
   return isGameStart ? (
     <InGameRoom
       setIsGameStart={setIsGameStart}
+      message={message}
       userId={userId}
       roomstatus={roomStatus}
       userStatus={userStatus}
@@ -45,6 +46,7 @@ const RoomCopy = (props: IProps) => {
   ) : (
     <WaitingRoom
       userStatus={userStatus}
+      message={message}
       roomStatus={roomStatus}
       chatIsHide={chatIsHide}
       dockLayoutRef={props.dockLayoutRef}
