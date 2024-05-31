@@ -15,6 +15,7 @@ import { removeTab } from 'utils/tabs';
 interface IProps {
   userId: string | null;
   userStatus: IUserStatus[];
+  message: any;
   roomStatus: any;
   chatIsHide: boolean;
   dockLayoutRef: React.RefObject<DockLayout>;
@@ -29,9 +30,7 @@ interface IProps {
 const WaitingRoom = (props: IProps) => {
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
 
-  const { publishMessage, roomSubscribe, message } = useWebSocketStore();
-
-  console.log('대기방 메세지 : ', message);
+  const { publishMessage, roomSubscribe } = useWebSocketStore();
 
   useEffect(() => {
     // 호스트 유저를 제외한 모든 유저의 isReady 상태 확인
@@ -50,56 +49,62 @@ const WaitingRoom = (props: IProps) => {
     setIsAllUsersReady(allReady);
   }, [props.userStatus]);
 
-  const handleWaitingRoomMessage = (message: any) => {
-    if (message.updateUserStatus) {
-      props.setUserStatus((prev: any) =>
-        prev.map((user: any) =>
-          user.userId === message.updateUserStatus.userId
-            ? message.updateUserStatus
-            : user
-        )
-      );
-    }
-
-    if (message.enterUserStatus) {
-      props.setUserStatus((prevUserStatus) => [
-        ...prevUserStatus,
-        message.enterUserStatus,
-      ]);
-    }
-
-    // 유저 퇴장
-    if (message.receivedMessage.leaveUserStatus) {
-      const leaveUserStatus = message.receivedMessage.leaveUserStatus;
-      // 방장이 퇴장할시
-      if (leaveUserStatus.isHost && leaveUserStatus.userId !== props.userId) {
-        alert('방장이 나갔습니다 ㅠㅠ');
-        removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-        return;
+  useEffect(() => {
+    console.log('대기방 메세지 : ', props.message);
+    if (props.message) {
+      if (props.message.updateUserStatus) {
+        props.setUserStatus((prev: any) =>
+          prev.map((user: any) =>
+            user.userId === props.message.updateUserStatus.userId
+              ? props.message.updateUserStatus
+              : user
+          )
+        );
       }
-      // 유저가 퇴장할시
-      props.setUserStatus((prevUserStatus: IUserStatus[]) =>
-        prevUserStatus.filter((user) => user.userId !== leaveUserStatus.userId)
-      );
-    }
 
-    // 방 설정 변경
-    if (message.receivedMessage.roomStatus) {
-      props.setRoomStatus(message.receivedMessage.roomStatus);
+      if (props.message.enterUserStatus) {
+        console.log('유저 입장');
+        props.setUserStatus((prevUserStatus) => [
+          ...prevUserStatus,
+          props.message.enterUserStatus,
+        ]);
+      }
+
+      // 유저 퇴장
+      if (props.message.leaveUserStatus) {
+        const leaveUserStatus = props.message.leaveUserStatus;
+        // 방장이 퇴장할시
+        if (leaveUserStatus.isHost && leaveUserStatus.userId !== props.userId) {
+          alert('방장이 나갔습니다 ㅠㅠ');
+          removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
+          return;
+        }
+        // 유저가 퇴장할시
+        props.setUserStatus((prevUserStatus: IUserStatus[]) =>
+          prevUserStatus.filter(
+            (user) => user.userId !== leaveUserStatus.userId
+          )
+        );
+      }
+
+      // 방 설정 변경
+      if (props.message.roomStatus) {
+        props.setRoomStatus(props.message.roomStatus);
+      }
     }
-  };
+  }, [props.message]);
 
   const handleRoomLeave = async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/gameRoom/leave/${props.roomStatus.roomId}`,
+        `v1/room/leave/${props.roomStatus.roomId}`,
         {}
       );
       console.log(response);
       removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
       if (roomSubscribe.subscription) {
         console.log(roomSubscribe);
-        roomSubscribe.subscription.unsubscribe(); // 구독 취소
+        roomSubscribe.subscription.unsubscribe();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -168,20 +173,21 @@ const WaitingRoom = (props: IProps) => {
               <RoomSettings roomStatus={props.roomStatus} />
             </div>
           </div>
-          <div className={styles.centerFooter}></div>
-          {props.roomStatus.hostId === props.userId ? (
-            <RoomCustomButton
-              // disabled={!isAllUsersReady}
-              onClick={handleGameStart}
-            >
-              게임시작
-            </RoomCustomButton>
-          ) : (
-            <RoomCustomButton onClick={handleReady}>준비완료</RoomCustomButton>
-          )}
+          <div className={styles.centerFooter}>
+            {props.roomStatus.hostId === props.userId ? (
+              <RoomCustomButton
+                // disabled={!isAllUsersReady}
+                onClick={handleGameStart}
+              >
+                게임시작
+              </RoomCustomButton>
+            ) : (
+              <RoomCustomButton onClick={handleReady}>
+                준비완료
+              </RoomCustomButton>
+            )}
+          </div>
         </div>
-      </div>
-      <div>
         {!props.chatIsHide ? (
           <div className={styles.rightSide}>
             <div className={styles.rightBody}>
