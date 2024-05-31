@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import RoomCopy from 'components/tabs/Room-copy';
+import Room from 'components/tabs/Room';
 
 interface ListCardProps {
   room: IRoomList;
@@ -29,7 +30,7 @@ const ListCard = (props: ListCardProps) => {
         console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
       }
-      const response = await api.post(`v1/gameRoom/enter`, {
+      const response = await api.post(`v1/room/enter`, {
         userId: localStorage.getItem('id'),
         roomId: props.room.roomId,
         password: password,
