@@ -40,18 +40,6 @@ interface Level {
 }
 
 const ModifyRoomModal = ({ data }: any) => {
-  const levelObj: Level = {
-    BRONZE1: 1,
-    BRONZE2: 2,
-    BRONZE3: 3,
-    BRONZE4: 4,
-    BRONZE5: 5,
-    SILVER1: 6,
-    SILVER2: 7,
-    SILVER3: 8,
-    SILVER4: 9,
-    SILVER5: 10,
-  };
   const {
     register,
     handleSubmit,
@@ -62,7 +50,7 @@ const ModifyRoomModal = ({ data }: any) => {
       title: data.title,
       password: data.password,
       maxUserCount: data.maxUserCount,
-      problemLevel: levelObj[data.problemLevel],
+      problemLevel: data.problemLevel,
       maxSubmitCount: data.maxSubmitCount,
       limitTime: data.limitTime,
       language: data.language,
@@ -79,7 +67,8 @@ const ModifyRoomModal = ({ data }: any) => {
 
   // 방 수정 함수
   const handleModifyRoom = async (inputData: any) => {
-    inputData.problemLevel = levelObj[inputData.problemLevel];
+    console.log(inputData, inputData.problemLevel);
+
     publishMessage(`/app/room/${data.roomId}/update/room-status`, inputData);
     handleClose();
   };
