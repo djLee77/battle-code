@@ -11,6 +11,7 @@ import styles from 'styles/room.module.css';
 import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import { removeTab } from 'utils/tabs';
+import Problem from './Problem';
 
 interface IProblem {
   id: number;
@@ -29,15 +30,11 @@ interface IProps {
   message: any;
   roomStatus: any;
   chatIsHide: boolean;
+  problems: IProblem[];
   dockLayoutRef: React.RefObject<DockLayout>;
   setIsGameStart: (isGameStart: boolean) => void;
   setChatIsHide: (isHide: boolean) => void;
-}
-
-interface ITestResults {
-  id: string;
-  percent: number;
-  result: string;
+  setProblems: (problems: IProblem[]) => void;
 }
 
 interface ITestResults {
@@ -57,7 +54,6 @@ interface IisSuccess {
 }
 
 const InGameRoom = (props: IProps) => {
-  const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
   const [testResults, setTestResults] = useState<ITestResults[]>([]); // 테스트케이스 결과 퍼센트
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
@@ -67,7 +63,18 @@ const InGameRoom = (props: IProps) => {
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winner, setWinner] = useState<string>(''); // 승자 ID
   const [winnerCode, setWinnerCode] = useState<string>(''); // 승자 코드
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(15); // TODO : 하위 컴포넌트로 빼기
+
+  // const timerId = setInterval(() => {
+  //   setTimeLeft((prevTime) => {
+  //     if (prevTime <= 1) {
+  //       clearInterval(timerId);
+  //       handleGameEnd(props.roomStatus.roomId);
+  //       return 0;
+  //     }
+  //     return prevTime - 1;
+  //   });
+  // }, 1000);
 
   const { roomSubscribe } = useWebSocketStore();
 
@@ -101,8 +108,9 @@ const InGameRoom = (props: IProps) => {
   useEffect(() => {
     console.log('인게임방 메세지 : ', props.message);
     if (props.message) {
+      // 게임 시작
       if (props.message.gameStartInfo) {
-        setProblems(props.message.gameStartInfo);
+        props.setProblems(props.message.gameStartInfo);
       }
 
       //테스트 케이스 통과율
@@ -128,6 +136,17 @@ const InGameRoom = (props: IProps) => {
             )
           );
         }
+      }
+
+      // 유저 퇴장
+      if (props.message.leaveUserStatus) {
+        const leaveUserStatus = props.message.leaveUserStatus;
+        console.log('유저 퇴장!');
+        setTestResults((prevTestResults: any) =>
+          prevTestResults.filter(
+            (user: any) => user.id !== leaveUserStatus.userId
+          )
+        );
       }
 
       // 게임 결과
@@ -159,13 +178,13 @@ const InGameRoom = (props: IProps) => {
     );
 
     api.post(`v1/judge`, {
-      problemId: problems[0].id,
+      problemId: props.problems[0].id,
       roomId: props.roomStatus.roomId,
       userId: props.userId,
       language: searchMyLanguage(),
       code: code,
     });
-  }, [props.userId, props.roomStatus.roomId, problems, code]);
+  }, [props.userId, props.roomStatus.roomId, props.problems, code]);
 
   const handleGameEnd = async (roomId: number): Promise<void> => {
     try {
@@ -246,35 +265,8 @@ const InGameRoom = (props: IProps) => {
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
-            {problems.map((problem) => (
-              <div key={problem.id} className={styles.problem}>
-                <h3>{problem.title}</h3>
-                <p>
-                  <strong>Algorithm Classification:</strong>{' '}
-                  {problem.algorithmClassification}
-                </p>
-                <p>
-                  <strong>Level:</strong> {problem.problemLevel}
-                </p>
-                <div className={styles.description}>
-                  <h4>Description</h4>
-                  <p>{problem.problemDescription}</p>
-                </div>
-                <div className={styles.description}>
-                  <h4>Input</h4>
-                  <p>{problem.inputDescription}</p>
-                </div>
-                <div className={styles.description}>
-                  <h4>Output</h4>
-                  <p>{problem.outputDescription}</p>
-                </div>
-                {problem.hint && (
-                  <div className={styles.description}>
-                    <h4>Hint</h4>
-                    <p>{problem.hint}</p>
-                  </div>
-                )}
-              </div>
+            {props.problems.map((problem) => (
+              <Problem key={problem.id} problem={problem} />
             ))}
           </div>
           <div className={styles.leftFooter}>
