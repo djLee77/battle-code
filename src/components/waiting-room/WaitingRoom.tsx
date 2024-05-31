@@ -52,6 +52,7 @@ const WaitingRoom = (props: IProps) => {
   useEffect(() => {
     console.log('대기방 메세지 : ', props.message);
     if (props.message) {
+      // 유저 상태 업데이트
       if (props.message.updateUserStatus) {
         props.setUserStatus((prev: any) =>
           prev.map((user: any) =>
@@ -62,8 +63,8 @@ const WaitingRoom = (props: IProps) => {
         );
       }
 
+      //유저 입장
       if (props.message.enterUserStatus) {
-        console.log('유저 입장');
         props.setUserStatus((prevUserStatus) => [
           ...prevUserStatus,
           props.message.enterUserStatus,
@@ -91,9 +92,15 @@ const WaitingRoom = (props: IProps) => {
       if (props.message.roomStatus) {
         props.setRoomStatus(props.message.roomStatus);
       }
+
+      // 게임 시작
+      if (props.message.gameStartInfo) {
+        props.setIsGameStart(true);
+      }
     }
   }, [props.message]);
 
+  // 방 나가기 함수
   const handleRoomLeave = async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
@@ -115,6 +122,7 @@ const WaitingRoom = (props: IProps) => {
     }
   };
 
+  // 준비 함수
   const handleReady = (): void => {
     const updateUser = props.userStatus.find(
       (user) => user.userId === props.userId
@@ -128,6 +136,7 @@ const WaitingRoom = (props: IProps) => {
     }
   };
 
+  // 게임 시작 함수
   const handleGameStart = async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
