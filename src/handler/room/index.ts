@@ -22,7 +22,7 @@ export const handleRoomLeave = async (
 ): Promise<void> => {
   try {
     const response: AxiosResponse = await api.post(
-      `v1/gameRoom/leave/${roomId}`,
+      `v1/room/leave/${roomId}`,
       {}
     );
     console.log(response);
