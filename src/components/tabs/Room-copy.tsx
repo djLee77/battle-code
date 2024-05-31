@@ -9,6 +9,7 @@ interface IProps {
   data: IRoomStatus;
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
+
 const RoomCopy = (props: IProps) => {
   const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
   const [chatIsHide, setChatIsHide] = useState<boolean>(false); // 채팅 표시 여부
@@ -25,7 +26,6 @@ const RoomCopy = (props: IProps) => {
       `/topic/room/${props.data.roomStatus.roomId}`,
       (message: any) => {
         const receivedMessage = JSON.parse(message.body);
-        console.log(receivedMessage);
         setMessage(receivedMessage);
       }
     );
@@ -38,7 +38,8 @@ const RoomCopy = (props: IProps) => {
       setIsGameStart={setIsGameStart}
       message={message}
       userId={userId}
-      roomstatus={roomStatus}
+      dockLayoutRef={props.dockLayoutRef}
+      roomStatus={roomStatus}
       userStatus={userStatus}
       chatIsHide={chatIsHide}
       setChatIsHide={setChatIsHide}
