@@ -1,8 +1,14 @@
 export const levelData = [
-  { value: 1, name: '상관없음' },
-  { value: 2, name: '브론즈1' },
-  { value: 3, name: '실버1' },
-  { value: 4, name: '골드1' },
+  { value: 1, name: 'BRONZE1' },
+  { value: 2, name: 'BRONZE2' },
+  { value: 3, name: 'BRONZE3' },
+  { value: 4, name: 'BRONZE4' },
+  { value: 5, name: 'BRONZE5' },
+  { value: 6, name: 'SILVER1' },
+  { value: 7, name: 'SILVER2' },
+  { value: 8, name: 'SILVER3' },
+  { value: 9, name: 'SILVER4' },
+  { value: 10, name: 'SILVER5' },
 ];
 
 export const langData = [
