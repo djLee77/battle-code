@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import ProgressBar from '@ramonak/react-progress-bar';
+import React from 'react';
 
 interface IProps {
   completed: number;
@@ -41,7 +42,7 @@ const ProgressBarContainer = styled.div<{ result: string; completed: Number }>`
     `}
 `;
 
-export default function ProgressBarComponent(props: IProps) {
+const ProgressBarComponent = React.memo((props: IProps) => {
   const calculateColor = (result: string): string => {
     return result === 'FAIL' ? `rgb(255,0,0)` : `rgb(0,215,0)`;
   };
@@ -63,4 +64,6 @@ export default function ProgressBarComponent(props: IProps) {
       </ProgressBarContainer>
     </div>
   );
-}
+});
+
+export default ProgressBarComponent;
