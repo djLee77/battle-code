@@ -9,9 +9,9 @@ import InputField from 'components/InputField';
 import SelectField from 'components/SelectField';
 import api from 'utils/axios';
 import { addTab } from 'utils/tabs';
-import Room from 'components/tabs/Room';
 import useWebSocketStore from 'store/useWebSocketStore';
 import RoomCopy from 'components/tabs/Room-copy';
+import Room from 'components/tabs/Room';
 
 // 모달 창 스타일
 const style = {
@@ -51,7 +51,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { roomSubscribe } = useWebSocketStore();
+  const { roomSubscribe, unsubscribe } = useWebSocketStore();
 
   const levelSelectList = levelData;
   const langSelectList = langData;
@@ -63,14 +63,15 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       console.log(roomSubscribe);
       // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
       if (roomSubscribe.subscription) {
-        console.log(roomSubscribe.subscription);
-        roomSubscribe.subscription.unsubscribe();
+        unsubscribe();
       }
 
-      const response = await api.post(`v1/gameRoom`, {
+      console.log(data);
+
+      const response = await api.post(`v1/room`, {
         hostId: localStorage.getItem('id'),
         title: data.title,
-        password: data.pw || null,
+        password: data.pw || '',
         language: data.lang,
         problemLevel: Number(data.level),
         maxUserCount: Number(data.memberCount),
