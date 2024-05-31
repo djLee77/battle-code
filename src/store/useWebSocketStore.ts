@@ -7,12 +7,10 @@ interface WebSocketStoreState {
   roomSubscribe: {
     subscription: StompJs.StompSubscription | null;
   };
-  message: any;
   connectWebSocket: (refreshToken: string) => void;
   publishMessage: (destination: string, messageBody: any) => void;
   subscribe: (destination: string, callback: any) => void;
   setRoomSubscription: (subscription: StompJs.StompSubscription | null) => void;
-  setMessage: (messageData: any) => void;
 }
 
 // 전역 상태로 관리
@@ -20,7 +18,6 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
   webSocketClient: null,
   isConnected: false,
   roomSubscribe: { subscription: null },
-  message: null,
 
   // 소켓 연결
   connectWebSocket: (accessToken: string | undefined) => {
@@ -101,9 +98,6 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
     set((state) => ({
       roomSubscribe: { ...state.roomSubscribe, subscription }, // subscription 업데이트
     })),
-
-  // 메시지 정보 저장
-  setMessage: (data: any) => set((state) => ({ ...state, message: data })),
 }));
 
 export default useWebSocketStore;
