@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import styles from 'styles/code-editor.module.css';
 
