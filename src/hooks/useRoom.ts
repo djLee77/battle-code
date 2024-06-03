@@ -188,12 +188,7 @@ const useRoom = (props: IUseRoomWebSocket) => {
     setIsAllUsersReady(allReady);
   }, [userStatus]);
 
-  useEffect(() => {
-    props.data.userStatus.map((value) => {
-      const obj = { id: value.userId, percent: 0 };
-      setTestResults((prev: any) => [...prev, obj]);
-    });
-  }, []);
+  useEffect(() => {}, []);
 
   return {
     userId,
