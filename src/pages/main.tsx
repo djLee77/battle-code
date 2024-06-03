@@ -1,5 +1,5 @@
 import DockLayout, { LayoutData } from 'rc-dock';
-import RoomList from '../components/tabs/RoomList';
+import RoomList from '../tabs/RoomList';
 import { useEffect, useMemo, useRef } from 'react';
 import '../styles/rc-dock-dark.css'; // 다크모드(커스텀)
 import Navigation from '../components/Navigation';
