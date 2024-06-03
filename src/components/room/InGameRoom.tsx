@@ -63,8 +63,26 @@ const InGameRoom = (props: IProps) => {
   const [winnerCode, setWinnerCode] = useState<string>(''); // 승자 코드
   const { roomSubscribe } = useWebSocketStore();
 
+  const getProblmes = async () => {
+    try {
+      const response = await api.get(
+        `v1/game/${props.roomStatus.roomId}/problems`
+      );
+      console.log(response.data.problems);
+      setProblems(response.data.problems);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     // 초기 값 설정
+    getProblmes();
+
     props.userStatus.map((user) => {
       setTestResults((prevResult: any) => [
         ...prevResult,
@@ -154,6 +172,7 @@ const InGameRoom = (props: IProps) => {
   };
 
   const handleSubmit = useCallback(() => {
+    console.log('제출');
     setTestResults((prevResults: any) =>
       prevResults.map((result: any) =>
         result.id === props.userId
@@ -250,7 +269,7 @@ const InGameRoom = (props: IProps) => {
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
-            {problems.map((problem) => (
+            {problems?.map((problem) => (
               <Problem key={problem.id} problem={problem} />
             ))}
           </div>
