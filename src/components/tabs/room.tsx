@@ -128,7 +128,6 @@ const Room = (props: IProps) => {
               <div className={styles.flexGrow}>
                 <UserList
                   userStatus={room.userStatus}
-                  publishMessage={room.publishMessage}
                   roomId={props.data.roomStatus.roomId}
                 />
                 <RoomSettings roomStatus={room.roomStatus} />

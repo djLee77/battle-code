@@ -1,4 +1,3 @@
-import RoomCustomButton from 'components/ui/RoomCustomButton';
 import styles from 'styles/chat.module.css';
 
 interface IProps {

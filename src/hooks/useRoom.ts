@@ -111,7 +111,6 @@ const useRoom = (props: IUseRoomWebSocket) => {
         setRoomStatus(receivedMessage.roomStatus);
       }
 
-      //게임시작
       // 게임 시작
       if (receivedMessage.gameStartInfo) {
         setProblems(receivedMessage.gameStartInfo);
@@ -187,8 +186,6 @@ const useRoom = (props: IUseRoomWebSocket) => {
     // 모든 유저가 준비 상태인지를 판단하여 상태 업데이트
     setIsAllUsersReady(allReady);
   }, [userStatus]);
-
-  useEffect(() => {}, []);
 
   return {
     userId,

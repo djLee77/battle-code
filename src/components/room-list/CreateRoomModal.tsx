@@ -9,8 +9,9 @@ import InputField from 'components/InputField';
 import SelectField from 'components/SelectField';
 import api from 'utils/axios';
 import { addTab } from 'utils/tabs';
-import Room from 'components/tabs/Room';
 import useWebSocketStore from 'store/useWebSocketStore';
+import RoomCopy from 'components/tabs/Room-copy';
+import Room from 'components/tabs/Room';
 
 // 모달 창 스타일
 const style = {
@@ -62,14 +63,15 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       console.log(roomSubscribe);
       // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
       if (roomSubscribe.subscription) {
-        console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
       }
 
-      const response = await api.post(`v1/gameRoom`, {
+      console.log(data);
+
+      const response = await api.post(`v1/room`, {
         hostId: localStorage.getItem('id'),
         title: data.title,
-        password: data.pw || null,
+        password: data.pw || '',
         language: data.lang,
         problemLevel: Number(data.level),
         maxUserCount: Number(data.memberCount),
@@ -81,7 +83,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
       addTab(
         `${roomId}번방`,
-        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+        <RoomCopy data={response.data.data} dockLayoutRef={dockLayoutRef} />,
         dockLayoutRef
       );
       handleClose();

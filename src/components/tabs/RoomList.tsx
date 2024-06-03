@@ -38,7 +38,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   // 대기방 목록 불러오는 함수
   const getGameRoomList = async () => {
     try {
-      const response = await api.get(`v1/gameRoomList`);
+      const response = await api.get(`v1/roomList`);
       console.log(response);
       response.data.data.shift(); // default 방 제거
       setRoomList(response.data.data);

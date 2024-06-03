@@ -2,7 +2,6 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import styles from 'styles/list-card.module.css';
 import { IRoomList } from 'types';
 import { addTab } from 'utils/tabs';
-import Room from '../tabs/Room';
 import React, { useState } from 'react';
 import api from 'utils/axios';
 import useWebSocketStore from 'store/useWebSocketStore';
@@ -10,6 +9,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
+import RoomCopy from 'components/tabs/Room-copy';
+import Room from 'components/tabs/Room';
 
 interface ListCardProps {
   room: IRoomList;
@@ -29,7 +30,7 @@ const ListCard = (props: ListCardProps) => {
         console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
       }
-      const response = await api.post(`v1/gameRoom/enter`, {
+      const response = await api.post(`v1/room/enter`, {
         userId: localStorage.getItem('id'),
         roomId: props.room.roomId,
         password: password,
@@ -38,7 +39,10 @@ const ListCard = (props: ListCardProps) => {
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
       addTab(
         `${props.room.roomId}번방`,
-        <Room data={response.data.data} dockLayoutRef={props.dockLayoutRef} />,
+        <RoomCopy
+          data={response.data.data}
+          dockLayoutRef={props.dockLayoutRef}
+        />,
         props.dockLayoutRef
       );
     } catch (error: unknown) {

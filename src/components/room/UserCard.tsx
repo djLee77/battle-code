@@ -1,15 +1,30 @@
+import useWebSocketStore from 'store/useWebSocketStore';
 import styles from 'styles/user-card.module.css';
 import { IUserStatus } from 'types/roomType';
-import { handleLanguageChange } from 'handler/room';
 
 interface IProps {
   roomId: number;
   userStatus: IUserStatus[];
   userData: IUserStatus;
-  publishMessage: (destination: string, payload: any) => void;
 }
 
 const UserCard = (props: IProps) => {
+  const { publishMessage } = useWebSocketStore();
+
+  const handleLanguageChange = (
+    userId: string,
+    newLanguage: string,
+    userStatus: IUserStatus[],
+    roomId: number
+  ): void => {
+    const updateUser = userStatus.find((user) => user.userId === userId);
+    if (updateUser) {
+      updateUser.language = newLanguage;
+      console.log(newLanguage);
+      publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles[`dot-box`]}>
@@ -44,8 +59,7 @@ const UserCard = (props: IProps) => {
                   props.userData.userId,
                   event.target.value,
                   props.userStatus,
-                  props.roomId,
-                  props.publishMessage
+                  props.roomId
                 )
               }
             >
