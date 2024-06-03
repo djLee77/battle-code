@@ -19,7 +19,7 @@ export const langData = [
 ];
 
 export const limitTImeData = [
-  { value: 15, name: '15분' },
+  { value: 1, name: '1분' },
   { value: 30, name: '30분' },
   { value: 60, name: '1시간' },
   { value: 120, name: '2시간' },
