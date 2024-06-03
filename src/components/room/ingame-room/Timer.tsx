@@ -6,7 +6,7 @@ interface IProps {
 }
 
 const Timer = React.memo((props: IProps) => {
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   useEffect(() => {
     const timerId = setInterval(() => {
