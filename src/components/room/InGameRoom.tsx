@@ -76,6 +76,7 @@ const InGameRoom = (props: IProps) => {
   const { roomSubscribe } = useWebSocketStore();
 
   useEffect(() => {
+    // 초기 값 설정
     props.userStatus.map((user) => {
       setTestResults((prevResult: any) => [
         ...prevResult,
