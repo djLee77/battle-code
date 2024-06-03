@@ -11,17 +11,6 @@ interface IProps {
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-interface IProblem {
-  id: number;
-  title: string;
-  algorithmClassification: string;
-  problemLevel: string;
-  problemDescription: string;
-  inputDescription: string;
-  outputDescription: string;
-  hint: string;
-}
-
 const Room = (props: IProps) => {
   const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
   const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
