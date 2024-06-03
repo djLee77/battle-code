@@ -9,8 +9,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
-import RoomCopy from 'components/tabs/Room-copy';
-import Room from 'components/tabs/Room';
+import RoomCopy from 'tabs/Room-copy';
+//import Room from 'components/tabs/Room';
 
 interface ListCardProps {
   room: IRoomList;

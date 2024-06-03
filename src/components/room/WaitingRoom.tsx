@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
 import Chat from 'components/room/Chat';
-import ModifyRoomModal from 'components/room/ModifyRoomModal';
-import RoomSettings from 'components/room/RoomSettings';
-import UserList from 'components/room/UserList';
+import ModifyRoomModal from 'components/room/waiting-room/ModifyRoomModal';
+import RoomSettings from 'components/room/waiting-room/RoomSettings';
+import UserList from 'components/room/waiting-room/UserList';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
 import { useEffect, useState } from 'react';

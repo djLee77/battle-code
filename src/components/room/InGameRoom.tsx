@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
-import CodeEditor from 'components/CodeEditor';
-import ProgressBarComponent from 'components/ProgressBar';
+import CodeEditor from 'components/room/ingame-room/CodeEditor';
+import ProgressBarComponent from 'components/room/ingame-room/ProgressBar';
 import Chat from 'components/room/Chat';
-import GameResultModal from 'components/room/GameResultModal';
+import GameResultModal from 'components/room/ingame-room/GameResultModal';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
 import { useCallback, useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import styles from 'styles/room.module.css';
 import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import { removeTab } from 'utils/tabs';
-import Problem from './Problem';
+import Problem from './ingame-room/Problem';
 
 interface IProblem {
   id: number;

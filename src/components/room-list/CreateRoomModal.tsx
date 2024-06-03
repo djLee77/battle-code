@@ -5,13 +5,13 @@ import styles from '../../styles/create-room.module.css';
 import React, { useState } from 'react';
 import { langData, levelData, limitTImeData } from '../../data/roomSettingData';
 import { useForm } from 'react-hook-form';
-import InputField from 'components/InputField';
-import SelectField from 'components/SelectField';
+import InputField from 'components/ui/InputField';
+import SelectField from 'components/ui/SelectField';
 import api from 'utils/axios';
 import { addTab } from 'utils/tabs';
 import useWebSocketStore from 'store/useWebSocketStore';
-import RoomCopy from 'components/tabs/Room-copy';
-import Room from 'components/tabs/Room';
+import RoomCopy from 'tabs/Room-copy';
+import Room from 'tabs/Room';
 
 // 모달 창 스타일
 const style = {

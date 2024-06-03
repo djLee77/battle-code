@@ -1,17 +1,17 @@
 import Chat from 'components/room/Chat';
-import ModifyRoomModal from 'components/room/ModifyRoomModal';
-import RoomSettings from 'components/room/RoomSettings';
-import UserList from 'components/room/UserList';
+import ModifyRoomModal from 'components/room/waiting-room/ModifyRoomModal';
+import RoomSettings from 'components/room/waiting-room/RoomSettings';
+import UserList from 'components/room/waiting-room/UserList';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import { useState } from 'react';
 import styles from 'styles/room.module.css';
 import { IRoomStatus } from 'types/roomType';
-import CodeEditor from 'components/CodeEditor';
-import { searchMyLanguage } from '../../handler/room';
+import CodeEditor from 'components/room/ingame-room/CodeEditor';
+import { searchMyLanguage } from '../handler/room';
 import DockLayout from 'rc-dock';
 import useRoom from 'hooks/useRoom';
-import ProgressBarComponent from 'components/ProgressBar';
-import GameResultModal from 'components/room/GameResultModal';
+import ProgressBarComponent from 'components/room/ingame-room/ProgressBar';
+import GameResultModal from 'components/room/ingame-room/GameResultModal';
 
 interface IProps {
   data: IRoomStatus;

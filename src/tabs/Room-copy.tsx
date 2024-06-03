@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { IRoomStatus, IUserStatus } from 'types/roomType';
 import DockLayout from 'rc-dock';
-import InGameRoom from 'components/ingame-room/InGameRoom';
-import WaitingRoom from 'components/waiting-room/WaitingRoom';
+import InGameRoom from 'components/room/InGameRoom';
+import WaitingRoom from 'components/room/WaitingRoom';
 import useWebSocketStore from 'store/useWebSocketStore';
 
 interface IProps {

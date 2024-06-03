@@ -1,12 +1,16 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import CustomButton from '../ui/CustomButton';
-import styles from '../../styles/create-room.module.css';
+import CustomButton from '../../ui/CustomButton';
+import styles from '../../../styles/create-room.module.css';
 import { useState } from 'react';
-import { langData, levelData, limitTImeData } from '../../data/roomSettingData';
+import {
+  langData,
+  levelData,
+  limitTImeData,
+} from '../../../data/roomSettingData';
 import { useForm } from 'react-hook-form';
-import InputField from 'components/InputField';
-import SelectField from 'components/SelectField';
+import InputField from 'components/ui/InputField';
+import SelectField from 'components/ui/SelectField';
 import useWebSocketStore from 'store/useWebSocketStore';
 
 // 모달 창 스타일
