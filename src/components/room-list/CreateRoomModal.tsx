@@ -10,8 +10,7 @@ import SelectField from 'components/ui/SelectField';
 import api from 'utils/axios';
 import { addTab } from 'utils/tabs';
 import useWebSocketStore from 'store/useWebSocketStore';
-import RoomCopy from 'tabs/Room-copy';
-import Room from 'tabs/Room';
+import Room from '../../tabs/Room';
 
 // 모달 창 스타일
 const style = {
@@ -83,7 +82,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
       addTab(
         `${roomId}번방`,
-        <RoomCopy data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
         dockLayoutRef
       );
       handleClose();

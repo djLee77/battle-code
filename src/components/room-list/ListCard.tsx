@@ -9,8 +9,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
-import RoomCopy from 'tabs/Room-copy';
-//import Room from 'components/tabs/Room';
+import Room from 'tabs/Room';
 
 interface ListCardProps {
   room: IRoomList;
@@ -39,10 +38,7 @@ const ListCard = (props: ListCardProps) => {
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
       addTab(
         `${props.room.roomId}번방`,
-        <RoomCopy
-          data={response.data.data}
-          dockLayoutRef={props.dockLayoutRef}
-        />,
+        <Room data={response.data.data} dockLayoutRef={props.dockLayoutRef} />,
         props.dockLayoutRef
       );
     } catch (error: unknown) {
