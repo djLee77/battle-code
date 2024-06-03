@@ -92,7 +92,7 @@ const WaitingRoom = (props: IProps) => {
       }
 
       // 게임 시작
-      if (msg.gameStartInfo) {
+      if (msg.startMessage) {
         props.setIsGameStart(true);
       }
     };
