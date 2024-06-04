@@ -238,7 +238,10 @@ const InGameRoom = (props: IProps) => {
     <div>
       <div className={styles.titleBox}>
         <h2 className={styles.title}>{props.roomStatus.title}</h2>
-        <Timer handleGameEnd={handleGameEnd} />
+        <Timer
+          handleGameEnd={handleGameEnd}
+          limitTime={props.roomStatus.limitTime}
+        />
         <div className={styles.boards}>
           {testResults.map((item) => (
             <div key={item.id} className={styles['score-board']}>

@@ -3,10 +3,11 @@ import styles from 'styles/room.module.css';
 
 interface IProps {
   handleGameEnd: () => void;
+  limitTime: number;
 }
 
 const Timer = React.memo((props: IProps) => {
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(props.limitTime * 60);
 
   useEffect(() => {
     const timerId = setInterval(() => {
