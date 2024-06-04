@@ -55,6 +55,7 @@ const Room = (props: IProps) => {
       roomStatus={roomStatus}
       userStatus={userStatus}
       setIsGameStart={setIsGameStart}
+      setUserStatus={setUserStatus}
     />
   ) : (
     <WaitingRoom
