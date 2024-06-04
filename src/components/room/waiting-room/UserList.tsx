@@ -1,9 +1,9 @@
+import React from 'react';
 import UserCard from './UserCard';
 import styles from 'styles/user-list.module.css';
 import { IUserStatus } from 'types/roomType';
 
 interface IProps {
-  className?: string;
   userStatus: IUserStatus[];
   roomId: number;
 }
