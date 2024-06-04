@@ -172,7 +172,6 @@ const InGameRoom = (props: IProps) => {
   };
 
   const handleSubmit = useCallback(() => {
-    console.log('제출');
     setTestResults((prevResults: any) =>
       prevResults.map((result: any) =>
         result.id === props.userId
