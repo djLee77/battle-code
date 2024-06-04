@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import CustomButton from '../../ui/CustomButton';
 import styles from '../../../styles/create-room.module.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   langData,
   levelData,
@@ -43,7 +43,7 @@ interface Level {
   [key: string]: number;
 }
 
-const ModifyRoomModal = ({ data }: any) => {
+const ModifyRoomModal = React.memo(({ data }: any) => {
   const {
     register,
     handleSubmit,
@@ -169,6 +169,6 @@ const ModifyRoomModal = ({ data }: any) => {
       </Modal>
     </div>
   );
-};
+});
 
 export default ModifyRoomModal;
