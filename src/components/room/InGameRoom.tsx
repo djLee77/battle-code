@@ -46,7 +46,7 @@ interface ISurrenders {
   isSurrender: boolean;
 }
 
-interface IisSuccess {
+interface IisCorrect {
   id: string;
   isCorrect: boolean;
 }
@@ -57,7 +57,9 @@ const InGameRoom = (props: IProps) => {
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   ); // 작성 코드
   const [surrenders, setSurrenders] = useState<ISurrenders[]>([]); // 항복 여부
-  const [isSuccess, setIsSuccess] = useState<IisSuccess[]>([]);
+  const [usersCorrectStatus, setUsersCorrectStatus] = useState<IisCorrect[]>(
+    []
+  );
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winner, setWinner] = useState<string>(''); // 승자 ID
   const [winnerCode, setWinnerCode] = useState<string>(''); // 승자 코드
@@ -79,6 +81,15 @@ const InGameRoom = (props: IProps) => {
     }
   };
 
+  const handleSurrend = async () => {
+    const response = await api.post(
+      `v1/game/${props.roomStatus.roomId}/${props.userId}/surrender`,
+      {}
+    );
+
+    console.log(surrenders);
+  };
+
   useEffect(() => {
     // 초기 값 설정
     getProblmes();
@@ -89,13 +100,6 @@ const InGameRoom = (props: IProps) => {
         {
           id: user.userId,
           isSurrender: false,
-        },
-      ]);
-      setIsSuccess((prevSuccess: any) => [
-        ...prevSuccess,
-        {
-          id: user.userId,
-          isSuccess: false,
         },
       ]);
     });
@@ -111,6 +115,19 @@ const InGameRoom = (props: IProps) => {
         setWinnerCode(msg.gameEnd.code);
         setIsGameEnd(true);
       }
+
+      if (msg.userSurrender) {
+        setSurrenders((prevSurrender: any) =>
+          prevSurrender.map((surrender: any) =>
+            surrender.id === msg.userSurrender.userId
+              ? {
+                  id: msg.userSurrender.userId,
+                  isSurrender: msg.userSurrender.surrender,
+                }
+              : surrender
+          )
+        );
+      }
     };
 
     emitter.on('message', handleMessages);
@@ -120,6 +137,38 @@ const InGameRoom = (props: IProps) => {
       emitter.off('message', handleMessages);
     };
   }, []);
+
+  useEffect(() => {
+    const correctedUsers = usersCorrectStatus.filter(
+      (status) => status.isCorrect
+    );
+
+    // 정답을 맞춘 유저들은 surrenders 배열에서 제거
+    setSurrenders((prevSurrender) =>
+      prevSurrender.filter(
+        (surrender) =>
+          !correctedUsers.find((corrected) => corrected.id === surrender.id)
+      )
+    );
+    console.log('정답자 제거');
+    console.log(usersCorrectStatus);
+
+    if (correctedUsers.length === props.userStatus.length) {
+      setIsGameEnd(true);
+    }
+  }, [usersCorrectStatus]);
+
+  useEffect(() => {
+    const isAllSurrender = surrenders.every(
+      (surrender) => surrender.isSurrender
+    );
+
+    console.log(surrenders);
+
+    if (isAllSurrender && surrenders.length > 0) {
+      setIsGameEnd(true);
+    }
+  }, [surrenders]);
 
   const searchMyLanguage = () => {
     const player = props.userStatus.find(
@@ -187,7 +236,10 @@ const InGameRoom = (props: IProps) => {
           handleGameEnd={handleGameEnd}
           limitTime={props.roomStatus.limitTime}
         />
-        <ScoreBoard userStatus={props.userStatus} setIsSuccess={setIsSuccess} />
+        <ScoreBoard
+          userStatus={props.userStatus}
+          setUsersCorrectStatus={setUsersCorrectStatus}
+        />
       </div>
       <div className={styles.container}>
         <div className={styles.leftSide}>
@@ -214,12 +266,14 @@ const InGameRoom = (props: IProps) => {
             </div>
           </div>
           <div className={styles.centerFooter}>
-            <>
+            <div style={{ marginRight: '10px' }}>
               <RoomCustomButton onClick={handleSubmit}>
                 제출하기
               </RoomCustomButton>
-              <RoomCustomButton onClick={() => {}}>항복</RoomCustomButton>
-            </>
+            </div>
+            <div>
+              <RoomCustomButton onClick={handleSurrend}>항복</RoomCustomButton>
+            </div>
           </div>
         </div>
         <Chat />
