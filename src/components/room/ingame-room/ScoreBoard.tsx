@@ -12,7 +12,7 @@ interface ITestResults {
 
 interface IProps {
   userStatus: IUserStatus[];
-  setIsSuccess: (isSuccess: any) => void;
+  setUsersCorrectStatus: (isCorrect: any) => void;
 }
 
 const ScoreBoard = (props: IProps) => {
@@ -29,11 +29,11 @@ const ScoreBoard = (props: IProps) => {
         },
       ]);
 
-      props.setIsSuccess((prevSuccess: any) => [
-        ...prevSuccess,
+      props.setUsersCorrectStatus((prevCorrect: any) => [
+        ...prevCorrect,
         {
           id: user.userId,
-          isSuccess: false,
+          isCorrect: false,
         },
       ]);
     });
@@ -59,9 +59,9 @@ const ScoreBoard = (props: IProps) => {
           )
         );
         if (percent === 100 && result === 'PASS') {
-          props.setIsSuccess((prev: any) =>
+          props.setUsersCorrectStatus((prev: any) =>
             prev.map((user: any) =>
-              user.id === userId ? { id: userId, isSuccess: true } : user
+              user.id === userId ? { id: userId, isCorrect: true } : user
             )
           );
         }

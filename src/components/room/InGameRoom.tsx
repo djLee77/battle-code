@@ -48,7 +48,7 @@ interface ISurrenders {
 
 interface IisSuccess {
   id: string;
-  isSuccess: boolean;
+  isCorrect: boolean;
 }
 
 const InGameRoom = (props: IProps) => {
