@@ -19,7 +19,6 @@ const Timer = React.memo((props: IProps) => {
         }
         return prevTime - 1;
       });
-      console.log(timeLeft);
     }, 1000);
   }, []);
 
