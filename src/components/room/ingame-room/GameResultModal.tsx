@@ -1,3 +1,4 @@
+import { Editor } from '@monaco-editor/react';
 import { Box, Modal } from '@mui/material';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import { useState } from 'react';
@@ -24,6 +25,20 @@ const style = {
   p: 4,
 };
 
+const childStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 800,
+  backgroundColor: '#2D2C2C',
+  border: '1px solid #000',
+  borderRadius: '24px',
+  color: 'white',
+  boxShadow: 24,
+  p: 4,
+};
+
 function ChildModal(props: any) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -42,8 +57,8 @@ function ChildModal(props: any) {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={style}>
-          <p>{props.winnerCode}</p>
+        <Box sx={childStyle}>
+          <Editor value={props.winnerCode} theme="vs-dark" height={600} />
           <RoomCustomButton onClick={handleClose}>닫기</RoomCustomButton>
         </Box>
       </Modal>
