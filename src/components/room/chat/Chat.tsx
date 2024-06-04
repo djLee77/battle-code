@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import styles from 'styles/room.module.css';
 import ChatList from './ChatList';
 
-const Chat = () => {
+const Chat = React.memo(() => {
   const [isHide, setIsHide] = useState<boolean>(false);
+  const [messages, setMessages] = useState([]);
+
   return (
     <>
       {!isHide ? (
@@ -23,7 +25,7 @@ const Chat = () => {
                   ▶
                 </span>
               </p>
-              <ChatList />
+              <ChatList messages={messages} />
             </div>
           </div>
           <div className={styles.rightFooter}>입력창</div>
@@ -43,6 +45,6 @@ const Chat = () => {
       )}
     </>
   );
-};
+});
 
 export default Chat;
