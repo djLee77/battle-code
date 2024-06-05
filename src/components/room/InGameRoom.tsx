@@ -205,7 +205,7 @@ const InGameRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response = await api.post(
-        `v1/rooms/leave/${props.roomStatus.roomId}`,
+        `v1/rooms/${props.roomStatus.roomId}/leave`,
         {}
       );
       console.log(response);
@@ -230,12 +230,14 @@ const InGameRoom = (props: IProps) => {
 
   return (
     <div>
-      <div className={styles.titleBox}>
-        <h2 className={styles.title}>{props.roomStatus.title}</h2>
-        <Timer
-          handleGameEnd={handleGameEnd}
-          limitTime={props.roomStatus.limitTime}
-        />
+      <div className={styles.header}>
+        <div className={styles.titleBox}>
+          <h2 className={styles.title}>{props.roomStatus.title}</h2>
+          <Timer
+            handleGameEnd={handleGameEnd}
+            limitTime={props.roomStatus.limitTime}
+          />
+        </div>
         <ScoreBoard
           userStatus={props.userStatus}
           setUsersCorrectStatus={setUsersCorrectStatus}
