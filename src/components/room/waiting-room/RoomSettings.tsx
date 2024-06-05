@@ -1,3 +1,4 @@
+import { levelData } from 'data/roomSettingData';
 import React from 'react';
 import styles from 'styles/room-settings.module.css';
 
@@ -11,10 +12,11 @@ interface IProps {
 }
 
 const RoomSettings = ({ roomStatus }: IProps) => {
+  const level = levelData;
   return (
     <div className={styles['room-settings']}>
       <div>
-        <p>난이도 : {roomStatus.problemLevel}</p>
+        <p>난이도 : {level[roomStatus.problemLevel]?.name}</p>
         <p>제출 횟수 : {roomStatus.maxSubmitCount}</p>
         <p>언어 설정 : {roomStatus.language}</p>
       </div>

@@ -33,6 +33,7 @@ interface IProps {
   roomStatus: any;
   dockLayoutRef: React.RefObject<DockLayout>;
   setIsGameStart: (isGameStart: boolean) => void;
+  setUserStatus: (userStatus: IUserStatus[]) => void;
 }
 
 interface ITestResults {
@@ -51,6 +52,13 @@ interface IisCorrect {
   isCorrect: boolean;
 }
 
+interface IWinnerInfo {
+  userId: string;
+  code: string;
+  language: string;
+  result: string;
+}
+
 const InGameRoom = (props: IProps) => {
   const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
   const [code, setCode] = useState<string>(
@@ -61,8 +69,7 @@ const InGameRoom = (props: IProps) => {
     []
   );
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
-  const [winner, setWinner] = useState<string>(''); // 승자 ID
-  const [winnerCode, setWinnerCode] = useState<string>(''); // 승자 코드
+  const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>(); // 승자 정보
   const { roomSubscribe } = useWebSocketStore();
 
   const getProblmes = async () => {
@@ -111,9 +118,13 @@ const InGameRoom = (props: IProps) => {
 
       // 게임 결과
       if (msg.gameEnd) {
-        setWinner(msg.gameEnd.userId);
-        setWinnerCode(msg.gameEnd.code);
+        setWinnerInfo(msg.gameEnd);
         setIsGameEnd(true);
+      }
+
+      if (msg.userStatusList) {
+        console.log('유저 정보');
+        props.setUserStatus(msg.userStatusList);
       }
 
       if (msg.userSurrender) {
@@ -178,6 +189,8 @@ const InGameRoom = (props: IProps) => {
   };
 
   const handleSubmit = useCallback(() => {
+    console.log('제출');
+
     api.post(`v1/judges`, {
       problemId: problems[0].id,
       roomId: props.roomStatus.roomId,
@@ -272,17 +285,14 @@ const InGameRoom = (props: IProps) => {
               <RoomCustomButton onClick={handleSubmit}>
                 제출하기
               </RoomCustomButton>
-            </div>
-            <div>
-              <RoomCustomButton onClick={handleSurrend}>항복</RoomCustomButton>
+              <RoomCustomButton onClick={() => {}}>항복</RoomCustomButton>
             </div>
           </div>
         </div>
         <Chat />
       </div>
       <GameResultModal
-        winner={winner}
-        winnerCode={winnerCode}
+        winnerInfo={winnerInfo}
         open={isGameEnd}
         setOpen={setIsGameEnd}
         setIsGameStart={props.setIsGameStart}
