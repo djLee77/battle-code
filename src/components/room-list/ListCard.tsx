@@ -29,7 +29,7 @@ const ListCard = (props: ListCardProps) => {
         console.log(roomSubscribe.subscription);
         roomSubscribe.subscription.unsubscribe();
       }
-      const response = await api.post(`v1/room/enter`, {
+      const response = await api.post(`v1/rooms/${props.room.roomId}/enter`, {
         userId: localStorage.getItem('id'),
         roomId: props.room.roomId,
         password: password,
