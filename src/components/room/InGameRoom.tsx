@@ -14,6 +14,7 @@ import api from 'utils/axios';
 import { removeTab } from 'utils/tabs';
 import Problem from './ingame-room/Problem';
 import emitter from 'utils/eventEmitter';
+import ScoreBoard from './ingame-room/ScoreBoard';
 
 interface IProblem {
   id: number;
@@ -46,9 +47,9 @@ interface ISurrenders {
   isSurrender: boolean;
 }
 
-interface IisSuccess {
+interface IisCorrect {
   id: string;
-  isSuccess: boolean;
+  isCorrect: boolean;
 }
 
 interface IWinnerInfo {
@@ -60,12 +61,13 @@ interface IWinnerInfo {
 
 const InGameRoom = (props: IProps) => {
   const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
-  const [testResults, setTestResults] = useState<ITestResults[]>([]); // 테스트케이스 결과 퍼센트
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   ); // 작성 코드
   const [surrenders, setSurrenders] = useState<ISurrenders[]>([]); // 항복 여부
-  const [isSuccess, setIsSuccess] = useState<IisSuccess[]>([]);
+  const [usersCorrectStatus, setUsersCorrectStatus] = useState<IisCorrect[]>(
+    []
+  );
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>(); // 승자 정보
   const { roomSubscribe } = useWebSocketStore();
@@ -73,7 +75,7 @@ const InGameRoom = (props: IProps) => {
   const getProblmes = async () => {
     try {
       const response = await api.get(
-        `v1/game/${props.roomStatus.roomId}/problems`
+        `v1/games/${props.roomStatus.roomId}/problems`
       );
       console.log(response.data.problems);
       setProblems(response.data.problems);
@@ -86,31 +88,25 @@ const InGameRoom = (props: IProps) => {
     }
   };
 
+  const handleSurrend = async () => {
+    const response = await api.post(
+      `v1/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
+      {}
+    );
+
+    console.log(surrenders);
+  };
+
   useEffect(() => {
     // 초기 값 설정
     getProblmes();
 
     props.userStatus.map((user) => {
-      setTestResults((prevResult: any) => [
-        ...prevResult,
-        {
-          id: user.userId,
-          percent: 0,
-          result: 'PASS',
-        },
-      ]);
       setSurrenders((prevSurrender: any) => [
         ...prevSurrender,
         {
           id: user.userId,
           isSurrender: false,
-        },
-      ]);
-      setIsSuccess((prevSuccess: any) => [
-        ...prevSuccess,
-        {
-          id: user.userId,
-          isSuccess: false,
         },
       ]);
     });
@@ -119,41 +115,6 @@ const InGameRoom = (props: IProps) => {
   useEffect(() => {
     const handleMessages = (msg: any) => {
       console.log('인게임 : ', msg);
-      //게임 시작
-      //테스트 케이스 통과율
-      if (msg.judgeResult) {
-        const { userId, currentTest, totalTests, result } = msg.judgeResult;
-        const percent = (currentTest / totalTests) * 100;
-        setTestResults((prevResults) =>
-          prevResults.map((item) =>
-            item.id === userId
-              ? {
-                  id: userId,
-                  percent: percent,
-                  result: result,
-                }
-              : item
-          )
-        );
-        if (percent === 100 && result === 'PASS') {
-          setIsSuccess((prev: any) =>
-            prev.map((user: any) =>
-              user.id === userId ? { id: userId, isSuccess: true } : user
-            )
-          );
-        }
-      }
-
-      // 유저 퇴장
-      if (msg.leaveUserStatus) {
-        const leaveUserStatus = msg.leaveUserStatus;
-        console.log('유저 퇴장!');
-        setTestResults((prevTestResults: any) =>
-          prevTestResults.filter(
-            (user: any) => user.id !== leaveUserStatus.userId
-          )
-        );
-      }
 
       // 게임 결과
       if (msg.gameEnd) {
@@ -165,6 +126,19 @@ const InGameRoom = (props: IProps) => {
         console.log('유저 정보');
         props.setUserStatus(msg.userStatusList);
       }
+
+      if (msg.userSurrender) {
+        setSurrenders((prevSurrender: any) =>
+          prevSurrender.map((surrender: any) =>
+            surrender.id === msg.userSurrender.userId
+              ? {
+                  id: msg.userSurrender.userId,
+                  isSurrender: msg.userSurrender.surrender,
+                }
+              : surrender
+          )
+        );
+      }
     };
 
     emitter.on('message', handleMessages);
@@ -175,6 +149,38 @@ const InGameRoom = (props: IProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const correctedUsers = usersCorrectStatus.filter(
+      (status) => status.isCorrect
+    );
+
+    // 정답을 맞춘 유저들은 surrenders 배열에서 제거
+    setSurrenders((prevSurrender) =>
+      prevSurrender.filter(
+        (surrender) =>
+          !correctedUsers.find((corrected) => corrected.id === surrender.id)
+      )
+    );
+    console.log('정답자 제거');
+    console.log(usersCorrectStatus);
+
+    if (correctedUsers.length === props.userStatus.length) {
+      setIsGameEnd(true);
+    }
+  }, [usersCorrectStatus]);
+
+  useEffect(() => {
+    const isAllSurrender = surrenders.every(
+      (surrender) => surrender.isSurrender
+    );
+
+    console.log(surrenders);
+
+    if (isAllSurrender && surrenders.length > 0) {
+      setIsGameEnd(true);
+    }
+  }, [surrenders]);
+
   const searchMyLanguage = () => {
     const player = props.userStatus.find(
       (user) => user.userId === props.userId
@@ -183,6 +189,7 @@ const InGameRoom = (props: IProps) => {
   };
 
   const handleSubmit = useCallback(() => {
+    console.log('제출');
     setTestResults((prevResults: any) =>
       prevResults.map((result: any) =>
         result.id === props.userId
@@ -206,7 +213,7 @@ const InGameRoom = (props: IProps) => {
   const handleGameEnd = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/game/${props.roomStatus.roomId}/end`,
+        `v1/games/${props.roomStatus.roomId}/end`,
         {}
       );
     } catch (error: unknown) {
@@ -221,7 +228,7 @@ const InGameRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response = await api.post(
-        `v1/room/leave/${props.roomStatus.roomId}`,
+        `v1/rooms/leave/${props.roomStatus.roomId}`,
         {}
       );
       console.log(response);
@@ -248,33 +255,14 @@ const InGameRoom = (props: IProps) => {
     <div>
       <div className={styles.titleBox}>
         <h2 className={styles.title}>{props.roomStatus.title}</h2>
-        <Timer handleGameEnd={handleGameEnd} />
-        <div className={styles.boards}>
-          {testResults.map((item) => (
-            <div key={item.id} className={styles['score-board']}>
-              <div>{item.id}</div>
-              <div className={styles['percent-box']}>
-                <div style={{ paddingTop: '4px' }}>
-                  <ProgressBarComponent
-                    completed={item.percent}
-                    roundedValue={Math.round(item.percent)}
-                    result={item.result}
-                  />
-                </div>
-                <div style={{ marginLeft: '5px' }}>
-                  {Math.round(item.percent)}%
-                  {item.percent === 0
-                    ? ''
-                    : item.result === 'FAIL'
-                    ? '틀렸습니다'
-                    : item.result === 'PASS' && item.percent === 100
-                    ? '맞았습니다'
-                    : '채점중'}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Timer
+          handleGameEnd={handleGameEnd}
+          limitTime={props.roomStatus.limitTime}
+        />
+        <ScoreBoard
+          userStatus={props.userStatus}
+          setUsersCorrectStatus={setUsersCorrectStatus}
+        />
       </div>
       <div className={styles.container}>
         <div className={styles.leftSide}>
@@ -301,11 +289,11 @@ const InGameRoom = (props: IProps) => {
             </div>
           </div>
           <div className={styles.centerFooter}>
-            <>
+            <div style={{ marginRight: '10px' }}>
               <RoomCustomButton onClick={handleSubmit}>
                 제출하기
               </RoomCustomButton>
-              <RoomCustomButton onClick={handleGameEnd}>항복</RoomCustomButton>
+              <RoomCustomButton onClick={() => {}}>항복</RoomCustomButton>
             </>
           </div>
         </div>

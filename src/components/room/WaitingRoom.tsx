@@ -108,7 +108,7 @@ const WaitingRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/room/leave/${props.roomStatus.roomId}`,
+        `v1/rooms/leave/${props.roomStatus.roomId}`,
         {}
       );
       console.log(response);
@@ -130,7 +130,7 @@ const WaitingRoom = (props: IProps) => {
     if (updateUser) {
       updateUser.isReady = !updateUser.isReady;
       publishMessage(
-        `/app/room/${props.roomStatus.roomId}/update/user-status`,
+        `/app/rooms/${props.roomStatus.roomId}/update/user-status`,
         updateUser
       );
     }
@@ -139,7 +139,7 @@ const WaitingRoom = (props: IProps) => {
   const handleGameStart = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/game/${props.roomStatus.roomId}/start`,
+        `v1/rooms/${props.roomStatus.roomId}/start`,
         {}
       );
       props.setIsGameStart(true);

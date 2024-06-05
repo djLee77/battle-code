@@ -73,7 +73,7 @@ const ModifyRoomModal = React.memo(({ data }: any) => {
   const handleModifyRoom = async (inputData: any) => {
     console.log(inputData, inputData.problemLevel);
 
-    publishMessage(`/app/room/${data.roomId}/update/room-status`, inputData);
+    publishMessage(`/app/rooms/${data.roomId}/update/room-status`, inputData);
     handleClose();
   };
 
