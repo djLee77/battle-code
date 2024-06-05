@@ -23,7 +23,7 @@ const childStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 800,
+  width: 700,
   backgroundColor: '#2D2C2C',
   border: '1px solid #000',
   borderRadius: '24px',
@@ -55,7 +55,7 @@ function ChildModal(props: any) {
           <Editor
             value={props.winnerCode}
             theme="vs-dark"
-            height={700}
+            height={600}
             language={props.language}
             options={{
               readOnly: true,
