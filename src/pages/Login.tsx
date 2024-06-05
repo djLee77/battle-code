@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import SignupModal from '../components/signup-modal';
+import SignupModal from '../components/SignupModal';
 import {
   setRefreshToken,
   removeRefreshToken,
-  getRefreshToken,
   setAccessToken,
-  getAccessToken,
 } from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/login.module.css';

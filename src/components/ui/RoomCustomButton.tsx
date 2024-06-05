@@ -1,5 +1,4 @@
 // CustomButton.js
-
 import React from 'react';
 import styles from 'styles/room-button.module.css';
 
@@ -9,16 +8,18 @@ interface IProps {
   children: string;
 }
 
-const RoomCustomButton = ({ onClick, disabled = false, children }: IProps) => {
+const RoomCustomButton = React.memo((props: IProps) => {
+  const disabled = props.disabled || false;
+
   return (
     <button
       className={disabled ? styles['button-disabled'] : styles.button}
-      onClick={onClick}
+      onClick={props.onClick}
       disabled={disabled}
     >
-      {children}
+      {props.children}
     </button>
   );
-};
+});
 
 export default RoomCustomButton;

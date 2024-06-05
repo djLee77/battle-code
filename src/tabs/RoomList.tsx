@@ -1,18 +1,19 @@
-import ListCard from 'components/room-list/list-card';
+import ListCard from 'components/room-list/ListCard';
 import { IRoomList } from 'types';
 import styles from 'styles/room-list.module.css';
-import RoomEntry from 'components/room-list/room-entry';
-import CustomButton from 'components/ui/button';
-import CreateRoomModal from 'components/room-list/create-room';
+import RoomEntry from 'components/room-list/RoomEntry';
+import CustomButton from 'components/ui/CustomButton';
+import CreateRoomModal from 'components/room-list/CreateRoomModal';
 import api from 'utils/axios';
-import { useQuery } from 'react-query';
+// import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
+import DockLayout from 'rc-dock';
 
 interface RoomListProps {
-  dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
+  dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
-export default function RoomList({ dockLayoutRef }: RoomListProps) {
+const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const [roomList, setRoomList] = useState([]);
   // const {
   //   data: roomList,
@@ -37,13 +38,17 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
   // 대기방 목록 불러오는 함수
   const getGameRoomList = async () => {
     try {
-      const response = await api.get(`v1/gameRoomList`);
+      const response = await api.get(`v1/roomList`);
       console.log(response);
       response.data.data.shift(); // default 방 제거
       setRoomList(response.data.data);
       return response.data.data;
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
     }
   };
 
@@ -79,4 +84,6 @@ export default function RoomList({ dockLayoutRef }: RoomListProps) {
       </div>
     </div>
   );
-}
+};
+
+export default RoomList;

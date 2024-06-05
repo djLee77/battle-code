@@ -93,6 +93,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
     });
   },
 
+  // 방 구독 정보 저장
   setRoomSubscription: (subscription) =>
     set((state) => ({
       roomSubscribe: { ...state.roomSubscribe, subscription }, // subscription 업데이트

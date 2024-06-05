@@ -1,12 +1,12 @@
 import DockLayout, { LayoutData } from 'rc-dock';
-import RoomList from '../components/tabs/room-list';
+import RoomList from '../tabs/RoomList';
 import { useEffect, useMemo, useRef } from 'react';
 import '../styles/rc-dock-dark.css'; // 다크모드(커스텀)
-import Navigation from '../components/navigation';
+import Navigation from '../components/Navigation';
 import { getAccessToken } from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 import { getTab } from 'utils/tabs';
-import useWebSocketStore from 'store/websocket-store';
+import useWebSocketStore from 'store/useWebSocketStore';
 
 export default function MainPage() {
   const navigate = useNavigate();
