@@ -191,7 +191,7 @@ const InGameRoom = (props: IProps) => {
   const handleSubmit = useCallback(() => {
     console.log('제출');
 
-    api.post(`v1/judge`, {
+    api.post(`v1/judges`, {
       problemId: problems[0].id,
       roomId: props.roomStatus.roomId,
       userId: props.userId,
