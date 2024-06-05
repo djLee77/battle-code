@@ -22,7 +22,7 @@ export const handleRoomLeave = async (
 ): Promise<void> => {
   try {
     const response: AxiosResponse = await api.post(
-      `v1/room/leave/${roomId}`,
+      `v1/rooms/leave/${roomId}`,
       {}
     );
     console.log(response);
@@ -54,7 +54,7 @@ export const handleLanguageChange = (
   if (updateUser) {
     updateUser.language = newLanguage;
     console.log(newLanguage);
-    publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+    publishMessage(`/app/rooms/${roomId}/update/user-status`, updateUser);
   }
 };
 
@@ -70,7 +70,7 @@ export const handleReady = (
   const updateUser = userStatus.find((user) => user.userId === userId);
   if (updateUser) {
     updateUser.isReady = !updateUser.isReady;
-    publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+    publishMessage(`/app/rooms/${roomId}/update/user-status`, updateUser);
   }
 };
 
@@ -86,7 +86,7 @@ export const handleSurrender = (
   const updateUser = surrenders.find((user: any) => user.userId === userId);
   if (updateUser) {
     updateUser.isSurrender = true;
-    publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+    publishMessage(`/app/rooms/${roomId}/update/user-status`, updateUser);
   }
 };
 
@@ -103,7 +103,7 @@ export const handleGameStart = async (
 ): Promise<void> => {
   try {
     const response: AxiosResponse = await api.post(
-      `v1/game/${roomId}/start`,
+      `v1/rooms/${roomId}/start`,
       {}
     );
     userStatus.map((user) => {
@@ -167,7 +167,7 @@ export const handleSubmit = (
         : result
     )
   );
-  api.post(`v1/judge`, {
+  api.post(`v1/judges`, {
     problemId: problems[0].id,
     roomId: roomId,
     userId: userId,
@@ -178,7 +178,10 @@ export const handleSubmit = (
 
 export const handleGameEnd = async (roomId: number): Promise<void> => {
   try {
-    const response: AxiosResponse = await api.post(`v1/game/${roomId}/end`, {});
+    const response: AxiosResponse = await api.post(
+      `v1/games/${roomId}/end`,
+      {}
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용

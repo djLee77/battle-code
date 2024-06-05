@@ -68,7 +68,7 @@ const InGameRoom = (props: IProps) => {
   const getProblmes = async () => {
     try {
       const response = await api.get(
-        `v1/game/${props.roomStatus.roomId}/problems`
+        `v1/games/${props.roomStatus.roomId}/problems`
       );
       console.log(response.data.problems);
       setProblems(response.data.problems);
@@ -83,7 +83,7 @@ const InGameRoom = (props: IProps) => {
 
   const handleSurrend = async () => {
     const response = await api.post(
-      `v1/game/${props.roomStatus.roomId}/${props.userId}/surrender`,
+      `v1/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
       {}
     );
 
@@ -178,7 +178,7 @@ const InGameRoom = (props: IProps) => {
   };
 
   const handleSubmit = useCallback(() => {
-    api.post(`v1/judge`, {
+    api.post(`v1/judges`, {
       problemId: problems[0].id,
       roomId: props.roomStatus.roomId,
       userId: props.userId,
@@ -190,7 +190,7 @@ const InGameRoom = (props: IProps) => {
   const handleGameEnd = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/game/${props.roomStatus.roomId}/end`,
+        `v1/games/${props.roomStatus.roomId}/end`,
         {}
       );
     } catch (error: unknown) {
@@ -205,7 +205,7 @@ const InGameRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response = await api.post(
-        `v1/room/leave/${props.roomStatus.roomId}`,
+        `v1/rooms/leave/${props.roomStatus.roomId}`,
         {}
       );
       console.log(response);

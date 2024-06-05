@@ -165,7 +165,7 @@ const useRoom = (props: IUseRoomWebSocket) => {
   useEffect(() => {
     if (!webSocketClient) return;
     const subscription = webSocketClient.subscribe(
-      `/topic/room/${props.data.roomStatus.roomId}`,
+      `/topic/rooms/${props.data.roomStatus.roomId}`,
       handleMessage
     );
 

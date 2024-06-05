@@ -21,7 +21,7 @@ const UserCard = (props: IProps) => {
     if (updateUser) {
       updateUser.language = newLanguage;
       console.log(newLanguage);
-      publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+      publishMessage(`/app/rooms/${roomId}/update/user-status`, updateUser);
     }
   };
 

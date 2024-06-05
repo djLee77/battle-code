@@ -67,7 +67,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
 
       console.log(data);
 
-      const response = await api.post(`v1/room`, {
+      const response = await api.post(`v1/rooms`, {
         hostId: localStorage.getItem('id'),
         title: data.title,
         password: data.pw || '',
