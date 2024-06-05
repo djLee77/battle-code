@@ -190,16 +190,6 @@ const InGameRoom = (props: IProps) => {
 
   const handleSubmit = useCallback(() => {
     console.log('제출');
-    setTestResults((prevResults: any) =>
-      prevResults.map((result: any) =>
-        result.id === props.userId
-          ? {
-              id: props.userId,
-              percent: 0,
-            }
-          : result
-      )
-    );
 
     api.post(`v1/judge`, {
       problemId: problems[0].id,
@@ -294,7 +284,7 @@ const InGameRoom = (props: IProps) => {
                 제출하기
               </RoomCustomButton>
               <RoomCustomButton onClick={() => {}}>항복</RoomCustomButton>
-            </>
+            </div>
           </div>
         </div>
         <Chat />
