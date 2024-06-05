@@ -6,14 +6,26 @@
     gap: 8px;
 }
 
-.titleBox {
+.header {
     display: flex;
     width: 100%;
     justify-content: space-between;
 }
 
-.timerBox{
+.titleBox{
     display: flex;
+    justify-content: space-between;
+    min-width: 150px;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+
+}
+
+.timerBox{
+    padding-top: 7px;
+    display: flex;
+    font-size: x-large;
 }
 
 .title {

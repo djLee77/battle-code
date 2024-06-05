@@ -25,8 +25,8 @@ const Timer = React.memo((props: IProps) => {
   return (
     <div>
       <div className={styles.timerBox}>
-        <div>{Math.floor(timeLeft / 60)} : </div>
-        <div>{timeLeft % 60}</div>
+        <div>{Math.floor(timeLeft / 60)} &nbsp;: </div>
+        <div>&nbsp; {timeLeft % 60}</div>
       </div>
     </div>
   );
