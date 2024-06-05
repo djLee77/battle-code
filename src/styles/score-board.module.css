@@ -1,0 +1,32 @@
+.boards{
+    display: flex;
+    margin-right: 10px;
+}
+
+.score-board {
+    margin-right: 5px;
+    background-color: #3c3c3c;
+    margin-top: 10px;
+    padding : 0px 10px 5px 10px;
+    border-radius: 10px;
+    height: 50px;
+}
+
+.test-info {
+    display: flex;
+}
+
+/*test-info의 첫번째 item*/
+.test-info > div:first-child {
+    margin-right: 10px;
+}
+
+/*test-info의 두번째 item*/
+.test-info > div:nth-child(2) {
+    margin-right: 10px;
+}
+
+
+.percent-box {
+    display: flex;
+}
