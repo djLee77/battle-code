@@ -54,7 +54,7 @@ const ModifyRoomModal = React.memo(({ data }: any) => {
       title: data.title,
       password: data.password,
       maxUserCount: data.maxUserCount,
-      problemLevel: data.problemLevel,
+      problemLevel: Number(data.problemLevel),
       maxSubmitCount: data.maxSubmitCount,
       limitTime: data.limitTime,
       language: data.language,

@@ -31,8 +31,8 @@ type FormValues = {
   title: string;
   pw: string;
   memberCount: number;
-  level: string;
-  lang: string;
+  level: number;
+  lang: number;
   submissionCount: number;
   limitTime: number;
 };
@@ -72,10 +72,10 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
         title: data.title,
         password: data.pw || '',
         language: data.lang,
-        problemLevel: Number(data.level),
-        maxUserCount: Number(data.memberCount),
-        maxSubmitCount: Number(data.submissionCount),
-        limitTime: Number(data.limitTime),
+        problemLevel: data.level,
+        maxUserCount: data.memberCount,
+        maxSubmitCount: data.submissionCount,
+        limitTime: data.limitTime,
       });
       console.log(response);
       const roomId = response.data.data.roomStatus.roomId;
