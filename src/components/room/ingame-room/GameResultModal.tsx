@@ -18,20 +18,6 @@ interface IProps {
   setIsGameStart: (isStart: boolean) => void;
 }
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  backgroundColor: '#2D2C2C',
-  border: '1px solid #000',
-  borderRadius: '24px',
-  color: 'white',
-  boxShadow: 24,
-  p: 4,
-};
-
 const childStyle = {
   position: 'absolute',
   top: '50%',
@@ -110,15 +96,17 @@ const GameResultModal = (props: IProps) => {
       >
         <Box sx={style}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <ConfettiExplosion
-              force={0.6}
-              zIndex={9999}
-              duration={3000}
-              particleCount={200}
-              style={{ position: 'absolute' }}
-              width={1800}
-              height={'200vh'}
-            />
+            {props.winnerInfo?.userId === localStorage.getItem('id') && (
+              <ConfettiExplosion
+                force={0.6}
+                zIndex={9999}
+                duration={3000}
+                particleCount={200}
+                style={{ position: 'absolute' }}
+                width={1800}
+                height={'200vh'}
+              />
+            )}
           </div>
           <div>
             <h2>{props.winnerInfo?.result}</h2>
