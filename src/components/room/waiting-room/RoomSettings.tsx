@@ -16,7 +16,7 @@ const RoomSettings = ({ roomStatus }: IProps) => {
   return (
     <div className={styles['room-settings']}>
       <div>
-        <p>난이도 : {level[roomStatus.problemLevel].name}</p>
+        <p>난이도 : {level[roomStatus.problemLevel]?.name}</p>
         <p>제출 횟수 : {roomStatus.maxSubmitCount}</p>
         <p>언어 설정 : {roomStatus.language}</p>
       </div>
