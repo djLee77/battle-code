@@ -108,7 +108,7 @@ const WaitingRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/rooms/leave/${props.roomStatus.roomId}`,
+        `v1/rooms/${props.roomStatus.roomId}/leave`,
         {}
       );
       console.log(response);
