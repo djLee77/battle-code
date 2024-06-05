@@ -44,7 +44,7 @@ const ProgressBarContainer = styled.div<{ result: string; completed: Number }>`
 
 const ProgressBarComponent = React.memo((props: IProps) => {
   const calculateColor = (result: string): string => {
-    return result === 'FAIL' ? `rgb(255,0,0)` : `rgb(0,215,0)`;
+    return result === 'FAIL' ? `rgb(255,0,0)` : `#00C896`;
   };
 
   const bgColor = calculateColor(props.result);
@@ -55,8 +55,8 @@ const ProgressBarComponent = React.memo((props: IProps) => {
         <ProgressBar
           completed={props.completed}
           bgColor={bgColor}
-          height="15px"
-          width="150px"
+          height="10px"
+          width="180px"
           borderRadius="10px"
           transitionDuration="0.25s"
           isLabelVisible={false}
