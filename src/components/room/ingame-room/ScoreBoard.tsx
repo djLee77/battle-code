@@ -92,15 +92,18 @@ const ScoreBoard = (props: IProps) => {
         <div key={item.id} className={styles['score-board']}>
           <div className={styles['test-info']}>
             <div className={styles['user-id']}>{item.id}</div>
-            <div>{Math.round(item.percent)}%</div>
-            <div>
-              {item.percent === 0
-                ? '채점대기중'
-                : item.result === 'FAIL'
-                ? '틀렸습니다'
-                : item.result === 'PASS' && item.percent === 100
-                ? '맞았습니다'
-                : '채점중...'}
+            <div className={styles.result}>
+              {item.percent === 0 ? (
+                ''
+              ) : item.result === 'FAIL' ? (
+                <span style={{ color: '#DD4124' }}>틀렸습니다</span>
+              ) : item.result === 'PASS' && item.percent === 100 ? (
+                <span>맞았습니다!</span>
+              ) : item.result === 'ERROR' ? (
+                <span>ERROR</span>
+              ) : (
+                `${Math.round(item.percent)}%`
+              )}
             </div>
           </div>
           <div className={styles['percent-box']}>
