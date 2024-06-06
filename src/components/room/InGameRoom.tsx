@@ -228,7 +228,7 @@ const InGameRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response = await api.post(
-        `v1/rooms/${props.roomStatus.roomId}/leave`,
+        `v1/games/${props.roomStatus.roomId}/leave`,
         {}
       );
       console.log(response);
@@ -284,7 +284,7 @@ const InGameRoom = (props: IProps) => {
             <div className={styles.flexGrow}>
               <CodeEditor
                 className={styles.flexGrow}
-                language={searchMyLanguage()}
+                language={searchMyLanguage().toLowerCase()}
                 code={code}
                 setCode={setCode}
               />
