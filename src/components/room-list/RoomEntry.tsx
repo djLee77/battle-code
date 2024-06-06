@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CustomButton from '../ui/CustomButton';
-import styles from 'styles/room-entry.module.css';
+import styles from 'styles/room-list/room-entry.module.css';
 
 const RoomEntry = () => {
   const [value, setValue] = useState('');

@@ -1,5 +1,5 @@
 import useWebSocketStore from 'store/useWebSocketStore';
-import styles from 'styles/user-card.module.css';
+import styles from 'styles/room/waiting-room/user-card.module.css';
 import { IUserStatus } from 'types/roomType';
 
 interface IProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import UserCard from './UserCard';
-import styles from 'styles/user-list.module.css';
+import styles from 'styles/room/waiting-room/user-list.module.css';
 import { IUserStatus } from 'types/roomType';
 
 interface IProps {

@@ -1,5 +1,5 @@
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import styles from 'styles/list-card.module.css';
+import styles from 'styles/room-list/list-card.module.css';
 import { IRoomList } from 'types';
 import { addTab } from 'utils/tabs';
 import React, { useState } from 'react';

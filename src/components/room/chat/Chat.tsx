@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import styles from 'styles/room.module.css';
+import styles from 'styles/room/room.module.css';
 import ChatList from './ChatList';
 
 const Chat = React.memo(() => {

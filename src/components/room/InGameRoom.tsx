@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios';
 import CodeEditor from 'components/room/ingame-room/CodeEditor';
-import ProgressBarComponent from 'components/room/ingame-room/ProgressBar';
 import Timer from './ingame-room/Timer';
 import Chat from 'components/room/chat/Chat';
 import GameResultModal from 'components/room/ingame-room/GameResultModal';
@@ -8,7 +7,7 @@ import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocketStore from 'store/useWebSocketStore';
-import styles from 'styles/room.module.css';
+import styles from 'styles/room/room.module.css';
 import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import { removeTab } from 'utils/tabs';
@@ -34,12 +33,6 @@ interface IProps {
   dockLayoutRef: React.RefObject<DockLayout>;
   setIsGameStart: (isGameStart: boolean) => void;
   setUserStatus: (userStatus: IUserStatus[]) => void;
-}
-
-interface ITestResults {
-  id: string;
-  percent: number;
-  result: string;
 }
 
 interface ISurrenders {
@@ -96,6 +89,21 @@ const InGameRoom = (props: IProps) => {
 
     console.log(surrenders);
   };
+
+  useEffect(() => {
+    // 초기 값 설정
+    getProblmes();
+
+    props.userStatus.map((user) => {
+      setSurrenders((prevSurrender: any) => [
+        ...prevSurrender,
+        {
+          id: user.userId,
+          isSurrender: false,
+        },
+      ]);
+    });
+  }, []);
 
   useEffect(() => {
     // 초기 값 설정
@@ -285,7 +293,9 @@ const InGameRoom = (props: IProps) => {
               <RoomCustomButton onClick={handleSubmit}>
                 제출하기
               </RoomCustomButton>
-              <RoomCustomButton onClick={() => {}}>항복</RoomCustomButton>
+              <RoomCustomButton onClick={() => handleSurrend}>
+                항복
+              </RoomCustomButton>
             </div>
           </div>
         </div>

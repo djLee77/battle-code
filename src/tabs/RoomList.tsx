@@ -1,6 +1,6 @@
 import ListCard from 'components/room-list/ListCard';
 import { IRoomList } from 'types';
-import styles from 'styles/room-list.module.css';
+import styles from 'styles/room-list/room-list.module.css';
 import RoomEntry from 'components/room-list/RoomEntry';
 import CustomButton from 'components/ui/CustomButton';
 import CreateRoomModal from 'components/room-list/CreateRoomModal';

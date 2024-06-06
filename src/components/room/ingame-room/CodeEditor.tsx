@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
-import styles from 'styles/code-editor.module.css';
+import styles from 'styles/room/ingame-room/code-editor.module.css';
 
 interface IProps {
   className?: string;

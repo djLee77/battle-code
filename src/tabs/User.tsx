@@ -3,7 +3,7 @@ import RecordCard from 'components/user/RecordCard';
 import CustomButton from 'components/ui/CustomButton';
 import { userData } from 'data/userData';
 import { useEffect, useMemo, useState } from 'react';
-import styles from 'styles/user.module.css';
+import styles from 'styles/my-page/user.module.css';
 
 interface BattleRecord {
   otherUser: string;

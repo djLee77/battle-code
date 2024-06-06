@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IUserStatus } from 'types/roomType';
 import ProgressBarComponent from './ProgressBar';
-import styles from 'styles/score-board.module.css';
+import styles from 'styles/room/ingame-room/score-board.module.css';
 import emitter from 'utils/eventEmitter';
 
 interface ITestResults {

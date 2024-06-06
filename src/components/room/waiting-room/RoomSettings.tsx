@@ -1,6 +1,6 @@
 import { levelData } from 'data/roomSettingData';
 import React from 'react';
-import styles from 'styles/room-settings.module.css';
+import styles from 'styles/room/waiting-room/room-settings.module.css';
 
 interface IProps {
   roomStatus: {

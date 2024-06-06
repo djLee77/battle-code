@@ -7,7 +7,7 @@ import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocketStore from 'store/useWebSocketStore';
-import styles from 'styles/room.module.css';
+import styles from 'styles/room/room.module.css';
 import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import emitter from 'utils/eventEmitter';

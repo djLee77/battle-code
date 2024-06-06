@@ -1,4 +1,4 @@
-import styles from 'styles/record-card.module.css';
+import styles from 'styles/my-page/record-card.module.css';
 import CustomButton from 'components/ui/CustomButton';
 
 interface RecordProps {

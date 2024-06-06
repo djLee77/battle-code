@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import CustomButton from '../ui/CustomButton';
-import styles from '../../styles/create-room.module.css';
+import styles from '../../styles/room-list/create-room.module.css';
 import React, { useState } from 'react';
 import { langData, levelData, limitTImeData } from '../../data/roomSettingData';
 import { useForm } from 'react-hook-form';
