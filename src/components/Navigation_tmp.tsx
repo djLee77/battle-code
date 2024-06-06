@@ -3,7 +3,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { IconButton } from '@mui/material';
 import styles from '../styles/navigation.module.css';
 import { addTab } from '../utils/tabs';
-import User from '../tabs/User';
+import MyPage from '../tabs/MyPage';
 import useWebSocketStore from 'store/useWebSocketStore';
 import { useNavigate } from 'react-router-dom';
 import { removeAccessToken, removeRefreshToken } from 'utils/cookie';
@@ -17,7 +17,7 @@ const Navigation = ({ dockLayoutRef }: NavigationProps) => {
   const { webSocketClient } = useWebSocketStore();
 
   const handleUserInfo = () => {
-    addTab('유저 정보', <User />, dockLayoutRef);
+    addTab('유저 정보', <MyPage />, dockLayoutRef);
   };
 
   const handleLogout = () => {

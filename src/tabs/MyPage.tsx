@@ -20,7 +20,7 @@ interface UserTestData {
   battleRecordList: BattleRecord[];
 }
 
-const User = () => {
+const MyPage = () => {
   const [userTestData, setUserTestData] = useState<UserTestData>({
     name: '',
     rank: 0,
@@ -94,4 +94,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default MyPage;
