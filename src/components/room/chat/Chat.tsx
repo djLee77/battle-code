@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from 'styles/room/room.module.css';
 import ChatList from './ChatList';
+
+interface IMessages {
+  messageType: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
+}
 
 interface IProps {
   isRightSideHide: boolean;
   setIsRightSideHide: (isRightSideHide: boolean) => void;
+  messages: IMessages[];
+  roomId: number;
 }
 
 const Chat = React.memo((props: IProps) => {
-  const [messages, setMessages] = useState([]);
-
   return (
     <>
       <div
@@ -27,7 +34,7 @@ const Chat = React.memo((props: IProps) => {
             ▶
           </span>
         </p>
-        <ChatList messages={messages} />
+        <ChatList messages={props.messages} />
       </div>
     </>
   );

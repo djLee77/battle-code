@@ -1,9 +1,25 @@
-interface IProps {
-  messages: any;
+import React from 'react';
+import MessageItem from './MessageItem';
+
+interface IMessages {
+  messageType: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
 }
 
-const ChatList = (props: IProps) => {
-  return <div>채팅리스트</div>;
-};
+interface IProps {
+  messages: IMessages[];
+}
+
+const ChatList = React.memo((props: IProps) => {
+  return (
+    <div>
+      {props.messages.map((message, index) => (
+        <MessageItem key={index} message={message} />
+      ))}
+    </div>
+  );
+});
 
 export default ChatList;
