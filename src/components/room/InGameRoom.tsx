@@ -63,7 +63,7 @@ const InGameRoom = (props: IProps) => {
   );
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>(); // 승자 정보
-  const { roomSubscribe } = useWebSocketStore();
+  const { roomSubscribe, publishMessage } = useWebSocketStore();
 
   const getProblmes = async () => {
     try {
@@ -81,9 +81,10 @@ const InGameRoom = (props: IProps) => {
     }
   };
 
-  const handleSurrend = async () => {
-    const response = await api.post(
-      `v1/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
+  const handleSurrend = () => {
+    console.log('항복 버튼');
+    publishMessage(
+      `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
       {}
     );
 
@@ -173,7 +174,7 @@ const InGameRoom = (props: IProps) => {
     console.log(usersCorrectStatus);
 
     if (correctedUsers.length === props.userStatus.length) {
-      setIsGameEnd(true);
+      handleGameEnd();
     }
   }, [usersCorrectStatus]);
 
@@ -185,7 +186,7 @@ const InGameRoom = (props: IProps) => {
     console.log(surrenders);
 
     if (isAllSurrender && surrenders.length > 0) {
-      setIsGameEnd(true);
+      handleGameEnd();
     }
   }, [surrenders]);
 
@@ -293,9 +294,7 @@ const InGameRoom = (props: IProps) => {
               <RoomCustomButton onClick={handleSubmit}>
                 제출하기
               </RoomCustomButton>
-              <RoomCustomButton onClick={() => handleSurrend}>
-                항복
-              </RoomCustomButton>
+              <RoomCustomButton onClick={handleSurrend}>항복</RoomCustomButton>
             </div>
           </div>
         </div>
