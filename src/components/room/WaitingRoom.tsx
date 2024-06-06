@@ -27,7 +27,7 @@ interface IProps {
 
 const WaitingRoom = (props: IProps) => {
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
-
+  const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const { publishMessage, roomSubscribe } = useWebSocketStore();
 
   useEffect(() => {
@@ -155,12 +155,16 @@ const WaitingRoom = (props: IProps) => {
 
   return (
     <div>
-      <>
-        <h1 className={styles.title}>{props.roomStatus.title}</h1>
-        {props.roomStatus.hostId === props.userId && (
-          <ModifyRoomModal data={props.roomStatus} />
-        )}
-      </>
+      <div style={{ display: 'flex' }}>
+        <div>
+          <h1 className={styles.title}>{props.roomStatus.title}</h1>
+        </div>
+        <div style={{ margin: '20px 0px 0px 0px' }}>
+          {props.roomStatus.hostId === props.userId && (
+            <ModifyRoomModal data={props.roomStatus} />
+          )}
+        </div>
+      </div>
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
@@ -197,7 +201,28 @@ const WaitingRoom = (props: IProps) => {
             )}
           </div>
         </div>
-        <Chat />
+        {!isRightSideHide ? (
+          <div className={styles.rightSide}>
+            <div className={styles.rightBody}>
+              <Chat
+                isRightSideHide={isRightSideHide}
+                setIsRightSideHide={setIsRightSideHide}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className={styles.hideRight}>
+            <p style={{ cursor: 'pointer' }}>
+              <span
+                onClick={() => setIsRightSideHide(false)}
+                role="img"
+                aria-label="arrow-open"
+              >
+                ◀
+              </span>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

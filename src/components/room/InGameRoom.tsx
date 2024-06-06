@@ -61,6 +61,7 @@ const InGameRoom = (props: IProps) => {
   const [usersCorrectStatus, setUsersCorrectStatus] = useState<IisCorrect[]>(
     []
   );
+  const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>(); // 승자 정보
   const { roomSubscribe, publishMessage } = useWebSocketStore();
@@ -298,7 +299,28 @@ const InGameRoom = (props: IProps) => {
             </div>
           </div>
         </div>
-        <Chat />
+        {!isRightSideHide ? (
+          <div className={styles.rightSide}>
+            <div className={styles.rightBody}>
+              <Chat
+                isRightSideHide={isRightSideHide}
+                setIsRightSideHide={setIsRightSideHide}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className={styles.hideRight}>
+            <p style={{ cursor: 'pointer' }}>
+              <span
+                onClick={() => setIsRightSideHide(false)}
+                role="img"
+                aria-label="arrow-open"
+              >
+                ◀
+              </span>
+            </p>
+          </div>
+        )}
       </div>
       <GameResultModal
         winnerInfo={winnerInfo}
