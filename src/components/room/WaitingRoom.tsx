@@ -142,7 +142,6 @@ const WaitingRoom = (props: IProps) => {
         `v1/rooms/${props.roomStatus.roomId}/start`,
         {}
       );
-      props.setIsGameStart(true);
       console.log(response);
     } catch (error: unknown) {
       if (error instanceof Error) {
