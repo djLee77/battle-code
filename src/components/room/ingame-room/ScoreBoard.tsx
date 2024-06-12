@@ -28,14 +28,6 @@ const ScoreBoard = (props: IProps) => {
           result: 'PASS',
         },
       ]);
-
-      props.setUsersCorrectStatus((prevCorrect: any) => [
-        ...prevCorrect,
-        {
-          id: user.userId,
-          isCorrect: false,
-        },
-      ]);
     });
   }, []);
 
