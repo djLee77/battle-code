@@ -117,21 +117,6 @@ const InGameRoom = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    // 초기 값 설정
-    getProblmes();
-
-    props.userStatus.map((user) => {
-      setSurrenders((prevSurrender: any) => [
-        ...prevSurrender,
-        {
-          id: user.userId,
-          isSurrender: false,
-        },
-      ]);
-    });
-  }, []);
-
-  useEffect(() => {
     const handleMessages = (msg: any) => {
       console.log('인게임 : ', msg);
 
