@@ -15,7 +15,7 @@ const api = axios.create({
 
 // 새로운 AccessToken을 발급받는 함수
 const refreshAccessToken = async () => {
-  const refreshToken = getRefreshToken();
+  const refreshToken: string | undefined = getRefreshToken();
   try {
     const response = await axios.get(`${baseURL}v1/oauth/refresh-token`, {
       headers: {
