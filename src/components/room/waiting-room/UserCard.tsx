@@ -56,9 +56,9 @@ const UserCard = (props: IProps) => {
               value={props.userData.language}
               onChange={(event) => handleLanguageChange(event.target.value)}
             >
-              <option value="java">java</option>
-              <option value="python">python</option>
-              <option value="javascript">javascript</option>
+              <option value="JAVA">JAVA</option>
+              <option value="PYTHON">PYTHON</option>
+              <option value="JAVASCRIPT">JAVASCRIPT</option>
             </select>
           ) : (
             <span className={styles['var-data-color']}>
