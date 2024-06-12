@@ -28,9 +28,10 @@ const MyPage = () => {
     battleRecordList: [],
   });
 
+  const userId = localStorage.getItem('id');
+
   useEffect(() => {
     setUserTestData(userData);
-    console.log('첫마운트');
   }, []);
 
   const { winCount, drawCount, lossCount } = useMemo(() => {
@@ -61,12 +62,17 @@ const MyPage = () => {
   return (
     <div className={styles[`user-container`]}>
       <div className={styles[`user-info`]}>
-        <h2>{userTestData.name}</h2>
-        <span>랭킹:{userTestData.rank}위</span>
+        <h2>{userId}</h2>
       </div>
       <div>
         <span>사용 테마 : {userTestData.useTheme}</span>
-        <CustomButton type="button" size="small">
+        <CustomButton
+          type="button"
+          size="small"
+          onClick={() => {
+            alert('아직 구현되지 않은 기능입니다. 죄송합니다 :(');
+          }}
+        >
           테마 변경
         </CustomButton>
       </div>

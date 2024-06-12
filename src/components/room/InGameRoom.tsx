@@ -14,6 +14,7 @@ import { removeTab } from 'utils/tabs';
 import Problem from './ingame-room/Problem';
 import emitter from 'utils/eventEmitter';
 import ScoreBoard from './ingame-room/ScoreBoard';
+import ChatSend from './chat/ChatSend';
 
 interface IProblem {
   id: number;
@@ -52,6 +53,13 @@ interface IWinnerInfo {
   result: string;
 }
 
+interface IMessages {
+  messageType: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
+}
+
 const InGameRoom = (props: IProps) => {
   const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
   const [code, setCode] = useState<string>(
@@ -64,6 +72,7 @@ const InGameRoom = (props: IProps) => {
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>(); // 승자 정보
+  const [messages, setMessages] = useState<IMessages[]>([]);
   const { roomSubscribe, publishMessage } = useWebSocketStore();
 
   const getProblmes = async () => {
@@ -148,6 +157,14 @@ const InGameRoom = (props: IProps) => {
               : surrender
           )
         );
+      }
+
+      // 채팅
+      if (msg.message) {
+        setMessages((prevMessages: IMessages[]) => [
+          ...prevMessages,
+          msg.message,
+        ]);
       }
     };
 
@@ -284,7 +301,7 @@ const InGameRoom = (props: IProps) => {
             <div className={styles.flexGrow}>
               <CodeEditor
                 className={styles.flexGrow}
-                language={searchMyLanguage()}
+                language={searchMyLanguage().toLowerCase()}
                 code={code}
                 setCode={setCode}
               />
@@ -305,7 +322,12 @@ const InGameRoom = (props: IProps) => {
               <Chat
                 isRightSideHide={isRightSideHide}
                 setIsRightSideHide={setIsRightSideHide}
+                messages={messages}
+                roomId={props.roomStatus.roomId}
               />
+            </div>
+            <div className={styles.rightFooter}>
+              <ChatSend roomId={props.roomStatus.roomId} />
             </div>
           </div>
         ) : (

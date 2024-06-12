@@ -12,6 +12,7 @@ import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import emitter from 'utils/eventEmitter';
 import { removeTab } from 'utils/tabs';
+import ChatSend from './chat/ChatSend';
 
 interface IProps {
   userId: string | null;
@@ -25,9 +26,17 @@ interface IProps {
   ) => void;
 }
 
+interface IMessages {
+  messageType: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
+}
+
 const WaitingRoom = (props: IProps) => {
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
+  const [messages, setMessages] = useState<IMessages[]>([]);
   const { publishMessage, roomSubscribe } = useWebSocketStore();
 
   useEffect(() => {
@@ -94,6 +103,14 @@ const WaitingRoom = (props: IProps) => {
       // 게임 시작
       if (msg.startMessage) {
         props.setIsGameStart(true);
+      }
+
+      // 채팅
+      if (msg.message) {
+        setMessages((prevMessages: IMessages[]) => [
+          ...prevMessages,
+          msg.message,
+        ]);
       }
     };
 
@@ -206,7 +223,12 @@ const WaitingRoom = (props: IProps) => {
               <Chat
                 isRightSideHide={isRightSideHide}
                 setIsRightSideHide={setIsRightSideHide}
+                messages={messages}
+                roomId={props.roomStatus.roomId}
               />
+            </div>
+            <div className={styles.rightFooter}>
+              <ChatSend roomId={props.roomStatus.roomId} />
             </div>
           </div>
         ) : (

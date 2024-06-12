@@ -34,7 +34,7 @@ const CodeEditor = React.memo(
         <div className={styles.header}></div>
         <div className={styles.body}>
           <Editor
-            height="300px"
+            height="600px"
             language={language}
             theme="vs-dark"
             value={code}
