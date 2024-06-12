@@ -14,7 +14,7 @@ import { removeTab } from 'utils/tabs';
 import Problem from './ingame-room/Problem';
 import emitter from 'utils/eventEmitter';
 import ScoreBoard from './ingame-room/ScoreBoard';
-import ChatSend from './chat/ChatSend';
+import ChatInput from './chat/ChatInput';
 
 interface IProblem {
   id: number;
@@ -114,18 +114,17 @@ const InGameRoom = (props: IProps) => {
         },
       ]);
     });
-  }, []);
 
-  useEffect(() => {
-    // 초기 값 설정
-    getProblmes();
+    const sortedUserStatus = props.userStatus.sort((a, b) =>
+      a.userId.localeCompare(b.userId)
+    );
 
-    props.userStatus.map((user) => {
-      setSurrenders((prevSurrender: any) => [
-        ...prevSurrender,
+    sortedUserStatus.map((user) => {
+      setUsersCorrectStatus((prevCorrect: any) => [
+        ...prevCorrect,
         {
           id: user.userId,
-          isSurrender: false,
+          isCorrect: false,
         },
       ]);
     });
@@ -166,6 +165,23 @@ const InGameRoom = (props: IProps) => {
           msg.message,
         ]);
       }
+
+      // 유저 퇴장
+      if (msg.leaveUserStatus) {
+        const leaveUserStatus = msg.leaveUserStatus;
+        console.log('유저 퇴장!');
+        setUsersCorrectStatus((prevTestResults: any) =>
+          prevTestResults.filter(
+            (user: any) => user.id !== leaveUserStatus.userId
+          )
+        );
+
+        setSurrenders((prevTestResults: any) =>
+          prevTestResults.filter(
+            (user: any) => user.id !== leaveUserStatus.userId
+          )
+        );
+      }
     };
 
     emitter.on('message', handleMessages);
@@ -188,6 +204,7 @@ const InGameRoom = (props: IProps) => {
           !correctedUsers.find((corrected) => corrected.id === surrender.id)
       )
     );
+
     console.log('정답자 제거');
     console.log(usersCorrectStatus);
 
@@ -228,6 +245,10 @@ const InGameRoom = (props: IProps) => {
   }, [props.userId, props.roomStatus.roomId, problems, code]);
 
   const handleGameEnd = useCallback(async (): Promise<void> => {
+    if (usersCorrectStatus[0].id !== props.userId) {
+      return;
+    }
+
     try {
       const response: AxiosResponse = await api.post(
         `v1/games/${props.roomStatus.roomId}/end`,
@@ -327,7 +348,7 @@ const InGameRoom = (props: IProps) => {
               />
             </div>
             <div className={styles.rightFooter}>
-              <ChatSend roomId={props.roomStatus.roomId} />
+              <ChatInput roomId={props.roomStatus.roomId} />
             </div>
           </div>
         ) : (

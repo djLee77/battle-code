@@ -12,7 +12,7 @@ import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import emitter from 'utils/eventEmitter';
 import { removeTab } from 'utils/tabs';
-import ChatSend from './chat/ChatSend';
+import ChatInput from './chat/ChatInput';
 
 interface IProps {
   userId: string | null;
@@ -228,7 +228,7 @@ const WaitingRoom = (props: IProps) => {
               />
             </div>
             <div className={styles.rightFooter}>
-              <ChatSend roomId={props.roomStatus.roomId} />
+              <ChatInput roomId={props.roomStatus.roomId} />
             </div>
           </div>
         ) : (
