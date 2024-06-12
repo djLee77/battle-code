@@ -40,7 +40,7 @@ export default function RecordCard({ record }: RecordProps) {
       <div className={styles[`record-level`]}>
         <div>
           <span>난이도:{record.level}</span>
-          <span>제출시간:{record.playTime}</span>
+          <span>진행시간:{record.playTime}</span>
         </div>
         <CustomButton type="button" size="small">
           코드 확인
