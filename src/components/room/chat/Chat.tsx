@@ -34,7 +34,9 @@ const Chat = React.memo((props: IProps) => {
             ▶
           </span>
         </p>
-        <ChatList messages={props.messages} />
+        <div style={{ paddingLeft: '10px' }}>
+          <ChatList messages={props.messages} />
+        </div>
       </div>
     </>
   );

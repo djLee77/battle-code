@@ -71,6 +71,10 @@
     overflow-y: auto;
 }
 
+.rightBody {
+    background-color: #313131;
+}
+
 .leftFooter,
 .centerFooter,
 .rightFooter {
