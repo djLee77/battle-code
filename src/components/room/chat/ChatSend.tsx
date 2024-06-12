@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import useWebSocketStore from 'store/useWebSocketStore';
+import styles from 'styles/room/chat/chat-send.module.css';
 
 interface IProps {
   roomId: number;
@@ -28,11 +29,12 @@ const ChatSend = (props: IProps) => {
     <div>
       <form onSubmit={handleSubmit(sendMessage)}>
         <input
+          className={styles[`input`]}
           id={register.name}
           {...register('message', { required: true })}
           defaultValue=""
           type="text"
-          placeholder="Type your message here..."
+          placeholder="메시지 입력"
           onKeyPress={(event) => {
             if (event.key === 'Enter' && !event.shiftKey) {
               event.preventDefault();
@@ -40,7 +42,6 @@ const ChatSend = (props: IProps) => {
             }
           }}
         />
-        <button type="submit">전송</button>
       </form>
     </div>
   );
