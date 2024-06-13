@@ -1,51 +1,60 @@
 import styles from 'styles/my-page/record-card.module.css';
-import CustomButton from 'components/ui/CustomButton';
 
-interface RecordProps {
-  record: {
-    otherUser: string;
-    date: string;
-    result: string;
-    level: string;
-    playTime: string;
-  };
+interface UsersResult {
+  user: string;
+  result: string;
 }
 
-export default function RecordCard({ record }: RecordProps) {
+interface UserTestData {
+  matchId: number;
+  language: string;
+  result: string;
+  problemLevel: string;
+  elapsedTime: string;
+  date: string;
+  usersResult: UsersResult[];
+}
+
+interface IProps {
+  record: UserTestData;
+}
+
+const RecordCard = (props: IProps) => {
   const bgColor: any = {
-    'Perfect Win': '#4157A3',
-    Win: '#4157A3',
-    Draw: '#424242',
-    Lose: '#953A3A',
+    WIN: '#4157A3',
+    DRAW: '#424242',
+    LOSE: '#953A3A',
   };
 
   const resultColor: any = {
-    'Perfect Win': '#4EFFDF',
-    Win: '#3D7FFF',
-    Draw: '#9C9C9C',
-    Lose: '#FF7070',
+    WIN: '#3D7FFF',
+    DRAW: '#9C9C9C',
+    LOSE: '#FF7070',
   };
   return (
     <div
       className={styles.record}
-      style={{ backgroundColor: bgColor[record.result] }}
+      style={{ backgroundColor: bgColor[props.record.result] }}
     >
       <div className={styles[`record-result`]}>
-        <b style={{ color: resultColor[record.result] }}>{record.result}</b>
-        <span>{record.date}</span>
+        <span>{props.record.date}</span>
+        <b style={{ color: resultColor[props.record.result] }}>
+          {props.record.result}
+        </b>
       </div>
       <div className={styles[`record-user`]}>
-        <b>vs {record.otherUser}</b>
+        <b>
+          {props.record.usersResult.map((user) => (
+            <div>{user.user}</div>
+          ))}
+        </b>
       </div>
       <div className={styles[`record-level`]}>
-        <div>
-          <span>난이도:{record.level}</span>
-          <span>진행시간:{record.playTime}</span>
-        </div>
-        <CustomButton type="button" size="small">
-          코드 확인
-        </CustomButton>
+        <span>난이도:{props.record.problemLevel}</span>
+        <span>진행시간:{props.record.elapsedTime}</span>
       </div>
     </div>
   );
-}
+};
+
+export default RecordCard;

@@ -5,6 +5,7 @@
     border-radius: 24px;
     padding: 12px 24px;
     margin-bottom: 12px;
+    min-height: 110px;
 }
 
 .record-result {
@@ -13,8 +14,13 @@
     min-width: 100px
 }
 
+.record-result span {
+    font-size: 12px;
+    color: rgb(222, 222, 222);
+}
+
 .record-result b {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .record-user {
@@ -23,12 +29,7 @@
 
 .record-level {
     display: flex;
-}
-
-.record-level div {
-    display: flex;
     flex-direction: column;
-    justify-content: space-between;
     font-size: 14px;
     margin-right: 14px;
 }
