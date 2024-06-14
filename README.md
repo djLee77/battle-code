@@ -1,4 +1,3 @@
-# Battle code!
 ![image](https://github.com/djLee77/battle-code/assets/117016295/6116ca5f-adf1-4d22-8ebd-8cfc91ba3735)
 
 ## 주요 기능
