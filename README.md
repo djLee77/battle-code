@@ -22,6 +22,7 @@
 ![battlecode-ingame-surrend](https://github.com/djLee77/battle-code/assets/117016295/dc896f47-e592-46ef-b668-3cdb61c9f075)
 
 ## ERD
+![image](https://github.com/djLee77/battle-code/assets/117016295/4c35dd7b-e529-4923-aca3-1a0198bfe290)
 
 ## API 명세서
 
