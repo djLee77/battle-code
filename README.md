@@ -1,5 +1,7 @@
-<div align="center">
-# Battle Code !
+<div  align="center">
+
+  # Battle Code !
+
 </div>
 
 ## 주요 기능
