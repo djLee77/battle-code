@@ -1,4 +1,6 @@
-![image](https://github.com/djLee77/battle-code/assets/117016295/6116ca5f-adf1-4d22-8ebd-8cfc91ba3735)
+<div align="center">
+# Battle Code !
+</div>
 
 ## 주요 기능
 ![battlecode-login](https://github.com/djLee77/battle-code/assets/117016295/c10cfaa2-3ebb-4f1e-8f84-18e4416b04fa)
