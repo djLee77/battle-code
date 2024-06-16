@@ -28,10 +28,10 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 - Springboot 3.2.0
 
 **기타 도구 및 주요 라이브러리**
-- Stomp
-- stomp-js
-- Zustand
-- Emitter
+- Stomp 1.2
+- StompJs 2.3.3
+- Zustand 4.5.2
+- Eventemitter3 5.0.1
 
 ## 화면 구성
 ![image](https://github.com/djLee77/battle-code/assets/117016295/71ce0275-b078-4359-848a-24fc4a488646)
