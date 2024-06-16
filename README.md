@@ -23,9 +23,18 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 ## 주요 기능
 ### 로그인
 ![battlecode-login](https://github.com/djLee77/battle-code/assets/117016295/edd49c7e-0df0-42f8-b62d-fdfedeef7ad6)
+- 사용자 인증: 사용자가 이메일과 비밀번호를 입력하여 로그인 요청을 하면, 서버는 입력된 정보를 기반으로 사용자를 인증합니다.
+- JWT 발급: 인증이 성공하면, 서버는 사용자에게 JWT(JSON Web Token)를 발급합니다.
+- JWT 저장: 발급된 JWT는 사용자의 브라우저 쿠키에 저장되어, 이후의 요청에서 인증 토큰으로 사용됩니다.
+- 보안: JWT는 HTTP-Only 속성으로 설정되어 자바스크립트를 통해 접근할 수 없으며, 이를 통해 XSS(Cross-Site Scripting) 공격을 방지합니다.
+
+<br>
 
 ### 대기실
 ![battlecode-login](https://github.com/djLee77/battle-code/assets/117016295/f570e0ea-f33d-4d50-b54b-c2acb6f57658)
+- 대기실 구독: 사용자가 대기실 페이지에 접속하면, 제일 먼저 대기실 pub를 구독합니다. 이를 통해 실시간으로 대기방 목록을 받아볼 수 있습니다.
+- 대기방 데이터 수신: STOMP 프로토콜을 사용하여 실시간으로 대기방 데이터를 수신합니다.
+- 대기방 목록 표시: 수신된 대기방 데이터를 바탕으로 현재 활성화된 대기방 목록을 사용자에게 표시합니다.
 
 ### 인게임
 ![battlecode-ingame](https://github.com/djLee77/battle-code/assets/117016295/f0e24fa9-d316-4716-a37d-56fd9ef55c7f)
@@ -37,8 +46,11 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 ![image](https://github.com/djLee77/battle-code/assets/117016295/51428d29-430f-4a4c-b0b8-21749700bb0c)
 
 ## 팀원 소개
-### 🌞Front-end 🌚Back-end
-🌞 [이대준](https://github.com/djLee77), 🌞 [김동건](https://github.com/ehdrjs4502), 🌚 [이병선](https://github.com/dlqudtjs)
+### 🌞Front-end
+- [이대준](https://github.com/djLee77)
+- [김동건](https://github.com/ehdrjs4502)
+### 🌚Back-end
+- [이병선](https://github.com/dlqudtjs)
 
 ## 기술 스택
 **Front-end**
