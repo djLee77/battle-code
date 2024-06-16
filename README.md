@@ -37,6 +37,8 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 ![image](https://github.com/djLee77/battle-code/assets/117016295/51428d29-430f-4a4c-b0b8-21749700bb0c)
 
 ## 팀원 소개
+### 🌞Front-end 🌚Back-end
+🌞 [이대준](https://github.com/djLee77), 🌞 [김동건](https://github.com/ehdrjs4502), 🌚 [이병선](https://github.com/dlqudtjs)
 
 ## 기술 스택
 **Front-end**
