@@ -19,9 +19,19 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 - 사용자 관리: 문제 풀이 이력 및 성과를 관리할 수 있습니다.
 
 ### 기술 스택
-프론트엔드: Typescript, React
-백엔드: MySql, Springboot
-기타 도구 및 주요 라이브러리: STOMP, Zustand, Emitter
+**Front-end**
+- Typescript 4.9.5
+- React 18.2.0
+  
+**Back-end**
+- MySql 8.0
+- Springboot 3.2.0
+
+**기타 도구 및 주요 라이브러리**
+- Stomp
+- stomp-js
+- Zustand
+- Emitter
 
 ## 화면 구성
 ![image](https://github.com/djLee77/battle-code/assets/117016295/71ce0275-b078-4359-848a-24fc4a488646)
