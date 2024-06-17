@@ -106,7 +106,7 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 ### Todo : 대전 기록 페이지
 
 ## ERD
-![image](https://github.com/djLee77/battle-code/assets/117016295/51428d29-430f-4a4c-b0b8-21749700bb0c)
+![image](https://github.com/djLee77/battle-code/assets/117016295/b142721a-4dce-492a-9243-4e23027af82b)
 
 ## 팀원 소개
 ### 🌞Front-end
