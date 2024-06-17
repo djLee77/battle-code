@@ -205,7 +205,7 @@ const WaitingRoom = (props: IProps) => {
           <div className={styles.centerFooter}>
             {props.roomStatus.hostId === props.userId ? (
               <RoomCustomButton
-                // disabled={!isAllUsersReady}
+                disabled={!isAllUsersReady}
                 onClick={handleGameStart}
               >
                 게임시작
