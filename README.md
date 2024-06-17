@@ -47,6 +47,10 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 
 <br>
 
+### Todo : 방생성(방설정, 방설정 수정)
+
+### Todo : 게임시작
+
 ### 인게임
 ![battlecode-ingame](https://github.com/djLee77/battle-code/assets/117016295/fe3a53b4-c7f2-430a-a054-4abe6c21cc5c)
 ![battlecode-ingame-surrend](https://github.com/djLee77/battle-code/assets/117016295/dc896f47-e592-46ef-b668-3cdb61c9f075)
