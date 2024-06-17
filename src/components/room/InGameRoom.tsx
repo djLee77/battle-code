@@ -75,32 +75,6 @@ const InGameRoom = (props: IProps) => {
   const [messages, setMessages] = useState<IMessages[]>([]);
   const { roomSubscribe, publishMessage } = useWebSocketStore();
 
-  const getProblmes = async () => {
-    try {
-      const response = await api.get(
-        `v1/games/${props.roomStatus.roomId}/problems`
-      );
-      console.log(response.data.problems);
-      setProblems(response.data.problems);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
-      } else {
-        console.error('알 수 없는 에러:', error);
-      }
-    }
-  };
-
-  const handleSurrend = () => {
-    console.log('항복 버튼');
-    publishMessage(
-      `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
-      {}
-    );
-
-    console.log(surrenders);
-  };
-
   useEffect(() => {
     // 초기 값 설정
     getProblmes();
@@ -129,6 +103,32 @@ const InGameRoom = (props: IProps) => {
       ]);
     });
   }, []);
+
+  const getProblmes = async () => {
+    try {
+      const response = await api.get(
+        `v1/games/${props.roomStatus.roomId}/problems`
+      );
+      console.log(response.data.problems);
+      setProblems(response.data.problems);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
+    }
+  };
+
+  const handleSurrend = () => {
+    console.log('항복 버튼');
+    publishMessage(
+      `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
+      {}
+    );
+
+    console.log(surrenders);
+  };
 
   useEffect(() => {
     const handleMessages = (msg: any) => {
@@ -245,6 +245,7 @@ const InGameRoom = (props: IProps) => {
   }, [props.userId, props.roomStatus.roomId, problems, code]);
 
   const handleGameEnd = useCallback(async (): Promise<void> => {
+    console.log(usersCorrectStatus, props.userId);
     if (usersCorrectStatus[0].id !== props.userId) {
       return;
     }
@@ -261,7 +262,7 @@ const InGameRoom = (props: IProps) => {
         console.error('알 수 없는 에러:', error);
       }
     }
-  }, [props.roomStatus.roomId]);
+  }, [props.roomStatus.roomId, props.userId, usersCorrectStatus]);
 
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
