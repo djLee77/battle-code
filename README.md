@@ -47,9 +47,12 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 
 <br>
 
-### Todo : UI 자유도(Tab 기능 상세 소개)
+### Todo : 방생성
+![battlecode-create-room](https://github.com/djLee77/battle-code/assets/117016295/1433fe9f-4813-42b6-84f6-bdd5ae56f473)
 
-### Todo : 방생성(방설정, 방설정 수정)
+<br>
+
+### Todo : UI 자유도(Tab 기능 상세 소개)
 
 ### Todo : 게임시작
 
