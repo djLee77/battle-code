@@ -17,7 +17,6 @@ interface IProps {
 
 const ScoreBoard = (props: IProps) => {
   const [testResults, setTestResults] = useState<ITestResults[]>([]);
-
   useEffect(() => {
     props.userStatus.map((user) => {
       setTestResults((prevResult: any) => [
@@ -26,14 +25,6 @@ const ScoreBoard = (props: IProps) => {
           id: user.userId,
           percent: 0,
           result: 'PASS',
-        },
-      ]);
-
-      props.setUsersCorrectStatus((prevCorrect: any) => [
-        ...prevCorrect,
-        {
-          id: user.userId,
-          isCorrect: false,
         },
       ]);
     });
