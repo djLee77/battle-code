@@ -59,6 +59,7 @@ const UserCard = (props: IProps) => {
               <option value="JAVA">JAVA</option>
               <option value="PYTHON">PYTHON</option>
               <option value="JAVASCRIPT">JAVASCRIPT</option>
+              <option value="C">C</option>
             </select>
           ) : (
             <span className={styles['var-data-color']}>
