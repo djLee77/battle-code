@@ -33,15 +33,11 @@ type FormValues = {
   title: string;
   password: string;
   maxUserCount: number;
-  problemLevel: number;
+  problemLevel: string;
   language: string;
   maxSubmitCount: number;
   limitTime: number;
 };
-
-interface Level {
-  [key: string]: number;
-}
 
 const ModifyRoomModal = React.memo(({ data }: any) => {
   const {
@@ -54,7 +50,7 @@ const ModifyRoomModal = React.memo(({ data }: any) => {
       title: data.title,
       password: data.password,
       maxUserCount: data.maxUserCount,
-      problemLevel: Number(data.problemLevel),
+      problemLevel: data.problemLevel,
       maxSubmitCount: data.maxSubmitCount,
       limitTime: data.limitTime,
       language: data.language,
