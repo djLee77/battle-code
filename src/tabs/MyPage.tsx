@@ -4,30 +4,29 @@ import api from 'utils/axios';
 import styles from 'styles/my-page/user.module.css';
 import InfiniteScroll from 'react-infinite-scroller';
 
-interface UsersResult {
+interface IMatchUsers {
   user: string;
   result: string;
 }
 
-interface UserTestData {
+interface IMatchResults {
   matchId: number;
   language: string;
   result: string;
   problemLevel: string;
   elapsedTime: string;
   date: string;
-  usersResult: UsersResult[];
+  usersResult: IMatchUsers[];
 }
-
+// 1페이지에 담을 데이터 양
 const SIZE = 10;
-const fetchPage = async (pageParam: number, userId: string | null) => {
-  if (userId) {
-    const response = await api.get(
-      `v1/recodes/${userId}?pageNo=${pageParam}&size=${SIZE}`
-    );
 
-    return response.data.data;
-  }
+const fetchPage = async (pageParam: number, userId: string | null) => {
+  const response = await api.get(
+    `v1/recodes/${userId}?pageNo=${pageParam}&size=${SIZE}`
+  );
+
+  return response.data.data;
 };
 
 const MyPage = () => {
@@ -37,12 +36,11 @@ const MyPage = () => {
     ({ pageParam = 1 }) => fetchPage(pageParam, userId),
     {
       getNextPageParam: (lastPage) => {
-        // lastPage의 데이터 개수를 기반으로 다음 페이지 존재 여부 확인
-        console.log(lastPage);
         return lastPage.currentPage !== lastPage.totalPage
           ? lastPage.currentPage + 1
           : undefined;
       },
+      enabled: !!userId, // userId가 있을 때만 쿼리 실행
       cacheTime: 600000, // 10분
       staleTime: 1000, // 10초
       refetchOnWindowFocus: false,
@@ -66,15 +64,15 @@ const MyPage = () => {
             loadMore={() => fetchNextPage()}
             hasMore={hasNextPage}
             loader={
-              <div className="loader" key={0}>
-                Loading ...
+              <div className={styles.loader}>
+                <div className={styles.spinner}></div>
               </div>
             }
             useWindow={false}
           >
             {data?.pages.map((page: any, index: any) => (
               <div key={index}>
-                {page.matchRecodeList.map((record: UserTestData) => (
+                {page.matchRecodeList.map((record: IMatchResults) => (
                   <RecordCard key={record.matchId} record={record} />
                 ))}
               </div>
