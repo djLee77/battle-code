@@ -2,9 +2,7 @@ import RecordCard from 'components/user/RecordCard';
 import { useInfiniteQuery } from 'react-query';
 import api from 'utils/axios';
 import styles from 'styles/my-page/user.module.css';
-import { useMemo } from 'react';
-import CircleProgress from 'components/user/CircleProgress';
-import { Typography } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroller';
 
 interface UsersResult {
   user: string;
@@ -22,55 +20,36 @@ interface UserTestData {
 }
 
 const SIZE = 10;
+const fetchPage = async (pageParam: number, userId: string | null) => {
+  if (userId) {
+    const response = await api.get(
+      `v1/recodes/${userId}?pageNo=${pageParam}&size=${SIZE}`
+    );
 
-const fetchPage = async ({ pageParam = 0 }) => {
-  const userId = localStorage.getItem('id');
-  const response = await api.get(
-    `v1/recodes/${userId}?pageNo=${pageParam}&size=${SIZE}`
-  );
-  return response.data;
+    return response.data.data;
+  }
 };
 
 const MyPage = () => {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-  } = useInfiniteQuery<any>('recodes', fetchPage, {
-    getNextPageParam: (lastPage) => {
-      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
-    },
-
-    cacheTime: 1000 * 60 * 10, // 10분 동안 캐시에 유지
-    staleTime: 1000 * 60 * 1, // 1분 동안 신선하게 유지
-  });
-
   const userId = localStorage.getItem('id');
-
-  // 스크롤 이벤트 핸들러
-  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
-    const { scrollHeight, scrollTop, clientHeight } = e.currentTarget;
-    if (
-      scrollHeight - scrollTop <= clientHeight * 1.5 &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage();
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery<any>(
+    ['recodes', userId], // queryKey에 userId 포함
+    ({ pageParam = 1 }) => fetchPage(pageParam, userId),
+    {
+      getNextPageParam: (lastPage) => {
+        // lastPage의 데이터 개수를 기반으로 다음 페이지 존재 여부 확인
+        console.log(lastPage);
+        return lastPage.currentPage !== lastPage.totalPage
+          ? lastPage.currentPage + 1
+          : undefined;
+      },
+      cacheTime: 600000, // 10분
+      staleTime: 1000, // 10초
+      refetchOnWindowFocus: false,
     }
-  };
+  );
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error loading data</div>;
-  }
-
-  console.log(data);
+  if (isLoading) return <div className="loading">Loading...</div>;
 
   return (
     <div className={styles[`user-container`]}>
@@ -78,32 +57,29 @@ const MyPage = () => {
         <h2>{userId}</h2>
       </div>
       <div className={styles[`record-container`]}>
-        <div className={styles[`circle-box`]}>
-          {/* <h4>
-            {userTestData.battleRecordList.length}전 {winCount}승 {drawCount}무{' '}
-            {lossCount}패
-          </h4>
-          <CircleProgress
-            progress={(winCount / userTestData.battleRecordList.length) * 100}
-            size={300}
-            strokeWidth={40}
-            circleColor="#FF5F58"
-            progressColor="#3278FF"
-          /> */}
-        </div>
+        <div className={styles[`circle-box`]}></div>
         <div
           className={styles[`record-box`]}
-          onScroll={handleScroll}
           style={{ height: '80vh', overflowY: 'auto' }}
         >
-          {data?.pages.map((page, index) => (
-            <div key={index}>
-              {page.data.map((record: UserTestData) => (
-                <RecordCard key={record.matchId} record={record} />
-              ))}
-            </div>
-          ))}
-          {isFetchingNextPage && <div>Loading more...</div>}
+          <InfiniteScroll
+            loadMore={() => fetchNextPage()}
+            hasMore={hasNextPage}
+            loader={
+              <div className="loader" key={0}>
+                Loading ...
+              </div>
+            }
+            useWindow={false}
+          >
+            {data?.pages.map((page: any, index: any) => (
+              <div key={index}>
+                {page.matchRecodeList.map((record: UserTestData) => (
+                  <RecordCard key={record.matchId} record={record} />
+                ))}
+              </div>
+            ))}
+          </InfiniteScroll>
         </div>
       </div>
     </div>
