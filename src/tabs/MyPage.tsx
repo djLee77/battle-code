@@ -1,5 +1,5 @@
 import RecordCard from 'components/user/RecordCard';
-import { useInfiniteQuery, useQueries, useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import api from 'utils/axios';
 import styles from 'styles/my-page/user.module.css';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -56,12 +56,17 @@ const MyPage = () => {
       enabled: !!userId, // userId가 있을 때만 쿼리 실행
       cacheTime: 600000, // 10분
       staleTime: 1000, // 10초
-      refetchOnWindowFocus: false,
     }
   );
 
-  const { data: overAlls } = useQuery(['overAlls', userId], () =>
-    fetchOverAlls(userId)
+  const { data: overAlls } = useQuery(
+    ['overAlls', userId],
+    () => fetchOverAlls(userId),
+    {
+      enabled: !!userId, // userId가 있을 때만 쿼리 실행
+      cacheTime: 600000, // 10분
+      staleTime: 1000, // 10초
+    }
   );
 
   if (isLoading) return <div className="loading">Loading...</div>;
