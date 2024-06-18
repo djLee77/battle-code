@@ -118,9 +118,8 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 ## 시스템 아키텍쳐
 ![image](https://github.com/djLee77/battle-code/assets/117016295/0efda5d7-ba79-48f6-a62a-96c23751ad0c)
 
-## 채점 기능 흐름도
-![image](https://github.com/djLee77/battle-code/assets/117016295/19f6711a-2cd5-4b08-a819-6143dcb0646c)
-
+## 코드 채점 흐름도
+![image](https://github.com/djLee77/battle-code/assets/117016295/9601b1cf-d251-4a37-b599-05827631ee22)
 
 ## ERD
 ![image](https://github.com/djLee77/battle-code/assets/117016295/b142721a-4dce-492a-9243-4e23027af82b)
