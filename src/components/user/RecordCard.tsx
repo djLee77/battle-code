@@ -27,7 +27,7 @@ const RecordCard = (props: IProps) => {
   };
 
   const resultColor: any = {
-    WIN: '#3D7FFF',
+    WIN: '#4EFFDF',
     DRAW: '#9C9C9C',
     LOSE: '#FF7070',
   };
