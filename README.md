@@ -29,9 +29,10 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
    - [인게임](#인게임)
    - [대전기록](#대전기록)
 3. [시스템 아키텍쳐](#시스템-아키텍쳐)
-4. [ERD](#erd)
-5. [팀원 소개](#팀원-소개)
-6. [기술 스택](#기술-스택)
+4. [채점 기능 흐름도](#채점-기능-흐름도)
+5. [ERD](#erd)
+6. [팀원 소개](#팀원-소개)
+7. [기술 스택](#기술-스택)
 
 
 ## 화면 구성
@@ -116,6 +117,10 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 
 ## 시스템 아키텍쳐
 ![image](https://github.com/djLee77/battle-code/assets/117016295/0efda5d7-ba79-48f6-a62a-96c23751ad0c)
+
+## 채점 기능 흐름도
+![image](https://github.com/djLee77/battle-code/assets/117016295/19f6711a-2cd5-4b08-a819-6143dcb0646c)
+
 
 ## ERD
 ![image](https://github.com/djLee77/battle-code/assets/117016295/b142721a-4dce-492a-9243-4e23027af82b)
