@@ -78,7 +78,7 @@ const CircleProgress = (props: CircleProgressProps) => {
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize="12"
-        fill="gray"
+        fill="#C5C5C5"
       >
         {`승: ${Math.round(winRatio * 100)}%, 무: ${Math.round(
           drawRatio * 100
