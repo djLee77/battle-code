@@ -112,6 +112,8 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 - React Query: React Query 라이브러리를 사용하여 API로부터 받아온 대전 기록 데이터를 캐싱하고 관리합니다. 이를 통해 로딩 속도를 향상시키고, 반복적인 요청을 줄여 성능을 최적화합니다.
 - Infinity Scroll: 대전 기록 목록은 Infinity Scroll 기능을 통해 구현되어, 사용자가 스크롤을 내릴 때마다 추가적인 기록을 불러와 화면에 표시합니다.
 
+<br>
+
 ## 시스템 아키텍쳐
 ![image](https://github.com/djLee77/battle-code/assets/117016295/0efda5d7-ba79-48f6-a62a-96c23751ad0c)
 
