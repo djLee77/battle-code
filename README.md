@@ -122,7 +122,7 @@ Battle Code는 기존의 온라인 저지 사이트(예: 백준, 프로그래머
 ![image](https://github.com/djLee77/battle-code/assets/117016295/9601b1cf-d251-4a37-b599-05827631ee22)
 
 ## ERD
-![image](https://github.com/djLee77/battle-code/assets/117016295/b142721a-4dce-492a-9243-4e23027af82b)
+![image](https://github.com/djLee77/battle-code/assets/117016295/5e97f1d3-cf48-45f6-8056-05f88965ec09)
 
 ## 팀원 소개
 ### 🌞Front-end
