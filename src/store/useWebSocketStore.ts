@@ -32,11 +32,6 @@ const useWebSocketStore = create<WebSocketStoreState>((set) => ({
         console.log('연결 성공');
         // 연결 됐으면 연결 상태 true로 변경
         set((state) => ({ ...state, isConnected: true }));
-        // 연결 성공 후 default room 구독
-        client.subscribe('/topic/public/room', (message) => {
-          console.log('받은 메시지:', message.body);
-          // 원하는 작업을 수행
-        });
       },
       // 에러 났을 때
       onStompError: (frame) => {
