@@ -43,10 +43,10 @@ const MyPage = () => {
     data: matchHistory,
     fetchNextPage,
     hasNextPage,
-    isLoading,
+    isLoading: matchHistoryIsLoading,
   } = useInfiniteQuery<any>(
     ['matchHistory', userId], // queryKey에 userId 포함
-    ({ pageParam = 1 }) => fetchMatchHistory(pageParam, userId),
+    ({ pageParam = 0 }) => fetchMatchHistory(pageParam, userId),
     {
       getNextPageParam: (lastPage) => {
         return lastPage.currentPage !== lastPage.totalPage
@@ -55,21 +55,24 @@ const MyPage = () => {
       },
       enabled: !!userId, // userId가 있을 때만 쿼리 실행
       cacheTime: 600000, // 10분
-      staleTime: 1000, // 10초
+      staleTime: 60000, // 1분
     }
   );
 
-  const { data: overAlls } = useQuery(
+  const { data: overAlls, isLoading } = useQuery(
     ['overAlls', userId],
     () => fetchOverAlls(userId),
     {
       enabled: !!userId, // userId가 있을 때만 쿼리 실행
       cacheTime: 600000, // 10분
-      staleTime: 1000, // 10초
+      staleTime: 60000, // 1분
     }
   );
 
+  if (matchHistoryIsLoading) return <div className="loading">Loading...</div>;
   if (isLoading) return <div className="loading">Loading...</div>;
+
+  console.log(matchHistory);
 
   return (
     <div className={styles[`user-container`]}>
