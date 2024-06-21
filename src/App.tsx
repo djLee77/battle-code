@@ -3,11 +3,17 @@ import MainPage from './pages/Main';
 import Login from './pages/Login';
 import './styles/global-style.css';
 
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
+
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />}></Route>
+        <QueryClientProvider client={queryClient}>
+          <Route path="/" element={<MainPage />}></Route>
+        </QueryClientProvider>
         <Route path="/login" element={<Login />}></Route>
       </Routes>
     </BrowserRouter>
