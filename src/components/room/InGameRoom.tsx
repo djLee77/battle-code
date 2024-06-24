@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios';
+import { useCallback, useEffect, useState } from 'react';
 import CodeEditor from 'components/room/ingame-room/CodeEditor';
 import Timer from './ingame-room/Timer';
 import Chat from 'components/room/chat/Chat';
 import GameResultModal from 'components/room/ingame-room/GameResultModal';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
-import { useCallback, useEffect, useState } from 'react';
 import useWebSocketStore from 'store/useWebSocketStore';
 import styles from 'styles/room/room.module.css';
 import { IUserStatus } from 'types/roomType';
@@ -61,152 +61,121 @@ interface IMessages {
 }
 
 const InGameRoom = (props: IProps) => {
-  const [problems, setProblems] = useState<IProblem[]>([]); // 코딩테스트 문제
+  const [problems, setProblems] = useState<IProblem[]>([]);
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
-  ); // 작성 코드
-  const [surrenders, setSurrenders] = useState<ISurrenders[]>([]); // 항복 여부
+  );
+  const [surrenders, setSurrenders] = useState<ISurrenders[]>([]);
   const [usersCorrectStatus, setUsersCorrectStatus] = useState<IisCorrect[]>(
     []
   );
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
-  const [isGameEnd, setIsGameEnd] = useState<boolean>(false); // 게임 종료 여부
-  const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>(); // 승자 정보
+  const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
+  const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>();
   const [messages, setMessages] = useState<IMessages[]>([]);
   const { roomSubscribe, publishMessage } = useWebSocketStore();
 
   useEffect(() => {
-    // 초기 값 설정
-    getProblmes();
-
-    props.userStatus.map((user) => {
-      setSurrenders((prevSurrender: any) => [
-        ...prevSurrender,
-        {
-          id: user.userId,
-          isSurrender: false,
-        },
-      ]);
-    });
-
-    const sortedUserStatus = props.userStatus.sort((a, b) =>
-      a.userId.localeCompare(b.userId)
-    );
-
-    sortedUserStatus.map((user) => {
-      setUsersCorrectStatus((prevCorrect: any) => [
-        ...prevCorrect,
-        {
-          id: user.userId,
-          isCorrect: false,
-        },
-      ]);
-    });
+    initializeGame();
   }, []);
 
-  const getProblmes = async () => {
+  const initializeGame = async () => {
+    await fetchProblems();
+    initializeUserStates();
+  };
+
+  const fetchProblems = async () => {
     try {
       const response = await api.get(
         `v1/games/${props.roomStatus.roomId}/problems`
       );
-      console.log(response.data.problems);
       setProblems(response.data.problems);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
-      } else {
-        console.error('알 수 없는 에러:', error);
-      }
+    } catch (error) {
+      console.error(
+        'Error fetching problems:',
+        error instanceof Error ? error.message : error
+      );
     }
   };
 
-  const handleSurrend = () => {
-    console.log('항복 버튼');
-    publishMessage(
-      `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
-      {}
+  const initializeUserStates = () => {
+    const sortedUserStatus = [...props.userStatus].sort((a, b) =>
+      a.userId.localeCompare(b.userId)
     );
 
-    console.log(surrenders);
+    const initialSurrenders = sortedUserStatus.map((user) => ({
+      id: user.userId,
+      isSurrender: false,
+    }));
+    const initialCorrectStatus = sortedUserStatus.map((user) => ({
+      id: user.userId,
+      isCorrect: false,
+    }));
+
+    setSurrenders(initialSurrenders);
+    setUsersCorrectStatus(initialCorrectStatus);
   };
 
   useEffect(() => {
     const handleMessages = (msg: any) => {
-      console.log('인게임 : ', msg);
-
-      // 게임 결과
       if (msg.gameEnd) {
         setWinnerInfo(msg.gameEnd);
         setIsGameEnd(true);
       }
 
       if (msg.userStatusList) {
-        console.log('유저 정보');
         props.setUserStatus(msg.userStatusList);
       }
 
       if (msg.userSurrender) {
-        setSurrenders((prevSurrender: any) =>
-          prevSurrender.map((surrender: any) =>
-            surrender.id === msg.userSurrender.userId
-              ? {
-                  id: msg.userSurrender.userId,
-                  isSurrender: msg.userSurrender.surrender,
-                }
-              : surrender
-          )
-        );
+        updateSurrenders(msg.userSurrender);
       }
 
-      // 채팅
       if (msg.message) {
-        setMessages((prevMessages: IMessages[]) => [
-          ...prevMessages,
-          msg.message,
-        ]);
+        setMessages((prevMessages) => [...prevMessages, msg.message]);
       }
 
-      // 유저 퇴장
       if (msg.leaveUserStatus) {
-        const leaveUserStatus = msg.leaveUserStatus;
-        console.log('유저 퇴장!');
-        setUsersCorrectStatus((prevTestResults: any) =>
-          prevTestResults.filter(
-            (user: any) => user.id !== leaveUserStatus.userId
-          )
-        );
-
-        setSurrenders((prevTestResults: any) =>
-          prevTestResults.filter(
-            (user: any) => user.id !== leaveUserStatus.userId
-          )
-        );
+        handleUserLeave(msg.leaveUserStatus);
       }
     };
 
     emitter.on('message', handleMessages);
 
-    // Cleanup 함수를 사용하여 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       emitter.off('message', handleMessages);
     };
   }, []);
 
+  const updateSurrenders = (userSurrender: any) => {
+    setSurrenders((prevSurrenders) =>
+      prevSurrenders.map((surrender) =>
+        surrender.id === userSurrender.userId
+          ? { id: userSurrender.userId, isSurrender: userSurrender.surrender }
+          : surrender
+      )
+    );
+  };
+
+  const handleUserLeave = (leaveUserStatus: any) => {
+    setUsersCorrectStatus((prevStatus) =>
+      prevStatus.filter((user) => user.id !== leaveUserStatus.userId)
+    );
+    setSurrenders((prevSurrenders) =>
+      prevSurrenders.filter((user) => user.id !== leaveUserStatus.userId)
+    );
+  };
+
   useEffect(() => {
     const correctedUsers = usersCorrectStatus.filter(
       (status) => status.isCorrect
     );
-
-    // 정답을 맞춘 유저들은 surrenders 배열에서 제거
-    setSurrenders((prevSurrender) =>
-      prevSurrender.filter(
+    setSurrenders((prevSurrenders) =>
+      prevSurrenders.filter(
         (surrender) =>
           !correctedUsers.find((corrected) => corrected.id === surrender.id)
       )
     );
-
-    console.log('정답자 제거');
-    console.log(usersCorrectStatus);
 
     if (correctedUsers.length === props.userStatus.length) {
       handleGameEnd();
@@ -214,13 +183,10 @@ const InGameRoom = (props: IProps) => {
   }, [usersCorrectStatus]);
 
   useEffect(() => {
-    const isAllSurrender = surrenders.every(
-      (surrender) => surrender.isSurrender
-    );
-
-    console.log(surrenders);
-
-    if (isAllSurrender && surrenders.length > 0) {
+    if (
+      surrenders.every((surrender) => surrender.isSurrender) &&
+      surrenders.length > 0
+    ) {
       handleGameEnd();
     }
   }, [surrenders]);
@@ -233,8 +199,6 @@ const InGameRoom = (props: IProps) => {
   };
 
   const handleSubmit = useCallback(() => {
-    console.log('제출');
-
     api.post(`v1/judges`, {
       problemId: problems[0].id,
       roomId: props.roomStatus.roomId,
@@ -245,50 +209,41 @@ const InGameRoom = (props: IProps) => {
   }, [props.userId, props.roomStatus.roomId, problems, code]);
 
   const handleGameEnd = useCallback(async (): Promise<void> => {
-    console.log(usersCorrectStatus, props.userId);
-    if (usersCorrectStatus[0].id !== props.userId) {
-      return;
-    }
+    if (usersCorrectStatus[0]?.id !== props.userId) return;
 
     try {
-      const response: AxiosResponse = await api.post(
-        `v1/games/${props.roomStatus.roomId}/end`,
-        {}
+      await api.post(`v1/games/${props.roomStatus.roomId}/end`, {});
+    } catch (error) {
+      console.error(
+        'Error ending game:',
+        error instanceof Error ? error.message : error
       );
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
-      } else {
-        console.error('알 수 없는 에러:', error);
-      }
     }
   }, [props.roomStatus.roomId, props.userId, usersCorrectStatus]);
 
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
-      const response = await api.post(
-        `v1/games/${props.roomStatus.roomId}/leave`,
-        {}
-      );
-      console.log(response);
+      await api.post(`v1/games/${props.roomStatus.roomId}/leave`, {});
       removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-
-      if (roomSubscribe.subscription) {
-        console.log(roomSubscribe);
-        roomSubscribe.subscription.unsubscribe();
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
-      } else {
-        console.error('알 수 없는 에러:', error);
-      }
+      roomSubscribe.subscription?.unsubscribe();
+    } catch (error) {
+      console.error(
+        'Error leaving room:',
+        error instanceof Error ? error.message : error
+      );
     }
   }, [
     props.roomStatus.roomId,
     props.dockLayoutRef,
     roomSubscribe.subscription,
   ]);
+
+  const handleSurrender = () => {
+    publishMessage(
+      `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
+      {}
+    );
+  };
 
   return (
     <div>
@@ -308,7 +263,7 @@ const InGameRoom = (props: IProps) => {
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
-            {problems?.map((problem) => (
+            {problems.map((problem) => (
               <Problem key={problem.id} problem={problem} />
             ))}
           </div>
@@ -320,22 +275,16 @@ const InGameRoom = (props: IProps) => {
         </div>
         <div className={styles.center}>
           <div className={styles.centerBody}>
-            <div className={styles.flexGrow}>
-              <CodeEditor
-                className={styles.flexGrow}
-                language={searchMyLanguage().toLowerCase()}
-                code={code}
-                setCode={setCode}
-              />
-            </div>
+            <CodeEditor
+              className={styles.flexGrow}
+              language={searchMyLanguage().toLowerCase()}
+              code={code}
+              setCode={setCode}
+            />
           </div>
           <div className={styles.centerFooter}>
-            <div style={{ marginRight: '10px' }}>
-              <RoomCustomButton onClick={handleSubmit}>
-                제출하기
-              </RoomCustomButton>
-              <RoomCustomButton onClick={handleSurrend}>항복</RoomCustomButton>
-            </div>
+            <RoomCustomButton onClick={handleSubmit}>제출하기</RoomCustomButton>
+            <RoomCustomButton onClick={handleSurrender}>항복</RoomCustomButton>
           </div>
         </div>
         {!isRightSideHide ? (
