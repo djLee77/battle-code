@@ -14,6 +14,12 @@ const SearchRoom = (props: any) => {
         value={props.value}
         onChange={(e) => handleInputValue(e)}
       />
+      <style>
+        {` 
+          ::placeholder { 
+              color: black; 
+          }`}
+      </style>
     </div>
   );
 };
