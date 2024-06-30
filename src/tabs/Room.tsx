@@ -38,7 +38,7 @@ const Room = (props: IProps) => {
     if (!webSocketClient) return;
 
     const subscription = webSocketClient.subscribe(
-      `/topic/room/${props.data.roomStatus.roomId}`,
+      `/topic/rooms/${props.data.roomStatus.roomId}`,
       (message: any) => {
         const receivedMessage = JSON.parse(message.body);
         emitter.emit('message', receivedMessage);
@@ -55,6 +55,7 @@ const Room = (props: IProps) => {
       roomStatus={roomStatus}
       userStatus={userStatus}
       setIsGameStart={setIsGameStart}
+      setUserStatus={setUserStatus}
     />
   ) : (
     <WaitingRoom

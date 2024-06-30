@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import CustomButton from '../ui/CustomButton';
-import styles from '../../styles/create-room.module.css';
+import styles from '../../styles/room-list/create-room.module.css';
 import React, { useState } from 'react';
 import { langData, levelData, limitTImeData } from '../../data/roomSettingData';
 import { useForm } from 'react-hook-form';
@@ -31,8 +31,8 @@ type FormValues = {
   title: string;
   pw: string;
   memberCount: number;
-  level: string;
-  lang: string;
+  level: number;
+  lang: number;
   submissionCount: number;
   limitTime: number;
 };
@@ -67,15 +67,15 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
 
       console.log(data);
 
-      const response = await api.post(`v1/room`, {
+      const response = await api.post(`v1/rooms`, {
         hostId: localStorage.getItem('id'),
         title: data.title,
         password: data.pw || '',
         language: data.lang,
-        problemLevel: Number(data.level),
-        maxUserCount: Number(data.memberCount),
-        maxSubmitCount: Number(data.submissionCount),
-        limitTime: Number(data.limitTime),
+        problemLevel: data.level,
+        maxUserCount: data.memberCount,
+        maxSubmitCount: data.submissionCount,
+        limitTime: data.limitTime,
       });
       console.log(response);
       const roomId = response.data.data.roomStatus.roomId;

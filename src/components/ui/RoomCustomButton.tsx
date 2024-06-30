@@ -1,6 +1,6 @@
 // CustomButton.js
 import React from 'react';
-import styles from 'styles/room-button.module.css';
+import styles from 'styles/room/room-button.module.css';
 
 interface IProps {
   onClick: () => void;

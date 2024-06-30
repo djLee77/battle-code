@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import styles from '../styles/signup-modal.module.css';
+import styles from '../styles/login/signup-modal.module.css';
 
 interface SignupModalProps {
   isOpen: boolean;

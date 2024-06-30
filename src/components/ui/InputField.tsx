@@ -2,11 +2,12 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 import styles from 'styles/input-field.module.css';
 
 interface IProps {
-  label: string;
+  label?: string;
+  placeholder?: string;
   type: string;
   register: UseFormRegisterReturn;
-  defaultValue: any;
-  error: any;
+  defaultValue?: any;
+  error?: any;
 }
 
 const InputField = (props: IProps) => {
@@ -19,6 +20,7 @@ const InputField = (props: IProps) => {
           {...props.register}
           defaultValue={props.defaultValue}
           type={props.type}
+          placeholder={props.placeholder}
         />
       </div>
       <span

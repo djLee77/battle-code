@@ -1,0 +1,11 @@
+.input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: white;
+    height: 56px;
+    width: 245px;
+    padding-left: 10px;
+}

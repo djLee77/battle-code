@@ -1,47 +1,52 @@
+import React, { useEffect, useState } from 'react';
 import ListCard from 'components/room-list/ListCard';
 import { IRoomList } from 'types';
-import styles from 'styles/room-list.module.css';
-import RoomEntry from 'components/room-list/RoomEntry';
+import styles from 'styles/room-list/room-list.module.css';
+import SearchRoom from 'components/room-list/SearchRoom';
 import CustomButton from 'components/ui/CustomButton';
 import CreateRoomModal from 'components/room-list/CreateRoomModal';
 import api from 'utils/axios';
-// import { useQuery } from 'react-query';
-import { useEffect, useState } from 'react';
 import DockLayout from 'rc-dock';
+import useWebSocketStore from 'store/useWebSocketStore';
+import Room from './Room';
+import { addTab } from 'utils/tabs';
+import PasswordModal from 'components/room-list/PasswordModal';
 
 interface RoomListProps {
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 const RoomList = ({ dockLayoutRef }: RoomListProps) => {
-  const [roomList, setRoomList] = useState([]);
-  // const {
-  //   data: roomList,
-  //   isLoading,
-  //   isError,
-  //   isFetching,
-  //   refetch,
-  // } = useQuery('roomList', getGameRoomList, {
-  //   staleTime: 3000,
-  //   refetchOnMount: true,
-  //   refetchOnWindowFocus: false,
-  // });
+  const [roomList, setRoomList] = useState<IRoomList[]>([]);
+  const [filteredRoomList, setFilteredRoomList] = useState<IRoomList[]>([]);
+  const [password, setPassword] = useState<string>('');
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const { roomSubscribe } = useWebSocketStore();
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
+  useEffect(() => {
+    getGameRoomList();
+  }, []);
 
-  // if (isError) {
-  //   return <div>Error occurred!</div>;
-  // }
+  useEffect(() => {
+    if (searchValue) {
+      const filteredRooms = roomList.filter((room) =>
+        room.roomId.toString().includes(searchValue)
+      );
+      setFilteredRoomList(filteredRooms);
+    } else {
+      setFilteredRoomList(roomList);
+    }
+  }, [searchValue, roomList]);
 
   // 대기방 목록 불러오는 함수
   const getGameRoomList = async () => {
     try {
-      const response = await api.get(`v1/roomList`);
+      const response = await api.get(`v1/roomLists`);
       console.log(response);
       response.data.data.shift(); // default 방 제거
       setRoomList(response.data.data);
+      setFilteredRoomList(response.data.data);
       return response.data.data;
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -52,37 +57,70 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
     }
   };
 
-  useEffect(() => {
-    getGameRoomList();
-  }, []);
-
-  // console.log(isLoading, isFetching);
+  const handleEnterRoom = async (room: any) => {
+    if (room.isLocked) setOpenModal(false);
+    try {
+      console.log(roomSubscribe);
+      if (roomSubscribe.subscription) {
+        roomSubscribe.subscription.unsubscribe();
+      }
+      const response = await api.post(`v1/rooms/${room.roomId}/enter`, {
+        userId: localStorage.getItem('id'),
+        roomId: room.roomId,
+        password: password,
+      });
+      console.log(response);
+      // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+      addTab(
+        `${room.roomId}번방`,
+        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+        dockLayoutRef
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
+      } else {
+        console.error('알 수 없는 에러:', error);
+      }
+    }
+  };
 
   return (
-    <div className={styles[`list-container`]}>
-      <div className={styles.top}>
-        <RoomEntry />
-        <div className={styles[`btn-group`]}>
-          <CustomButton type="button" size="small" onClick={getGameRoomList}>
-            방 새로고침
-          </CustomButton>
-          <CreateRoomModal dockLayoutRef={dockLayoutRef} />
+    <>
+      <div className={styles[`list-container`]}>
+        <div className={styles.top}>
+          <SearchRoom value={searchValue} onChange={setSearchValue} />
+          <div className={styles[`btn-group`]}>
+            <CustomButton type="button" size="small" onClick={getGameRoomList}>
+              방 새로고침
+            </CustomButton>
+            <CreateRoomModal dockLayoutRef={dockLayoutRef} />
+          </div>
+        </div>
+        <div className={styles.list}>
+          {!filteredRoomList.length ? (
+            <p>대기방이 존재하지 않습니다.</p>
+          ) : (
+            filteredRoomList.map((room: IRoomList) => (
+              <ListCard
+                key={room.roomId}
+                room={room}
+                dockLayoutRef={dockLayoutRef}
+                setOpenModal={setOpenModal}
+                handleEnterRoom={handleEnterRoom}
+              />
+            ))
+          )}
         </div>
       </div>
-      <div className={styles.list}>
-        {!roomList.length ? (
-          <p>대기방이 존재하지 않습니다.</p>
-        ) : (
-          roomList.map((room: IRoomList) => (
-            <ListCard
-              key={room.roomId}
-              room={room}
-              dockLayoutRef={dockLayoutRef}
-            />
-          ))
-        )}
-      </div>
-    </div>
+      <PasswordModal
+        password={password}
+        setPassword={setPassword}
+        open={openModal}
+        setOpen={setOpenModal}
+        handleEnterRoom={handleEnterRoom}
+      />
+    </>
   );
 };
 

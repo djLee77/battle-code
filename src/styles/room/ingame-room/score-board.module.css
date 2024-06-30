@@ -1,0 +1,27 @@
+.boards{
+    display: flex;
+    margin-right: 10px;
+}
+
+.score-board {
+    margin-right: 5px;
+    background-color: #36383C;
+    margin-top: 10px;
+    padding : 0px 10px 10px 10px;
+    border-radius: 10px;
+    height: 53px;
+}
+
+.test-info {
+    display: flex;
+    padding: 4px;
+    justify-content: space-between;
+}
+
+
+.user-id {
+}
+
+.percent-box {
+    display: flex;
+}

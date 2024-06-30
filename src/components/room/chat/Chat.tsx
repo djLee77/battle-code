@@ -1,48 +1,45 @@
-import { useState } from 'react';
-
-import styles from 'styles/room.module.css';
+import React, { useCallback, useEffect, useState } from 'react';
+import styles from 'styles/room/room.module.css';
 import ChatList from './ChatList';
 
-const Chat = () => {
-  const [isHide, setIsHide] = useState<boolean>(false);
+interface IMessages {
+  messageType: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
+}
+
+interface IProps {
+  isRightSideHide: boolean;
+  setIsRightSideHide: (isRightSideHide: boolean) => void;
+  messages: IMessages[];
+  roomId: number;
+}
+
+const Chat = React.memo((props: IProps) => {
   return (
     <>
-      {!isHide ? (
-        <div className={styles.rightSide}>
-          <div className={styles.rightBody}>
-            <div
-              className={styles[`chat`]}
-              style={isHide ? { display: 'none' } : { display: 'block' }}
-            >
-              <p style={{ cursor: 'pointer' }}>
-                <span
-                  onClick={() => setIsHide(true)}
-                  role="img"
-                  aria-label="arrow-open"
-                >
-                  ▶
-                </span>
-              </p>
-              <ChatList />
-            </div>
-          </div>
-          <div className={styles.rightFooter}>입력창</div>
+      <div
+        className={styles[`chat`]}
+        style={
+          props.isRightSideHide ? { display: 'none' } : { display: 'block' }
+        }
+      >
+        <p style={{ cursor: 'pointer' }}>
+          <span
+            onClick={() => props.setIsRightSideHide(true)}
+            role="img"
+            aria-label="arrow-open"
+          >
+            ▶
+          </span>
+        </p>
+        <div style={{ paddingLeft: '10px' }}>
+          <ChatList messages={props.messages} />
         </div>
-      ) : (
-        <div className={styles.hideRight}>
-          <p style={{ cursor: 'pointer' }}>
-            <span
-              onClick={() => setIsHide(false)}
-              role="img"
-              aria-label="arrow-open"
-            >
-              ◀
-            </span>
-          </p>
-        </div>
-      )}
+      </div>
     </>
   );
-};
+});
 
 export default Chat;

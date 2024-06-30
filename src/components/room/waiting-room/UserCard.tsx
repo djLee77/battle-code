@@ -1,5 +1,5 @@
 import useWebSocketStore from 'store/useWebSocketStore';
-import styles from 'styles/user-card.module.css';
+import styles from 'styles/room/waiting-room/user-card.module.css';
 import { IUserStatus } from 'types/roomType';
 
 interface IProps {
@@ -11,17 +11,17 @@ interface IProps {
 const UserCard = (props: IProps) => {
   const { publishMessage } = useWebSocketStore();
 
-  const handleLanguageChange = (
-    userId: string,
-    newLanguage: string,
-    userStatus: IUserStatus[],
-    roomId: number
-  ): void => {
-    const updateUser = userStatus.find((user) => user.userId === userId);
+  const handleLanguageChange = (newLanguage: string): void => {
+    const updateUser = props.userStatus.find(
+      (user) => user.userId === props.userData.userId
+    );
     if (updateUser) {
       updateUser.language = newLanguage;
       console.log(newLanguage);
-      publishMessage(`/app/room/${roomId}/update/user-status`, updateUser);
+      publishMessage(
+        `/app/rooms/${props.roomId}/update/user-status`,
+        updateUser
+      );
     }
   };
 
@@ -54,18 +54,12 @@ const UserCard = (props: IProps) => {
             <select
               className={styles.select}
               value={props.userData.language}
-              onChange={(event) =>
-                handleLanguageChange(
-                  props.userData.userId,
-                  event.target.value,
-                  props.userStatus,
-                  props.roomId
-                )
-              }
+              onChange={(event) => handleLanguageChange(event.target.value)}
             >
-              <option value="java">java</option>
-              <option value="python">python</option>
-              <option value="javascript">javascript</option>
+              <option value="JAVA">JAVA</option>
+              <option value="PYTHON">PYTHON</option>
+              <option value="JAVASCRIPT">JAVASCRIPT</option>
+              <option value="C">C</option>
             </select>
           ) : (
             <span className={styles['var-data-color']}>

@@ -7,11 +7,12 @@ import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
 import { useCallback, useEffect, useState } from 'react';
 import useWebSocketStore from 'store/useWebSocketStore';
-import styles from 'styles/room.module.css';
+import styles from 'styles/room/room.module.css';
 import { IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import emitter from 'utils/eventEmitter';
 import { removeTab } from 'utils/tabs';
+import ChatInput from './chat/ChatInput';
 
 interface IProps {
   userId: string | null;
@@ -25,9 +26,17 @@ interface IProps {
   ) => void;
 }
 
+interface IMessages {
+  messageType: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
+}
+
 const WaitingRoom = (props: IProps) => {
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
-
+  const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
+  const [messages, setMessages] = useState<IMessages[]>([]);
   const { publishMessage, roomSubscribe } = useWebSocketStore();
 
   useEffect(() => {
@@ -95,6 +104,14 @@ const WaitingRoom = (props: IProps) => {
       if (msg.startMessage) {
         props.setIsGameStart(true);
       }
+
+      // 채팅
+      if (msg.message) {
+        setMessages((prevMessages: IMessages[]) => [
+          ...prevMessages,
+          msg.message,
+        ]);
+      }
     };
 
     emitter.on('message', handleMessages);
@@ -108,7 +125,7 @@ const WaitingRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/room/leave/${props.roomStatus.roomId}`,
+        `v1/rooms/${props.roomStatus.roomId}/leave`,
         {}
       );
       console.log(response);
@@ -130,7 +147,7 @@ const WaitingRoom = (props: IProps) => {
     if (updateUser) {
       updateUser.isReady = !updateUser.isReady;
       publishMessage(
-        `/app/room/${props.roomStatus.roomId}/update/user-status`,
+        `/app/rooms/${props.roomStatus.roomId}/update/user-status`,
         updateUser
       );
     }
@@ -139,10 +156,9 @@ const WaitingRoom = (props: IProps) => {
   const handleGameStart = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/game/${props.roomStatus.roomId}/start`,
+        `v1/rooms/${props.roomStatus.roomId}/start`,
         {}
       );
-      props.setIsGameStart(true);
       console.log(response);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -155,12 +171,16 @@ const WaitingRoom = (props: IProps) => {
 
   return (
     <div>
-      <>
-        <h1 className={styles.title}>{props.roomStatus.title}</h1>
-        {props.roomStatus.hostId === props.userId && (
-          <ModifyRoomModal data={props.roomStatus} />
-        )}
-      </>
+      <div style={{ display: 'flex' }}>
+        <div>
+          <h1 className={styles.title}>{props.roomStatus.title}</h1>
+        </div>
+        <div style={{ margin: '20px 0px 0px 0px' }}>
+          {props.roomStatus.hostId === props.userId && (
+            <ModifyRoomModal data={props.roomStatus} />
+          )}
+        </div>
+      </div>
       <div className={styles.container}>
         <div className={styles.leftSide}>
           <div className={styles.leftBody}>
@@ -197,7 +217,33 @@ const WaitingRoom = (props: IProps) => {
             )}
           </div>
         </div>
-        <Chat />
+        {!isRightSideHide ? (
+          <div className={styles.rightSide}>
+            <div className={styles.rightBody}>
+              <Chat
+                isRightSideHide={isRightSideHide}
+                setIsRightSideHide={setIsRightSideHide}
+                messages={messages}
+                roomId={props.roomStatus.roomId}
+              />
+            </div>
+            <div className={styles.rightFooter}>
+              <ChatInput roomId={props.roomStatus.roomId} />
+            </div>
+          </div>
+        ) : (
+          <div className={styles.hideRight}>
+            <p style={{ cursor: 'pointer' }}>
+              <span
+                onClick={() => setIsRightSideHide(false)}
+                role="img"
+                aria-label="arrow-open"
+              >
+                ◀
+              </span>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

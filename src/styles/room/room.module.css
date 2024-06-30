@@ -6,32 +6,26 @@
     gap: 8px;
 }
 
-.titleBox {
+.header {
     display: flex;
     width: 100%;
     justify-content: space-between;
 }
 
-.timerBox{
+.titleBox {
     display: flex;
+    justify-content: space-between;
+    min-width: 150px;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+
 }
 
-.boards{
+.timerBox {
+    padding-top: 7px;
     display: flex;
-    margin-right: 10px;
-}
-
-.score-board {
-    margin-right: 5px;
-    background-color: #3c3c3c;
-    margin-top: 10px;
-    padding : 0px 10px 5px 10px;
-    border-radius: 10px;
-    height: 50px;
-}
-
-.percent-box {
-    display: flex;
+    font-size: x-large;
 }
 
 .title {
@@ -49,19 +43,22 @@
 }
 
 .leftSide {
-    flex: 1; /* 너비를 자동으로 조정 */
+    flex: 1;
+    /* 너비를 자동으로 조정 */
 }
 
 .center {
-    flex: 2; /* 너비를 자동으로 조정 */
+    flex: 2;
+    /* 너비를 자동으로 조정 */
 }
 
 .rightSide {
-    width: 250px; /* 채팅창 역할을 할 수 있을 정도로 넓이 설정 */
+    width: 250px;
+    /* 채팅창 역할을 할 수 있을 정도로 넓이 설정 */
 }
 
 .hideRight {
-    width: 20px; 
+    width: 20px;
 }
 
 .leftBody,
@@ -72,6 +69,10 @@
     flex-direction: column;
     border: 2px solid #3c3c3c;
     overflow-y: auto;
+}
+
+.rightBody {
+    background-color: #313131;
 }
 
 .leftFooter,

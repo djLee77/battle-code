@@ -1,8 +1,0 @@
-.user-list {
-    border: 1px solid white;
-    flex: 1;
-    display: grid;
-    gap: 24px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
-    padding: 24px;
-}

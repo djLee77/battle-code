@@ -7,7 +7,7 @@ import {
   setAccessToken,
 } from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/login.module.css';
+import styles from '../styles/login/login.module.css';
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);

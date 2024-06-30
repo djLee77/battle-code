@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IUserStatus } from 'types/roomType';
 import ProgressBarComponent from './ProgressBar';
-import styles from 'styles/room.module.css';
+import styles from 'styles/room/ingame-room/score-board.module.css';
 import emitter from 'utils/eventEmitter';
 
 interface ITestResults {
@@ -26,14 +26,6 @@ const ScoreBoard = (props: IProps) => {
           id: user.userId,
           percent: 0,
           result: 'PASS',
-        },
-      ]);
-
-      props.setUsersCorrectStatus((prevCorrect: any) => [
-        ...prevCorrect,
-        {
-          id: user.userId,
-          isCorrect: false,
         },
       ]);
     });
@@ -90,7 +82,22 @@ const ScoreBoard = (props: IProps) => {
     <div className={styles.boards}>
       {testResults.map((item) => (
         <div key={item.id} className={styles['score-board']}>
-          <div>{item.id}</div>
+          <div className={styles['test-info']}>
+            <div className={styles['user-id']}>{item.id}</div>
+            <div className={styles.result}>
+              {item.percent === 0 ? (
+                ''
+              ) : item.result === 'FAIL' ? (
+                <span style={{ color: '#DD4124' }}>틀렸습니다</span>
+              ) : item.result === 'PASS' && item.percent === 100 ? (
+                <span>맞았습니다!</span>
+              ) : item.result === 'ERROR' ? (
+                <span>ERROR</span>
+              ) : (
+                `${Math.round(item.percent)}%`
+              )}
+            </div>
+          </div>
           <div className={styles['percent-box']}>
             <div style={{ paddingTop: '4px' }}>
               <ProgressBarComponent
@@ -98,16 +105,6 @@ const ScoreBoard = (props: IProps) => {
                 roundedValue={Math.round(item.percent)}
                 result={item.result}
               />
-            </div>
-            <div style={{ marginLeft: '5px' }}>
-              {Math.round(item.percent)}%
-              {item.percent === 0
-                ? ''
-                : item.result === 'FAIL'
-                ? '틀렸습니다'
-                : item.result === 'PASS' && item.percent === 100
-                ? '맞았습니다'
-                : '채점중'}
             </div>
           </div>
         </div>
