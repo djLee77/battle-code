@@ -1,0 +1,23 @@
+.container {
+}
+
+.header {
+  margin: 5px;
+}
+
+.body {
+  margin: 5px;
+}
+
+.footer {
+  margin: 5px;
+}
+
+.languageMenu {
+  width: 150px;
+  height: 35px;
+  background-size: 20px;
+  padding: 5px 30px 5px 10px;
+  border-radius: 4px;
+  outline: 0 none;
+}

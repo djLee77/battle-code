@@ -1,0 +1,28 @@
+.list-container {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 12px;
+    padding: 12px;
+    flex-direction: column;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.btn-group {
+    display: flex
+}
+
+.btn-group button {
+    margin-right: 18px;
+}
+
+.list {
+    padding: 12px;
+    overflow-y: auto;
+    height: fit-content;
+    max-height: 600px;
+}

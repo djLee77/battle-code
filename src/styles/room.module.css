@@ -1,0 +1,129 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 10px;
+    gap: 8px;
+}
+
+.titleBox {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.timerBox{
+    display: flex;
+}
+
+.boards{
+    display: flex;
+    margin-right: 10px;
+}
+
+.score-board {
+    margin-right: 5px;
+    background-color: #3c3c3c;
+    margin-top: 10px;
+    padding : 0px 10px 5px 10px;
+    border-radius: 10px;
+    height: 50px;
+}
+
+.percent-box {
+    display: flex;
+}
+
+.title {
+    font-size: 30px;
+    padding: 10px;
+}
+
+.leftSide,
+.center,
+.rightSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 70vh;
+}
+
+.leftSide {
+    flex: 1; /* 너비를 자동으로 조정 */
+}
+
+.center {
+    flex: 2; /* 너비를 자동으로 조정 */
+}
+
+.rightSide {
+    width: 250px; /* 채팅창 역할을 할 수 있을 정도로 넓이 설정 */
+}
+
+.hideRight {
+    width: 20px; 
+}
+
+.leftBody,
+.centerBody,
+.rightBody {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #3c3c3c;
+    overflow-y: auto;
+}
+
+.leftFooter,
+.centerFooter,
+.rightFooter {
+    height: 60px;
+    display: flex;
+    align-items: end;
+    margin-top: 10px;
+    border: 2px solid #3c3c3c;
+}
+
+
+.leftFooter {
+    justify-content: start;
+}
+
+.centerFooter {
+    justify-content: end;
+}
+
+.rightFooter {
+    justify-content: center;
+}
+
+.problem {
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.description {
+    margin-top: 10px;
+}
+
+.description h4 {
+    margin-bottom: 5px;
+}
+
+.flexGrow {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.roomSettings {
+    border: 1px solid black;
+    margin-top: 10px;
+    flex: 0.4
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
