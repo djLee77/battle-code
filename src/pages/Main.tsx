@@ -10,7 +10,10 @@ import useWebSocketStore from 'store/useWebSocketStore';
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const { isConnected, connectWebSocket, subscribe } = useWebSocketStore();
+  const { isConnected, connectWebSocket, subscribe, subscriptions } =
+    useWebSocketStore();
+
+  console.log(subscriptions);
 
   // 컴포넌트가 마운트될 때 WebSocket 연결 시도
   useEffect(() => {
@@ -21,17 +24,18 @@ export default function MainPage() {
 
   // webscoket 연결 후 default, error방 구독
   useEffect(() => {
-    if (isConnected) {
-      console.log(isConnected);
-      // default room 구독
-      subscribe('/topic/room/0', (message: any) => {
-        console.log('공개 대기실 : ', message.body);
-      });
-      // 에러 메시지 room 구독 (에러 발생 시 메시지로 알려줌)
-      subscribe('/topic/error', (message: any) => {
-        console.log('error room : ', message.body);
-      });
-    }
+    if (!isConnected) return;
+    console.log('WebSocket connected:', isConnected);
+
+    // default room 구독
+    subscribe('default', '/topic/room/0', (message: any) => {
+      console.log('공개 대기실 : ', message.body);
+    });
+
+    // 에러 메시지 room 구독 (에러 발생 시 메시지로 알려줌)
+    subscribe('error', '/topic/error', (message: any) => {
+      console.log('error room : ', message.body);
+    });
   }, [isConnected]);
 
   const dockLayoutRef = useRef<DockLayout>(null); // DockLayout 컴포넌트에 대한 ref 생성
