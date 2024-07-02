@@ -15,7 +15,7 @@ const Room = (props: IProps) => {
   const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
   const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
   const [userStatus, setUserStatus] = useState(props.data.userStatus); // 유저들 상태
-  const { webSocketClient, setRoomSubscription } = useWebSocketStore();
+  const { isConnected, subscribe } = useWebSocketStore();
   const userId = localStorage.getItem('id');
 
   // 새로고침을 막는 함수
@@ -35,18 +35,14 @@ const Room = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    if (!webSocketClient) return;
+    if (!isConnected) return;
+    const destination = `/topic/rooms/${props.data.roomStatus.roomId}`;
 
-    const subscription = webSocketClient.subscribe(
-      `/topic/rooms/${props.data.roomStatus.roomId}`,
-      (message: any) => {
-        const receivedMessage = JSON.parse(message.body);
-        emitter.emit('message', receivedMessage);
-      }
-    );
-
-    setRoomSubscription(subscription);
-  }, [webSocketClient, props.data.roomStatus.roomId, setRoomSubscription]);
+    subscribe('room', destination, (message: any) => {
+      const receivedMessage = JSON.parse(message.body);
+      emitter.emit('message', receivedMessage);
+    });
+  }, [isConnected, props.data.roomStatus.roomId]);
 
   return isGameStart ? (
     <InGameRoom
