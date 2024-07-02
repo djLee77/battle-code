@@ -36,7 +36,9 @@ const MessageItem = React.memo((props: IProps) => {
       >
         {props.message.senderId}
       </div>
-      {props.message.message}
+      <div style={{ wordBreak: 'break-all', width: '100px' }}>
+        {props.message.message}
+      </div>
     </div>
   );
 });
