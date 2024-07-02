@@ -130,48 +130,52 @@ const MyPage = () => {
             <h2>{searchedUserId}</h2>
             <div className={styles.search}></div>
           </div>
-          <div className={styles[`record-container`]}>
-            <div className={styles[`circle-box`]}>
-              <h4>
-                {overAlls?.total}전 {overAlls?.win}승 {overAlls?.draw}무{' '}
-                {overAlls?.lose}패
-              </h4>
-              <CircleProgress
-                win={overAlls?.win}
-                draw={overAlls?.draw}
-                lose={overAlls?.lose}
-                total={overAlls?.total}
-                size={300}
-                strokeWidth={40}
-                winColor="#3278FF"
-                drawColor="#555555"
-                loseColor="#FF5F58"
-              />
-            </div>
-            <div
-              className={styles[`record-box`]}
-              style={{ height: '80vh', overflowY: 'auto' }}
-            >
-              <InfiniteScroll
-                loadMore={() => fetchNextPage()}
-                hasMore={hasNextPage}
-                loader={
-                  <div className={styles.loader}>
-                    <div className={styles.spinner}></div>
-                  </div>
-                }
-                useWindow={false}
+          {overAlls?.total ? (
+            <div className={styles[`record-container`]}>
+              <div className={styles[`circle-box`]}>
+                <h4>
+                  {overAlls?.total}전 {overAlls?.win}승 {overAlls?.draw}무{' '}
+                  {overAlls?.lose}패
+                </h4>
+                <CircleProgress
+                  win={overAlls?.win}
+                  draw={overAlls?.draw}
+                  lose={overAlls?.lose}
+                  total={overAlls?.total}
+                  size={300}
+                  strokeWidth={40}
+                  winColor="#3278FF"
+                  drawColor="#555555"
+                  loseColor="#FF5F58"
+                />
+              </div>
+              <div
+                className={styles[`record-box`]}
+                style={{ height: '80vh', overflowY: 'auto' }}
               >
-                {matchHistory?.pages.map((page: any, index: any) => (
-                  <div key={index}>
-                    {page.matchRecodeList.map((record: IMatchHistory) => (
-                      <RecordCard key={record.matchId} record={record} />
-                    ))}
-                  </div>
-                ))}
-              </InfiniteScroll>
+                <InfiniteScroll
+                  loadMore={() => fetchNextPage()}
+                  hasMore={hasNextPage}
+                  loader={
+                    <div className={styles.loader}>
+                      <div className={styles.spinner}></div>
+                    </div>
+                  }
+                  useWindow={false}
+                >
+                  {matchHistory?.pages.map((page: any, index: any) => (
+                    <div key={index}>
+                      {page.matchRecodeList.map((record: IMatchHistory) => (
+                        <RecordCard key={record.matchId} record={record} />
+                      ))}
+                    </div>
+                  ))}
+                </InfiniteScroll>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className={styles.emptyRecords}>전적 기록이 없습니다.</div>
+          )}
         </>
       )}
     </div>

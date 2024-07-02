@@ -20,12 +20,23 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
-  width: 30%;
   height: 80%;
   margin: 5%;
   align-content: center;
   align-items: center;
   justify-content: center;
+}
+
+.errorContainer {
+  height: 20px;
+  /* 오류 메시지가 들어갈 공간을 항상 확보 */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.errorMessage {
+  color: rgb(255, 95, 95);
 }
 
 .input {
@@ -41,7 +52,8 @@
 
 ::placeholder {
   color: #fff;
-  opacity: 1; /* Firefox */
+  opacity: 1;
+  /* Firefox */
 }
 
 .item {
@@ -101,8 +113,8 @@
 
 .intro {
   color: #fff;
-  font:icon;
-  font-weight:bold;
+  font: icon;
+  font-weight: bold;
   font-size: medium;
   margin-bottom: 30px;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import SignupModal from '../components/SignupModal';
 import {
   setRefreshToken,
@@ -13,12 +13,14 @@ const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear previous error message
     try {
       const response = await axios.post(`${serverUrl}v1/oauth/sign-in`, {
         userId: userId,
@@ -31,7 +33,6 @@ const Login = () => {
       navigate('/');
       console.log('로그인 성공');
     } catch (error: any) {
-      // 에러면 error 출력 아니면 log 출력
       if (error instanceof Error) {
         console.error(error);
       } else {
@@ -41,6 +42,7 @@ const Login = () => {
         const message =
           error.response?.data?.message ?? '서버에서 응답을 받지 못했습니다.';
         console.error('로그인 실패:', message);
+        setErrorMessage('Error : 아이디 또는 비밀번호가 잘못되었습니다.');
       } else {
         // Axios 외의 에러 처리
       }
@@ -83,6 +85,11 @@ const Login = () => {
             placeholder="Password"
             required
           />
+        </div>
+        <div className={styles.errorContainer}>
+          {errorMessage && (
+            <div className={styles.errorMessage}>{errorMessage}</div>
+          )}
         </div>
         <div className={styles.item}>
           <button className={`${styles.customBtn}`} type="submit">
