@@ -78,11 +78,10 @@
 .leftFooter,
 .centerFooter,
 .rightFooter {
-    height: 60px;
+    /* height: 60px; */
     display: flex;
     align-items: end;
     margin-top: 10px;
-    border: 2px solid #3c3c3c;
 }
 
 

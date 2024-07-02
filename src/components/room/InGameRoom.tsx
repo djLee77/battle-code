@@ -283,8 +283,12 @@ const InGameRoom = (props: IProps) => {
             />
           </div>
           <div className={styles.centerFooter}>
+            <div style={{ marginRight: 34 }}>
+              <RoomCustomButton onClick={handleSurrender}>
+                항복
+              </RoomCustomButton>
+            </div>
             <RoomCustomButton onClick={handleSubmit}>제출하기</RoomCustomButton>
-            <RoomCustomButton onClick={handleSurrender}>항복</RoomCustomButton>
           </div>
         </div>
         {!isRightSideHide ? (
