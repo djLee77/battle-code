@@ -73,7 +73,7 @@ const InGameRoom = (props: IProps) => {
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>();
   const [messages, setMessages] = useState<IMessages[]>([]);
-  const { roomSubscribe, publishMessage } = useWebSocketStore();
+  const { publishMessage, unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
     initializeGame();
@@ -225,18 +225,14 @@ const InGameRoom = (props: IProps) => {
     try {
       await api.post(`v1/games/${props.roomStatus.roomId}/leave`, {});
       removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-      roomSubscribe.subscription?.unsubscribe();
+      unsubscribe('room');
     } catch (error) {
       console.error(
         'Error leaving room:',
         error instanceof Error ? error.message : error
       );
     }
-  }, [
-    props.roomStatus.roomId,
-    props.dockLayoutRef,
-    roomSubscribe.subscription,
-  ]);
+  }, [props.roomStatus.roomId, props.dockLayoutRef, unsubscribe]);
 
   const handleSurrender = () => {
     publishMessage(

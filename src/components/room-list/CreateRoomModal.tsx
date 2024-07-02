@@ -50,7 +50,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { roomSubscribe } = useWebSocketStore();
+  const { unsubscribe } = useWebSocketStore();
 
   const levelSelectList = levelData;
   const langSelectList = langData;
@@ -59,12 +59,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   // 방 생성 함수
   const handleCreateRoom = async (data: FormValues) => {
     try {
-      console.log(roomSubscribe);
-      // 이미 다른 방 구독 중이면 구독 중인 방 구독 해제
-      if (roomSubscribe.subscription) {
-        roomSubscribe.subscription.unsubscribe();
-      }
-
+      unsubscribe('room');
       console.log(data);
 
       const response = await api.post(`v1/rooms`, {

@@ -37,7 +37,7 @@ const WaitingRoom = (props: IProps) => {
   const [isAllUsersReady, setIsAllUsersReady] = useState<boolean>(false); // 모든 유저 준비 여부
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [messages, setMessages] = useState<IMessages[]>([]);
-  const { publishMessage, roomSubscribe } = useWebSocketStore();
+  const { publishMessage, unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
     // 호스트 유저를 제외한 모든 유저의 isReady 상태 확인
@@ -130,7 +130,7 @@ const WaitingRoom = (props: IProps) => {
       );
       console.log(response);
       removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-      roomSubscribe.subscription?.unsubscribe();
+      unsubscribe('room');
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('요청 실패:', error.message);
@@ -138,7 +138,7 @@ const WaitingRoom = (props: IProps) => {
         console.error('알 수 없는 에러:', error);
       }
     }
-  }, [props.roomStatus.roomId, props.dockLayoutRef, roomSubscribe]);
+  }, [props.roomStatus.roomId, props.dockLayoutRef, unsubscribe]);
 
   const handleReady = useCallback((): void => {
     const updateUser = props.userStatus.find(
