@@ -33,6 +33,12 @@
     transform: translateZ(0);
 }
 
+.emptyRecords {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
 .record-container {
     display: flex;
     align-items: center;
