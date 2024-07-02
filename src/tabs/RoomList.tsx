@@ -22,7 +22,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const [password, setPassword] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
-  const { roomSubscribe } = useWebSocketStore();
+  const { unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
     getGameRoomList();
@@ -60,10 +60,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const handleEnterRoom = async (room: any) => {
     if (room.isLocked) setOpenModal(false);
     try {
-      console.log(roomSubscribe);
-      if (roomSubscribe.subscription) {
-        roomSubscribe.subscription.unsubscribe();
-      }
+      unsubscribe('room');
       const response = await api.post(`v1/rooms/${room.roomId}/enter`, {
         userId: localStorage.getItem('id'),
         roomId: room.roomId,
