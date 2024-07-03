@@ -1,4 +1,5 @@
 import { Editor } from '@monaco-editor/react';
+import { Height } from '@mui/icons-material';
 import { Box, Modal } from '@mui/material';
 import RoomCustomButton from 'components/ui/RoomCustomButton';
 import { useState } from 'react';
@@ -30,6 +31,7 @@ const childStyle = {
   color: 'white',
   boxShadow: 24,
   p: 4,
+  height: '90%',
 };
 
 function ChildModal(props: any) {
@@ -55,13 +57,21 @@ function ChildModal(props: any) {
           <Editor
             value={props.winnerCode}
             theme="vs-dark"
-            height={600}
+            height={'90%'}
             language={props.language}
             options={{
               readOnly: true,
             }}
           />
-          <RoomCustomButton onClick={handleClose}>닫기</RoomCustomButton>
+          <div
+            style={{
+              marginTop: '24px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <RoomCustomButton onClick={handleClose}>닫기</RoomCustomButton>
+          </div>
         </Box>
       </Modal>
     </div>
@@ -84,7 +94,10 @@ const GameResultModal = (props: IProps) => {
     p: 4,
   };
 
-  const handleClose = () => props.setOpen(false);
+  const handleClose = () => {
+    props.setOpen(false);
+    props.setIsGameStart(false);
+  };
 
   return (
     <div>
@@ -110,22 +123,25 @@ const GameResultModal = (props: IProps) => {
           </div>
           <div>
             <h2>{props.winnerInfo?.result}</h2>
-            <h3>{props.winnerInfo?.userId}</h3>
-            <div style={{ display: 'flex', marginTop: '24px' }}>
-              {props.winnerInfo?.result !== 'DRAW' && (
+            {props.winnerInfo?.result !== 'DRAW' && (
+              <h3>{props.winnerInfo?.userId}</h3>
+            )}
+            <div
+              style={{
+                display: 'flex',
+                marginTop: '24px',
+                justifyContent: 'space-between',
+              }}
+            >
+              {props.winnerInfo?.result !== 'DRAW' ? (
                 <ChildModal
                   winnerCode={props.winnerInfo?.code}
                   language={props.winnerInfo?.language.toLowerCase()}
                 />
+              ) : (
+                <div></div>
               )}
-              <RoomCustomButton
-                onClick={() => {
-                  props.setIsGameStart(false);
-                  props.setOpen(false);
-                }}
-              >
-                닫기
-              </RoomCustomButton>
+              <RoomCustomButton onClick={handleClose}>닫기</RoomCustomButton>
             </div>
           </div>
         </Box>
