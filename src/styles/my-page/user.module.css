@@ -6,6 +6,16 @@
     flex-direction: column;
 }
 
+.search-box {
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+.search-box input::-webkit-input-placeholder {
+    color: #bbbbbb;
+}
+
 .user-info {
     display: flex;
     align-items: center;
@@ -43,6 +53,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 420px;
 }
 
 .circle-box h4 {
