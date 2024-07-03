@@ -113,7 +113,7 @@ const MyPage = () => {
 
   return (
     <div className={styles[`user-container`]}>
-      <div style={{ display: 'flex' }}>
+      <div className={styles[`search-box`]}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <InputField
             placeholder="유저 검색"
@@ -151,7 +151,7 @@ const MyPage = () => {
               </div>
               <div
                 className={styles[`record-box`]}
-                style={{ height: '80vh', overflowY: 'auto' }}
+                style={{ overflowY: 'auto' }}
               >
                 <InfiniteScroll
                   loadMore={() => fetchNextPage()}
