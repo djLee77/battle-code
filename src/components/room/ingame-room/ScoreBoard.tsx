@@ -10,9 +10,17 @@ interface ITestResults {
   result: string;
 }
 
+interface ISurrenders {
+  id: string;
+  isSurrender: boolean;
+}
+
 interface IProps {
   userStatus: IUserStatus[];
   setUsersCorrectStatus: (isCorrect: any) => void;
+  setIsJudging: (isJudging: boolean) => void;
+  userId: string | null;
+  surrenders: ISurrenders[];
 }
 
 const ScoreBoard = (props: IProps) => {
@@ -50,12 +58,19 @@ const ScoreBoard = (props: IProps) => {
               : item
           )
         );
+
+        if (result === 'FAIL' && props.userId === userId) {
+          props.setIsJudging(false);
+        }
         if (percent === 100 && result === 'PASS') {
           props.setUsersCorrectStatus((prev: any) =>
             prev.map((user: any) =>
               user.id === userId ? { id: userId, isCorrect: true } : user
             )
           );
+          if (props.userId === userId) {
+            props.setIsJudging(false);
+          }
         }
       }
       // 유저 퇴장
@@ -78,6 +93,34 @@ const ScoreBoard = (props: IProps) => {
     };
   }, []);
 
+  const getResultIcon = (item: ITestResults, surrenders: ISurrenders[]) => {
+    const isSurrender = surrenders.find(
+      (surrender) => surrender.id === item.id && surrender.isSurrender
+    );
+
+    if (isSurrender) {
+      return '😭🏳️';
+    }
+
+    if (item.percent === 0) {
+      return '';
+    }
+
+    switch (item.result) {
+      case 'FAIL':
+        return <span style={{ color: '#DD4124' }}>😧❌</span>;
+      case 'PASS':
+        if (item.percent === 100) {
+          return <span>💯🎉</span>;
+        }
+        return `${Math.round(item.percent)}%`;
+      case 'ERROR':
+        return <span>ERROR</span>;
+      default:
+        return `${Math.round(item.percent)}%`;
+    }
+  };
+
   return (
     <div className={styles.boards}>
       {testResults.map((item) => (
@@ -85,17 +128,7 @@ const ScoreBoard = (props: IProps) => {
           <div className={styles['test-info']}>
             <div className={styles['user-id']}>{item.id}</div>
             <div className={styles.result}>
-              {item.percent === 0 ? (
-                ''
-              ) : item.result === 'FAIL' ? (
-                <span style={{ color: '#DD4124' }}>틀렸습니다</span>
-              ) : item.result === 'PASS' && item.percent === 100 ? (
-                <span>맞았습니다!</span>
-              ) : item.result === 'ERROR' ? (
-                <span>ERROR</span>
-              ) : (
-                `${Math.round(item.percent)}%`
-              )}
+              {getResultIcon(item, props.surrenders)}
             </div>
           </div>
           <div className={styles['percent-box']}>
