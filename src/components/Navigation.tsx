@@ -14,13 +14,14 @@ interface NavigationProps {
 
 const Navigation = ({ dockLayoutRef }: NavigationProps) => {
   const navigate = useNavigate();
-  const { webSocketClient } = useWebSocketStore();
+  const { webSocketClient, setIsLogout } = useWebSocketStore();
 
   const handleUserInfo = () => {
     addTab('유저 정보', <MyPage />, dockLayoutRef);
   };
 
   const handleLogout = () => {
+    setIsLogout(true);
     webSocketClient?.deactivate();
     console.log(webSocketClient);
     removeRefreshToken();

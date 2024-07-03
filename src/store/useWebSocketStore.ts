@@ -13,11 +13,13 @@ interface WebSocketStoreState {
   webSocketClient: StompJs.Client | null;
   isConnected: boolean;
   subscriptions: Subscription[];
+  isLogout: boolean;
   connectWebSocket: (accessToken: string) => void;
   reconnectWebSocket: () => void;
   publishMessage: (destination: string, messageBody: any) => void;
   subscribe: (id: string, destination: string, callback: any) => void;
   unsubscribe: (id: string) => void;
+  setIsLogout: (loggingOut: boolean) => void;
 }
 
 // 전역 상태로 관리
@@ -25,6 +27,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
   webSocketClient: null,
   isConnected: false,
   subscriptions: [],
+  isLogout: false,
 
   // 소켓 연결
   connectWebSocket: (accessToken: string) => {
@@ -38,8 +41,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
       heartbeatOutgoing: 60 * 1000,
       onConnect: () => {
         console.log('연결 성공');
-        set((state) => ({ ...state, isConnected: true }));
-
+        set((state) => ({ ...state, isConnected: true, isLogout: false }));
         // 이전에 구독했던 채널을 다시 구독
         const subscriptions = get().subscriptions;
         console.log('구독 정보 : ', subscriptions);
@@ -55,7 +57,9 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
       // 연결 끊어졌을 때
       onWebSocketClose: () => {
         console.error('WebSocket closed');
-        get().reconnectWebSocket();
+        if (!get().isLogout) {
+          get().reconnectWebSocket();
+        }
       },
       onDisconnect: () => {
         console.log('연결 해제');
@@ -143,6 +147,11 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
       }
       return state;
     });
+  },
+
+  // 로그아웃 상태 설정
+  setIsLogout: (value: boolean) => {
+    set((state) => ({ ...state, isLogout: value }));
   },
 }));
 
