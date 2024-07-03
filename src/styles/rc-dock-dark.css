@@ -233,6 +233,7 @@ body>.dragging-layer>div:last-child {
 .dock-pane-cache {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
 }
 
 .dock-content {
