@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import CodeEditor from 'components/room/ingame-room/CodeEditor';
 import Timer from './ingame-room/Timer';
 import Chat from 'components/room/chat/Chat';
@@ -8,7 +8,7 @@ import RoomCustomButton from 'components/ui/RoomCustomButton';
 import DockLayout from 'rc-dock';
 import useWebSocketStore from 'store/useWebSocketStore';
 import styles from 'styles/room/room.module.css';
-import { IUserStatus } from 'types/roomType';
+import { IRoom, IUserStatus } from 'types/roomType';
 import api from 'utils/axios';
 import { removeTab } from 'utils/tabs';
 import Problem from './ingame-room/Problem';
@@ -27,10 +27,14 @@ interface IProblem {
   hint: string;
 }
 
+interface IRoomProps {
+  hostId: string;
+}
+
 interface IProps {
   userId: string | null;
   userStatus: IUserStatus[];
-  roomStatus: any;
+  roomStatus: IRoom;
   dockLayoutRef: React.RefObject<DockLayout>;
   setIsGameStart: (isGameStart: boolean) => void;
   setUserStatus: (userStatus: IUserStatus[]) => void;
@@ -73,10 +77,76 @@ const InGameRoom = (props: IProps) => {
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>();
   const [messages, setMessages] = useState<IMessages[]>([]);
+  const [isJudging, setIsJudging] = useState<boolean>(false);
+  const [submitCount, setSubmitCount] = useState<number>(
+    props.roomStatus.maxSubmitCount
+  );
   const { publishMessage, unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
     initializeGame();
+  }, []);
+
+  useEffect(() => {
+    const correctedUsers = usersCorrectStatus.filter(
+      (status) => status.isCorrect
+    );
+    setSurrenders((prevSurrenders) =>
+      prevSurrenders.filter(
+        (surrender) =>
+          !correctedUsers.find((corrected) => corrected.id === surrender.id)
+      )
+    );
+
+    if (correctedUsers.length === props.userStatus.length) {
+      handleGameEnd();
+    }
+  }, [usersCorrectStatus]);
+
+  useEffect(() => {
+    if (
+      surrenders.every((surrender) => surrender.isSurrender) &&
+      surrenders.length > 0
+    ) {
+      handleGameEnd();
+    }
+  }, [surrenders]);
+
+  useEffect(() => {
+    if (submitCount === 0) {
+      handleSurrender();
+    }
+  }, [submitCount]);
+
+  useEffect(() => {
+    const handleMessages = (msg: any) => {
+      if (msg.gameEnd) {
+        setWinnerInfo(msg.gameEnd);
+        setIsGameEnd(true);
+      }
+
+      if (msg.userStatusList) {
+        props.setUserStatus(msg.userStatusList);
+      }
+
+      if (msg.userSurrender) {
+        updateSurrenders(msg.userSurrender);
+      }
+
+      if (msg.message) {
+        setMessages((prevMessages) => [...prevMessages, msg.message]);
+      }
+
+      if (msg.leaveUserStatus) {
+        handleUserLeave(msg.leaveUserStatus);
+      }
+    };
+
+    emitter.on('message', handleMessages);
+
+    return () => {
+      emitter.off('message', handleMessages);
+    };
   }, []);
 
   const initializeGame = async () => {
@@ -116,37 +186,6 @@ const InGameRoom = (props: IProps) => {
     setUsersCorrectStatus(initialCorrectStatus);
   };
 
-  useEffect(() => {
-    const handleMessages = (msg: any) => {
-      if (msg.gameEnd) {
-        setWinnerInfo(msg.gameEnd);
-        setIsGameEnd(true);
-      }
-
-      if (msg.userStatusList) {
-        props.setUserStatus(msg.userStatusList);
-      }
-
-      if (msg.userSurrender) {
-        updateSurrenders(msg.userSurrender);
-      }
-
-      if (msg.message) {
-        setMessages((prevMessages) => [...prevMessages, msg.message]);
-      }
-
-      if (msg.leaveUserStatus) {
-        handleUserLeave(msg.leaveUserStatus);
-      }
-    };
-
-    emitter.on('message', handleMessages);
-
-    return () => {
-      emitter.off('message', handleMessages);
-    };
-  }, []);
-
   const updateSurrenders = (userSurrender: any) => {
     setSurrenders((prevSurrenders) =>
       prevSurrenders.map((surrender) =>
@@ -166,31 +205,6 @@ const InGameRoom = (props: IProps) => {
     );
   };
 
-  useEffect(() => {
-    const correctedUsers = usersCorrectStatus.filter(
-      (status) => status.isCorrect
-    );
-    setSurrenders((prevSurrenders) =>
-      prevSurrenders.filter(
-        (surrender) =>
-          !correctedUsers.find((corrected) => corrected.id === surrender.id)
-      )
-    );
-
-    if (correctedUsers.length === props.userStatus.length) {
-      handleGameEnd();
-    }
-  }, [usersCorrectStatus]);
-
-  useEffect(() => {
-    if (
-      surrenders.every((surrender) => surrender.isSurrender) &&
-      surrenders.length > 0
-    ) {
-      handleGameEnd();
-    }
-  }, [surrenders]);
-
   const searchMyLanguage = () => {
     const player = props.userStatus.find(
       (user) => user.userId === props.userId
@@ -198,14 +212,23 @@ const InGameRoom = (props: IProps) => {
     return player ? player.language : '';
   };
 
-  const handleSubmit = useCallback(() => {
-    api.post(`v1/judges`, {
-      problemId: problems[0].id,
-      roomId: props.roomStatus.roomId,
-      userId: props.userId,
-      language: searchMyLanguage(),
-      code: code,
-    });
+  const handleSubmit = useCallback(async () => {
+    try {
+      setSubmitCount((submitCount) => submitCount - 1);
+      setIsJudging(true);
+      await api.post(`v1/judges`, {
+        problemId: problems[0].id,
+        roomId: props.roomStatus.roomId,
+        userId: props.userId,
+        language: searchMyLanguage(),
+        code: code,
+      });
+    } catch (error) {
+      console.error(
+        'Error ending game:',
+        error instanceof Error ? error.message : error
+      );
+    }
   }, [props.userId, props.roomStatus.roomId, problems, code]);
 
   const handleGameEnd = useCallback(async (): Promise<void> => {
@@ -235,11 +258,24 @@ const InGameRoom = (props: IProps) => {
   }, [props.roomStatus.roomId, props.dockLayoutRef, unsubscribe]);
 
   const handleSurrender = () => {
-    publishMessage(
-      `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
-      {}
-    );
+    if (
+      window.confirm(
+        '항복을 하면 더이상 제출을 할 수 없게됩니다. 정말로 항복하시겠습니까?'
+      )
+    ) {
+      publishMessage(
+        `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
+        {}
+      );
+    }
   };
+
+  const isSurrender = useMemo(() => {
+    const findUser = surrenders.find(
+      (value) => value.id === props.userId && value.isSurrender
+    );
+    return findUser ? true : false;
+  }, [surrenders]);
 
   return (
     <div>
@@ -254,6 +290,9 @@ const InGameRoom = (props: IProps) => {
         <ScoreBoard
           userStatus={props.userStatus}
           setUsersCorrectStatus={setUsersCorrectStatus}
+          setIsJudging={setIsJudging}
+          userId={props.userId}
+          surrenders={surrenders}
         />
       </div>
       <div className={styles.container}>
@@ -284,7 +323,12 @@ const InGameRoom = (props: IProps) => {
                 항복
               </RoomCustomButton>
             </div>
-            <RoomCustomButton onClick={handleSubmit}>제출하기</RoomCustomButton>
+            <RoomCustomButton
+              onClick={handleSubmit}
+              disabled={isJudging || submitCount === 0 || isSurrender}
+            >
+              {'제출 ' + submitCount + ' / ' + props.roomStatus.maxSubmitCount}
+            </RoomCustomButton>
           </div>
         </div>
         {!isRightSideHide ? (
