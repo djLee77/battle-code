@@ -174,7 +174,11 @@ const MyPage = () => {
                   {matchHistory?.pages.map((page: any, index: any) => (
                     <div key={index}>
                       {page.matchRecodeList.map((record: IMatchHistory) => (
-                        <RecordCard key={record.matchId} record={record} />
+                        <RecordCard
+                          key={record.matchId}
+                          record={record}
+                          setSearchedUserId={setSearchedUserId}
+                        />
                       ))}
                     </div>
                   ))}

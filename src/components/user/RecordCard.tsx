@@ -17,6 +17,7 @@ interface UserTestData {
 
 interface IProps {
   record: UserTestData;
+  setSearchedUserId: (userId: string) => void;
 }
 
 const RecordCard = (props: IProps) => {
@@ -45,7 +46,12 @@ const RecordCard = (props: IProps) => {
       <div className={styles[`record-user`]}>
         <b>
           {props.record.usersResult.map((user) => (
-            <div>{user.user}</div>
+            <div
+              onClick={() => props.setSearchedUserId(user.user)}
+              className={styles[`user-id`]}
+            >
+              {user.user}
+            </div>
           ))}
         </b>
       </div>
