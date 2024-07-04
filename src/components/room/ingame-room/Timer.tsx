@@ -4,6 +4,7 @@ import styles from 'styles/room/room.module.css';
 interface IProps {
   handleGameEnd: () => void;
   limitTime: number;
+  isGameEnd: boolean;
 }
 
 const Timer = React.memo((props: IProps) => {
@@ -11,17 +12,20 @@ const Timer = React.memo((props: IProps) => {
 
   useEffect(() => {
     const timerId = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerId);
-          props.handleGameEnd();
-          return 0;
-        }
-        return prevTime - 1;
-      });
+      if (!props.isGameEnd) {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerId);
+            props.handleGameEnd();
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }
     }, 1000);
-  }, []);
 
+    return () => clearInterval(timerId);
+  }, [props.isGameEnd]);
   return (
     <div>
       <div className={styles.timerBox}>

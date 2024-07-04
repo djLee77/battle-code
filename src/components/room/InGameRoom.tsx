@@ -27,10 +27,6 @@ interface IProblem {
   hint: string;
 }
 
-interface IRoomProps {
-  hostId: string;
-}
-
 interface IProps {
   userId: string | null;
   userStatus: IUserStatus[];
@@ -245,15 +241,17 @@ const InGameRoom = (props: IProps) => {
   }, [props.roomStatus.roomId, props.userId, usersCorrectStatus]);
 
   const handleRoomLeave = useCallback(async (): Promise<void> => {
-    try {
-      await api.post(`v1/games/${props.roomStatus.roomId}/leave`, {});
-      removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-      unsubscribe('room');
-    } catch (error) {
-      console.error(
-        'Error leaving room:',
-        error instanceof Error ? error.message : error
-      );
+    if (window.confirm('정말로 나가시겠습니까?')) {
+      try {
+        await api.post(`v1/games/${props.roomStatus.roomId}/leave`, {});
+        removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
+        unsubscribe('room');
+      } catch (error) {
+        console.error(
+          'Error leaving room:',
+          error instanceof Error ? error.message : error
+        );
+      }
     }
   }, [props.roomStatus.roomId, props.dockLayoutRef, unsubscribe]);
 
@@ -285,6 +283,7 @@ const InGameRoom = (props: IProps) => {
           <Timer
             handleGameEnd={handleGameEnd}
             limitTime={props.roomStatus.limitTime}
+            isGameEnd={isGameEnd}
           />
         </div>
         <ScoreBoard
