@@ -172,10 +172,10 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
               />
             </div>
             <div className={styles[`btn-group`]}>
-              <CustomButton type="submit">생성</CustomButton>
               <CustomButton size="small" type="button" onClick={handleClose}>
                 취소
               </CustomButton>
+              <CustomButton type="submit">생성</CustomButton>
             </div>
           </form>
         </Box>
