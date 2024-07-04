@@ -90,6 +90,10 @@ const MyPage = () => {
       enabled: !!searchedUserId, // userId가 있을 때만 쿼리 실행
       cacheTime: 600000, // 10분
       staleTime: 60000, // 1분
+      retry: 1,
+      onError: (error: any) => {
+        console.error('Error fetching match history:', error.message);
+      },
     }
   );
 
@@ -104,6 +108,10 @@ const MyPage = () => {
       enabled: !!searchedUserId, // userId가 있을 때만 쿼리 실행
       cacheTime: 600000, // 10분
       staleTime: 60000, // 1분
+      retry: 1,
+      onError: (error: any) => {
+        console.error('Error fetching match history:', error.message);
+      },
     }
   );
 
