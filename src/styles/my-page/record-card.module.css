@@ -28,6 +28,15 @@
     min-width: 120px;
 }
 
+.user-id {
+    cursor: pointer;
+}
+
+.user-id:hover {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+}
+
 .record-level {
     display: flex;
     flex-direction: column;
