@@ -1,0 +1,13 @@
+.problem {
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.description {
+    margin-top: 10px;
+    text-align: justify;
+}
+
+.description h4 {
+    margin-bottom: 5px;
+}

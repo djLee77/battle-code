@@ -1,4 +1,4 @@
-import styles from 'styles/room/room.module.css';
+import styles from 'styles/room/ingame-room/problem.module.css';
 
 interface IProblem {
   id: number;

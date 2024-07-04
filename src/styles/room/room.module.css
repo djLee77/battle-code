@@ -94,19 +94,6 @@
     justify-content: center;
 }
 
-.problem {
-    margin-bottom: 20px;
-    padding: 10px;
-}
-
-.description {
-    margin-top: 10px;
-}
-
-.description h4 {
-    margin-bottom: 5px;
-}
-
 .flexGrow {
     flex-grow: 1;
     display: flex;
