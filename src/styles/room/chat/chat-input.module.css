@@ -8,4 +8,9 @@
     height: 38px;
     width: 245px;
     padding-left: 10px;
+
+}
+
+.input::-webkit-input-placeholder {
+    color: #bbbbbb;
 }

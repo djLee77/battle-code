@@ -40,6 +40,7 @@ const ChatInput = (props: IProps) => {
               handleSubmit(sendMessage)();
             }
           }}
+          placeholder="채팅 입력"
         />
       </form>
     </div>
