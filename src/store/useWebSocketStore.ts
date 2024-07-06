@@ -36,9 +36,9 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
-      reconnectDelay: 0,
-      heartbeatIncoming: 0,
-      heartbeatOutgoing: 0,
+      reconnectDelay: 20 * 100,
+      heartbeatIncoming: 60 * 1000,
+      heartbeatOutgoing: 60 * 1000,
       onConnect: () => {
         console.log('연결 성공');
         set((state) => ({ ...state, isConnected: true, isLogout: false }));
