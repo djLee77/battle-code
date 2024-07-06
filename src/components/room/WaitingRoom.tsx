@@ -207,6 +207,7 @@ const WaitingRoom = (props: IProps) => {
               <RoomCustomButton
                 // disabled={!isAllUsersReady}
                 onClick={handleGameStart}
+                bgColor="#108ee9"
               >
                 게임시작
               </RoomCustomButton>

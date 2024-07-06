@@ -325,6 +325,7 @@ const InGameRoom = (props: IProps) => {
             <RoomCustomButton
               onClick={handleSubmit}
               disabled={isJudging || submitCount === 0 || isSurrender}
+              bgColor="#108ee9"
             >
               {'제출 ' + submitCount + ' / ' + props.roomStatus.maxSubmitCount}
             </RoomCustomButton>

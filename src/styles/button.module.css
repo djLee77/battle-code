@@ -5,7 +5,6 @@
     cursor: pointer;
     font-weight: bold;
     outline: none;
-    background-color: #575A65;
     transition: background-color 0.2s;
 }
 
@@ -22,8 +21,4 @@
 .large {
     font-size: 20px;
     padding: 15px 30px;
-}
-
-.btn:hover {
-    background-color: #535353;
 }

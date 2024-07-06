@@ -175,7 +175,9 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
               <CustomButton size="small" type="button" onClick={handleClose}>
                 취소
               </CustomButton>
-              <CustomButton type="submit">생성</CustomButton>
+              <CustomButton type="submit" bgColor="#108ee9">
+                생성
+              </CustomButton>
             </div>
           </form>
         </Box>
