@@ -36,7 +36,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
-      reconnectDelay: 20 * 100,
+      reconnectDelay: 0,
       heartbeatIncoming: 60 * 1000,
       heartbeatOutgoing: 60 * 1000,
       onConnect: () => {
