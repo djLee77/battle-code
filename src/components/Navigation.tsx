@@ -14,7 +14,12 @@ interface NavigationProps {
 
 const Navigation = ({ dockLayoutRef }: NavigationProps) => {
   const navigate = useNavigate();
-  const { webSocketClient, setIsLogout } = useWebSocketStore();
+  const {
+    webSocketClient,
+    setIsLogout,
+    reconnectAttempts,
+    maxReconnectAttempts,
+  } = useWebSocketStore();
 
   const handleUserInfo = () => {
     addTab('유저 정보', <MyPage />, dockLayoutRef);
@@ -28,6 +33,11 @@ const Navigation = ({ dockLayoutRef }: NavigationProps) => {
     removeAccessToken();
     navigate('/login');
   };
+
+  if (reconnectAttempts === maxReconnectAttempts) {
+    alert('소켓 재연결 최대 횟수 도달.. 재 로그인 바랍니다.');
+    handleLogout();
+  }
 
   return (
     <nav className={styles.navigation}>

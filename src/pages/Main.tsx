@@ -10,10 +10,7 @@ import useWebSocketStore from 'store/useWebSocketStore';
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const { isConnected, connectWebSocket, subscribe, subscriptions } =
-    useWebSocketStore();
-
-  console.log(subscriptions);
+  const { isConnected, connectWebSocket, subscribe } = useWebSocketStore();
 
   // 컴포넌트가 마운트될 때 WebSocket 연결 시도
   useEffect(() => {
