@@ -14,6 +14,8 @@ interface WebSocketStoreState {
   isConnected: boolean;
   subscriptions: Subscription[];
   isLogout: boolean;
+  reconnectAttempts: number;
+  maxReconnectAttempts: number;
   connectWebSocket: (accessToken: string) => void;
   reconnectWebSocket: () => void;
   publishMessage: (destination: string, messageBody: any) => void;
@@ -28,6 +30,8 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
   isConnected: false,
   subscriptions: [],
   isLogout: false,
+  reconnectAttempts: 0,
+  maxReconnectAttempts: 3,
 
   // 소켓 연결
   connectWebSocket: (accessToken: string) => {
@@ -41,7 +45,12 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
       heartbeatOutgoing: 60 * 1000,
       onConnect: () => {
         console.log('연결 성공');
-        set((state) => ({ ...state, isConnected: true, isLogout: false }));
+        set((state) => ({
+          ...state,
+          isConnected: true,
+          isLogout: false,
+          reconnectAttempts: 0,
+        }));
         // 이전에 구독했던 채널을 다시 구독
         const subscriptions = get().subscriptions;
         console.log('구독 정보 : ', subscriptions);
@@ -74,11 +83,20 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
 
   // 재연결 로직
   reconnectWebSocket: async () => {
-    try {
-      const newAccessToken = await refreshAccessToken();
-      get().connectWebSocket(newAccessToken);
-    } catch (error) {
-      console.error('Failed to refresh token', error);
+    set((state) => ({
+      ...state,
+      reconnectAttempts: state.reconnectAttempts + 1,
+    }));
+    const { reconnectAttempts, maxReconnectAttempts } = get();
+    if (reconnectAttempts < maxReconnectAttempts) {
+      try {
+        const newAccessToken = await refreshAccessToken();
+        get().connectWebSocket(newAccessToken);
+      } catch (error) {
+        console.error('토큰 갱신 실패', error);
+      }
+    } else {
+      console.error('최대 재연결 시도 횟수 도달. 연결을 포기합니다.');
     }
   },
 
