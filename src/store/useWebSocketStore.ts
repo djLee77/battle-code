@@ -55,8 +55,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
         const subscriptions = get().subscriptions;
         console.log('구독 정보 : ', subscriptions);
         subscriptions.forEach(({ id, destination, callback }) => {
-          get().unsubscribe(id); // 기존 구독 해제
-          get().subscribe(id, destination, callback); // 다시 구독
+          get().subscribe(id, destination, callback);
         });
       },
       // 에러 났을 때
@@ -75,14 +74,6 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
         set((state) => ({ ...state, isConnected: false }));
       },
     });
-
-    if (
-      client.webSocket?.readyState === WebSocket.CLOSING ||
-      client.webSocket?.readyState === WebSocket.CLOSED
-    ) {
-      console.log('WebSocket is already in CLOSING or CLOSED state.');
-      return;
-    }
 
     client.activate(); // 클라이언트 활성화
     // 클라이언트 정보 저장
@@ -161,7 +152,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
   // 구독 해제
   unsubscribe: (id: string) => {
     set((state) => {
-      const { subscriptions } = state;
+      const { subscriptions, webSocketClient } = state;
       const subscription = subscriptions.find((sub) => sub.id === id);
       if (subscription) {
         subscription.subscription?.unsubscribe();
