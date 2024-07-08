@@ -1,8 +1,8 @@
-import LockOpenIcon from '@mui/icons-material/LockOpen';
 import styles from 'styles/room-list/list-card.module.css';
 import { IRoomList } from 'types';
 import LockIcon from '@mui/icons-material/Lock';
 import React from 'react';
+import { ReactComponent as LockOpenRightIcon } from '../../assets/icons/lock-open-right.svg';
 
 interface ListCardProps {
   room: IRoomList;
@@ -32,11 +32,13 @@ const ListCard = (props: ListCardProps) => {
     >
       <div className={styles[`top-box`]}>
         <h3 className={styles.title}>
-          {props.room.isLocked ? (
-            <LockIcon sx={{ marginRight: '12px' }} />
-          ) : (
-            <LockOpenIcon sx={{ marginRight: '12px' }} />
-          )}
+          <div style={{ marginRight: '12px' }}>
+            {props.room.isLocked ? (
+              <LockIcon />
+            ) : (
+              <LockOpenRightIcon width={24} height={24} fill="white" />
+            )}
+          </div>
           {`#${props.room.roomId}. ${props.room.title}`}
         </h3>
         <div className={styles[`status-box`]}>
