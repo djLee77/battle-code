@@ -15,8 +15,12 @@ interface IProps {
 const ChatList = React.memo((props: IProps) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
+  const scrollToBottom = (behavior: ScrollBehavior) => {
+    messageEndRef?.current?.scrollIntoView({ behavior: behavior });
+  };
+
   useEffect(() => {
-    messageEndRef?.current?.scrollIntoView({ behavior: 'smooth' });
+    scrollToBottom('smooth');
   }, [props.messages]);
 
   return (
