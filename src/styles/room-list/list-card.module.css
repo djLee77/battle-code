@@ -59,8 +59,8 @@
 }
 
 .option-list li {
-    background-color: #606060;
-    padding: 6px;
+    background-color: #2b2b2b;
+    padding: 6px 12px 6px 12px;
     border-radius: 12px;
     font-size: 12px;
     margin-right: 12px;
