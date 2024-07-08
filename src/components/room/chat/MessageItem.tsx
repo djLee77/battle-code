@@ -17,7 +17,6 @@ const MessageItem = React.memo((props: IProps) => {
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-
     let color = '#';
     for (let i = 0; i < 3; i++) {
       const value = (hash >> (i * 8)) & 0xff;
@@ -27,17 +26,39 @@ const MessageItem = React.memo((props: IProps) => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '300px',
+        margin: '10px 0',
+        fontFamily: 'Arial, sans-serif',
+      }}
+    >
       <div
         style={{
-          color: stringToColor(props.message.senderId),
-          marginRight: '12px',
+          backgroundColor: '#1E1E1E',
+          borderRadius: '15px',
+          padding: '10px',
+          color: '#FFFFFF',
         }}
       >
-        {props.message.senderId}
-      </div>
-      <div style={{ wordBreak: 'break-all', width: '100px' }}>
-        {props.message.message}
+        <div
+          style={{
+            color: stringToColor(props.message.senderId),
+            fontWeight: 'bold',
+            marginBottom: '5px',
+          }}
+        >
+          {props.message.senderId}
+        </div>
+        <div
+          style={{
+            wordBreak: 'break-word',
+          }}
+        >
+          {props.message.message}
+        </div>
       </div>
     </div>
   );
