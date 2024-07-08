@@ -11,6 +11,9 @@ import useWebSocketStore from 'store/useWebSocketStore';
 import Room from './Room';
 import { addTab } from 'utils/tabs';
 import PasswordModal from 'components/room-list/PasswordModal';
+import alertStyles from 'styles/alert.module.css';
+import { Alert } from '@mui/material';
+import useAlert from 'hooks/useAlert';
 
 interface RoomListProps {
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
@@ -22,6 +25,8 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const [password, setPassword] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [selectedRoom, setSelectedRoom] = useState<IRoomList>();
+  const { alertOpen, showAlert } = useAlert(false, 3000);
   const { unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
@@ -65,6 +70,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
         roomId: room.roomId,
         password: password,
       });
+      console.log(response);
       if (response.status === 200) {
         unsubscribe('room');
         // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
@@ -75,6 +81,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
         );
       }
     } catch (error: unknown) {
+      showAlert();
       if (error instanceof Error) {
         console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
       } else {
@@ -85,6 +92,15 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
 
   return (
     <>
+      {alertOpen && (
+        <Alert
+          variant="filled"
+          severity="error"
+          className={alertStyles[`alert-top`]}
+        >
+          방 입장에 실패했습니다.
+        </Alert>
+      )}{' '}
       <div className={styles[`list-container`]}>
         <div className={styles.top}>
           <SearchRoom value={searchValue} onChange={setSearchValue} />
@@ -106,6 +122,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
                 dockLayoutRef={dockLayoutRef}
                 setOpenModal={setOpenModal}
                 handleEnterRoom={handleEnterRoom}
+                setSelectedRoom={setSelectedRoom}
               />
             ))
           )}
@@ -117,6 +134,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
         open={openModal}
         setOpen={setOpenModal}
         handleEnterRoom={handleEnterRoom}
+        selectedRoom={selectedRoom}
       />
     </>
   );
