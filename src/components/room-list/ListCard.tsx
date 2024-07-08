@@ -12,6 +12,9 @@ interface ListCardProps {
 }
 
 const ListCard = (props: ListCardProps) => {
+  const language =
+    props.room.language === 'DEFAULT' ? '상관없음' : props.room.language;
+
   const handleClickRoom = () => {
     if (props.room.isLocked) {
       props.setOpenModal(true);
@@ -45,9 +48,9 @@ const ListCard = (props: ListCardProps) => {
       </div>
       <ul className={styles[`option-list`]}>
         <li>{`난이도 : ${props.room.problemLevel}`}</li>
-        <li>{`제한 시간 : ${props.room.limitTime}`}</li>
+        <li>{`제한 시간 : ${props.room.limitTime}분`}</li>
         <li>{`제출 제한 : ${props.room.maxSubmitCount}`}</li>
-        <li>{`언어 설정 : ${props.room.language}`}</li>
+        <li>{`언어 설정 : ${language}`}</li>
       </ul>
     </div>
   );
