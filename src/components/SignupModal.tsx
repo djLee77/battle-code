@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios, { AxiosError } from 'axios';
 import styles from '../styles/login/signup-modal.module.css';
 
@@ -13,19 +13,32 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [userIdAvailable, setUserIdAvailable] = useState(false);
+  const userIdRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
+  const validateUserId = (userId: string) => {
+    const regex = /^[a-zA-Z0-9]{1,10}$/;
+    return regex.test(userId);
+  };
+
   const checkUserIdAvailability = async () => {
+    if (userId === '') return;
+
+    if (!validateUserId(userId)) {
+      alert('User ID는 10자리 이하의 영어와 숫자만 가능합니다.');
+      userIdRef.current?.focus(); // userId 입력 필드에 포커스
+      return;
+    }
+
     try {
       // 서버에 중복 검사 요청을 보냅니다.
-      // 이 예제에서는 요청 URL과 응답 형식이 가정되어 있습니다.
       const response = await axios.get(
         `${serverUrl}v1/oauth/check-userId/${userId}`
       );
       // 서버에서 중복된 아이디가 없다고 응답하면 true, 중복되었다면 false를 반환한다고 가정
       console.log(response.data);
-      console.log();
       if (response.data.status === 200) {
         setUserIdAvailable(true);
         alert('사용 가능한 아이디입니다!');
@@ -34,8 +47,6 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       console.error('아이디 중복 검사 중 오류가 발생했습니다.', error);
       alert('중복된 아이디가 존재합니다.');
     }
-
-    console.log(userIdAvailable);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,6 +59,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
 
     if (password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
+      passwordRef.current?.focus();
       return;
     }
 
@@ -103,6 +115,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                     setUserIdAvailable(false);
                   }}
                   placeholder="User ID"
+                  ref={userIdRef}
                   required
                 />
                 <button
@@ -149,6 +162,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 placeholder="Confirm Password"
                 required
+                ref={passwordRef}
               />
             </div>
             <div className={styles.item}>
