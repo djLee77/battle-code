@@ -60,19 +60,20 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const handleEnterRoom = async (room: any) => {
     if (room.isLocked) setOpenModal(false);
     try {
-      unsubscribe('room');
       const response = await api.post(`v1/rooms/${room.roomId}/enter`, {
         userId: localStorage.getItem('id'),
         roomId: room.roomId,
         password: password,
       });
-      console.log(response);
-      // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
-      addTab(
-        `${room.roomId}번방`,
-        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
-        dockLayoutRef
-      );
+      if (response.status === 200) {
+        unsubscribe('room');
+        // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+        addTab(
+          `${room.roomId}번방`,
+          <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+          dockLayoutRef
+        );
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
