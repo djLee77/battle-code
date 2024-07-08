@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import { Alert } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import useWebSocketStore from 'store/useWebSocketStore';
 import styles from 'styles/room/chat/chat-input.module.css';
@@ -13,9 +15,13 @@ type FormValues = {
 const ChatInput = (props: IProps) => {
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const { publishMessage } = useWebSocketStore();
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const sendMessage = (data: FormValues): void => {
-    console.log(data.message);
+    if (data.message.length > 100) {
+      setAlertOpen(true);
+      return;
+    }
     if (data.message) {
       publishMessage(`/app/rooms/${props.roomId}/messages`, {
         senderId: localStorage.getItem('id'),
@@ -25,12 +31,28 @@ const ChatInput = (props: IProps) => {
     }
   };
 
+  useEffect(() => {
+    if (alertOpen) {
+      const timer = setTimeout(() => {
+        setAlertOpen(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertOpen]);
+
   return (
-    <div>
-      <form onSubmit={handleSubmit(sendMessage)}>
+    <div style={{ position: 'relative' }}>
+      {alertOpen && (
+        <Alert variant="filled" severity="error" className={styles.alert}>
+          채팅 입력 제한 수 100자를 넘겼습니다.
+        </Alert>
+      )}
+      <form
+        onSubmit={handleSubmit(sendMessage)}
+        style={{ position: 'relative' }}
+      >
         <input
-          className={styles[`input`]}
-          id={register.name}
+          className={styles.input}
           {...register('message', { required: true })}
           defaultValue=""
           type="text"
