@@ -9,6 +9,7 @@ interface ListCardProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
   setOpenModal: any;
   handleEnterRoom: any;
+  setSelectedRoom: any;
 }
 
 const ListCard = (props: ListCardProps) => {
@@ -18,6 +19,7 @@ const ListCard = (props: ListCardProps) => {
   const handleClickRoom = () => {
     if (props.room.isLocked) {
       props.setOpenModal(true);
+      props.setSelectedRoom(props.room);
     } else {
       props.handleEnterRoom(props.room);
     }

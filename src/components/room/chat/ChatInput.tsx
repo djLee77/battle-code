@@ -3,6 +3,8 @@ import { Alert } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import useWebSocketStore from 'store/useWebSocketStore';
 import styles from 'styles/room/chat/chat-input.module.css';
+import alertStyles from 'styles/alert.module.css';
+import useAlert from 'hooks/useAlert';
 
 interface IProps {
   roomId: number;
@@ -15,11 +17,11 @@ type FormValues = {
 const ChatInput = (props: IProps) => {
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const { publishMessage } = useWebSocketStore();
-  const [alertOpen, setAlertOpen] = useState(false);
+  const { alertOpen, showAlert } = useAlert(false, 3000);
 
   const sendMessage = (data: FormValues): void => {
     if (data.message.length > 100) {
-      setAlertOpen(true);
+      showAlert();
       return;
     }
     if (data.message) {
@@ -31,19 +33,10 @@ const ChatInput = (props: IProps) => {
     }
   };
 
-  useEffect(() => {
-    if (alertOpen) {
-      const timer = setTimeout(() => {
-        setAlertOpen(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [alertOpen]);
-
   return (
     <div style={{ position: 'relative' }}>
       {alertOpen && (
-        <Alert variant="filled" severity="error" className={styles.alert}>
+        <Alert variant="filled" severity="error" className={alertStyles.alert}>
           채팅 입력 제한 수 100자를 넘겼습니다.
         </Alert>
       )}
