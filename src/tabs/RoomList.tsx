@@ -82,6 +82,7 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
       }
     } catch (error: unknown) {
       showAlert();
+      getGameRoomList();
       if (error instanceof Error) {
         console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
       } else {
