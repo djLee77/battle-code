@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import styles from 'styles/room/room.module.css';
+import React from 'react';
+import styles from 'styles/room/chat/chat.module.css';
 import ChatList from './ChatList';
 
 interface IMessages {
@@ -20,21 +20,23 @@ const Chat = React.memo((props: IProps) => {
   return (
     <>
       <div
-        className={styles[`chat`]}
-        style={
-          props.isRightSideHide ? { display: 'none' } : { display: 'block' }
-        }
+        className={props.isRightSideHide ? styles[`chat-hide`] : styles.chat}
       >
-        <p style={{ cursor: 'pointer' }}>
-          <span
-            onClick={() => props.setIsRightSideHide(true)}
-            role="img"
-            aria-label="arrow-open"
-          >
-            ▶
-          </span>
-        </p>
-        <div style={{ paddingLeft: '10px' }}>
+        <button
+          className={styles[`hide-button`]}
+          onClick={() => props.setIsRightSideHide(true)}
+          role="img"
+          aria-label="arrow-open"
+        >
+          ▶
+        </button>
+        <div
+          style={{
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            marginTop: '32px',
+          }}
+        >
           <ChatList messages={props.messages} />
         </div>
       </div>
