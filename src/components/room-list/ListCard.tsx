@@ -36,7 +36,7 @@ const ListCard = (props: ListCardProps) => {
             {props.room.isLocked ? (
               <LockIcon />
             ) : (
-              <LockOpenRightIcon width={24} height={24} fill="white" />
+              <LockOpenRightIcon width={21} height={21} fill="white" />
             )}
           </div>
           {`#${props.room.roomId}. ${props.room.title}`}
