@@ -41,8 +41,8 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
         Authorization: `Bearer ${accessToken}`,
       },
       reconnectDelay: 0,
-      heartbeatIncoming: 60 * 1000,
-      heartbeatOutgoing: 60 * 1000,
+      heartbeatIncoming: 30 * 1000,
+      heartbeatOutgoing: 30 * 1000,
       onConnect: () => {
         console.log('연결 성공');
         set((state) => ({
@@ -75,6 +75,14 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
         set((state) => ({ ...state, isConnected: false }));
       },
     });
+
+    if (
+      client.webSocket?.readyState === WebSocket.CLOSING ||
+      client.webSocket?.readyState === WebSocket.CLOSED
+    ) {
+      console.log('WebSocket is already in CLOSING or CLOSED state.');
+      return;
+    }
 
     client.activate(); // 클라이언트 활성화
     // 클라이언트 정보 저장
@@ -125,7 +133,6 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
     set((state) => {
       const { webSocketClient, subscriptions } = state;
       // 클라이언트 정보가 있으면 채널 구독, 콜백 함수로 메시지 수신
-      console.log(webSocketClient);
       const isExistSubscribe = subscriptions.find((sub) => sub.id === id);
       if (webSocketClient) {
         const subscription = webSocketClient.subscribe(
