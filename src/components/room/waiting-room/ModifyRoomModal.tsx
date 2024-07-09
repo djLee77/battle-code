@@ -61,6 +61,8 @@ const ModifyRoomModal = React.memo(({ data }: any) => {
   const handleClose = () => setOpen(false);
   const { publishMessage } = useWebSocketStore();
 
+  console.log(data);
+
   const levelSelectList = levelData;
   const langSelectList = langData;
   const limitTimeSelectList = limitTImeData;
@@ -155,9 +157,11 @@ const ModifyRoomModal = React.memo(({ data }: any) => {
               />
             </div>
             <div className={styles[`btn-group`]}>
-              <CustomButton type="submit">수정</CustomButton>
               <CustomButton size="small" type="button" onClick={handleClose}>
                 취소
+              </CustomButton>
+              <CustomButton type="submit" bgColor="#108ee9">
+                수정
               </CustomButton>
             </div>
           </form>
