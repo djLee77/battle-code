@@ -10,6 +10,7 @@ interface IProps {
 
 const UserCard = (props: IProps) => {
   const { publishMessage } = useWebSocketStore();
+  let is = true;
 
   const handleLanguageChange = (newLanguage: string): void => {
     const updateUser = props.userStatus.find(
@@ -71,8 +72,8 @@ const UserCard = (props: IProps) => {
         <div>
           <span className={styles['var-type-color']}>let</span>{' '}
           <span className={styles['var-name-color']}>isReady</span> ={' '}
-          <span className={styles['var-data-color']}>
-            '{props.userData.isReady ? 'true' : 'false'}'
+          <span style={{ color: '#569CD6' }}>
+            {props.userData.isReady ? 'true' : 'false'}
           </span>
           ;
         </div>
