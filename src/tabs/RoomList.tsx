@@ -34,14 +34,10 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   }, []);
 
   useEffect(() => {
-    if (searchValue) {
-      const filteredRooms = roomList.filter((room) =>
-        room.roomId.toString().includes(searchValue)
-      );
-      setFilteredRoomList(filteredRooms);
-    } else {
-      setFilteredRoomList(roomList);
-    }
+    const filteredRooms = roomList.filter((room) =>
+      room.roomId.toString().includes(searchValue)
+    );
+    setFilteredRoomList(filteredRooms);
   }, [searchValue, roomList]);
 
   // 대기방 목록 불러오는 함수
@@ -49,16 +45,11 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
     try {
       const response = await api.get(`v1/roomLists`);
       console.log(response);
-      response.data.data.shift(); // default 방 제거
-      setRoomList(response.data.data);
-      setFilteredRoomList(response.data.data);
-      return response.data.data;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
-      } else {
-        console.error('알 수 없는 에러:', error);
-      }
+      const rooms = response.data.data.slice(1); // Remove default room
+      setRoomList(rooms);
+      setFilteredRoomList(rooms);
+    } catch (error) {
+      console.error('Failed to fetch room list:', error);
     }
   };
 
@@ -80,14 +71,10 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
           dockLayoutRef
         );
       }
-    } catch (error: unknown) {
+    } catch (error) {
       showAlert();
       getGameRoomList();
-      if (error instanceof Error) {
-        console.error('요청 실패:', error.message); // Error 인스턴스라면 message 속성을 사용
-      } else {
-        console.error('알 수 없는 에러:', error);
-      }
+      console.error('Failed to enter room:', error);
     }
   };
 
