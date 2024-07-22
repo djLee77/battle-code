@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IRoomStatus } from 'types/roomType';
+import { IRoom, IUserStatus } from 'types/roomType';
 import DockLayout from 'rc-dock';
 import InGameRoom from 'components/room/InGameRoom';
 import WaitingRoom from 'components/room/WaitingRoom';
@@ -7,14 +7,15 @@ import useWebSocketStore from 'store/useWebSocketStore';
 import emitter from 'utils/eventEmitter';
 
 interface IProps {
-  data: IRoomStatus;
+  roomStatus: IRoom;
+  userStatus: IUserStatus[];
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
 }
 
 const Room = (props: IProps) => {
   const [isGameStart, setIsGameStart] = useState<boolean>(false); // 게임 시작 여부
-  const [roomStatus, setRoomStatus] = useState(props.data.roomStatus); // 방 상태
-  const [userStatus, setUserStatus] = useState(props.data.userStatus); // 유저들 상태
+  const [roomStatus, setRoomStatus] = useState(props.roomStatus); // 방 상태
+  const [userStatus, setUserStatus] = useState(props.userStatus); // 유저들 상태
   const { isConnected, subscribe } = useWebSocketStore();
   const userId = localStorage.getItem('id');
 
@@ -23,6 +24,18 @@ const Room = (props: IProps) => {
     e.preventDefault();
     e.returnValue = ''; // 이 코드는 Chrome에서 새로고침 경고를 활성화하는 데 필요
   };
+
+  useEffect(() => {
+    localStorage.setItem('roomStatus', JSON.stringify(roomStatus));
+  }, [roomStatus]);
+
+  useEffect(() => {
+    localStorage.setItem('userStatus', JSON.stringify(userStatus));
+  }, [userStatus]);
+
+  useEffect(() => {
+    localStorage.setItem('isGameStart', JSON.stringify(isGameStart));
+  }, [isGameStart]);
 
   useEffect(() => {
     // 컴포넌트 마운트 시 beforeunload 이벤트 리스너 추가
@@ -36,13 +49,13 @@ const Room = (props: IProps) => {
 
   useEffect(() => {
     if (!isConnected) return;
-    const destination = `/topic/rooms/${props.data.roomStatus.roomId}`;
+    const destination = `/topic/rooms/${props.roomStatus.roomId}`;
 
     subscribe('room', destination, (message: any) => {
       const receivedMessage = JSON.parse(message.body);
       emitter.emit('message', receivedMessage);
     });
-  }, [isConnected, props.data.roomStatus.roomId]);
+  }, [isConnected, props.roomStatus.roomId]);
 
   return isGameStart ? (
     <InGameRoom

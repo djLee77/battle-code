@@ -31,6 +31,8 @@ const Navigation = ({ dockLayoutRef }: NavigationProps) => {
     console.log(webSocketClient);
     removeRefreshToken();
     removeAccessToken();
+    localStorage.removeItem('roomStatus');
+    localStorage.removeItem('userStatus');
     navigate('/login');
   };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ListCard from 'components/room-list/ListCard';
-import { IRoomList } from 'types';
+import { IRoom, IRoomList } from 'types';
 import styles from 'styles/room-list/room-list.module.css';
 import SearchRoom from 'components/room-list/SearchRoom';
 import CustomButton from 'components/ui/CustomButton';
@@ -31,6 +31,23 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
 
   useEffect(() => {
     getGameRoomList();
+    const roomStatus = localStorage.getItem('roomStatus');
+    const userStatus = localStorage.getItem('userStatus');
+    if (roomStatus && userStatus) {
+      console.log(JSON.parse(roomStatus).roomId);
+    }
+
+    if (roomStatus !== null && userStatus !== null) {
+      addTab(
+        `${JSON.parse(roomStatus).roomId}번방`,
+        <Room
+          roomStatus={JSON.parse(roomStatus)}
+          userStatus={JSON.parse(userStatus)}
+          dockLayoutRef={dockLayoutRef}
+        />,
+        dockLayoutRef
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -67,7 +84,11 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
         // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
         addTab(
           `${room.roomId}번방`,
-          <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+          <Room
+            roomStatus={response.data.data.roomStatus}
+            userStatus={response.data.data.userStatus}
+            dockLayoutRef={dockLayoutRef}
+          />,
           dockLayoutRef
         );
       }

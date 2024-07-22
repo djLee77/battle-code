@@ -77,7 +77,11 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
       addTab(
         `${roomId}번방`,
-        <Room data={response.data.data} dockLayoutRef={dockLayoutRef} />,
+        <Room
+          roomStatus={response.data.data.roomStatus}
+          userStatus={response.data.data.userStatus}
+          dockLayoutRef={dockLayoutRef}
+        />,
         dockLayoutRef
       );
       handleClose();

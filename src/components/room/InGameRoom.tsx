@@ -41,7 +41,7 @@ interface ISurrenders {
   isSurrender: boolean;
 }
 
-interface IisCorrect {
+interface IUsersCorrectStatus {
   id: string;
   isCorrect: boolean;
 }
@@ -66,9 +66,9 @@ const InGameRoom = (props: IProps) => {
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   );
   const [surrenders, setSurrenders] = useState<ISurrenders[]>([]);
-  const [usersCorrectStatus, setUsersCorrectStatus] = useState<IisCorrect[]>(
-    []
-  );
+  const [usersCorrectStatus, setUsersCorrectStatus] = useState<
+    IUsersCorrectStatus[]
+  >([]);
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>();
@@ -80,8 +80,24 @@ const InGameRoom = (props: IProps) => {
   const { publishMessage, unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
-    initializeGame();
+    const usersCorrectStatus = localStorage.getItem('usersCorrectStatus');
+    if (!usersCorrectStatus) initializeGame();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      'usersCorrectStatus',
+      JSON.stringify(usersCorrectStatus)
+    );
+  }, [usersCorrectStatus]);
+
+  useEffect(() => {
+    localStorage.setItem('submitCount', JSON.stringify(submitCount));
+  }, [submitCount]);
+
+  useEffect(() => {
+    localStorage.setItem('surrenders', JSON.stringify(surrenders));
+  }, [surrenders]);
 
   useEffect(() => {
     const correctedUsers = usersCorrectStatus.filter(
@@ -245,6 +261,8 @@ const InGameRoom = (props: IProps) => {
       try {
         await api.post(`v1/games/${props.roomStatus.roomId}/leave`, {});
         removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
+        localStorage.removeItem('roomStatus');
+        localStorage.removeItem('userStatus');
         unsubscribe('room');
       } catch (error) {
         console.error(

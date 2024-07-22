@@ -130,6 +130,8 @@ const WaitingRoom = (props: IProps) => {
       );
       console.log(response);
       removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
+      localStorage.removeItem('roomStatus');
+      localStorage.removeItem('userStatus');
       unsubscribe('room');
     } catch (error: unknown) {
       if (error instanceof Error) {
