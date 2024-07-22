@@ -7,6 +7,7 @@ import MyPage from '../tabs/MyPage';
 import useWebSocketStore from 'store/useWebSocketStore';
 import { useNavigate } from 'react-router-dom';
 import { removeAccessToken, removeRefreshToken } from 'utils/cookie';
+import useRoomStore from 'store/useRoomStore';
 
 interface NavigationProps {
   dockLayoutRef: React.RefObject<any>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
@@ -14,11 +15,13 @@ interface NavigationProps {
 
 const Navigation = ({ dockLayoutRef }: NavigationProps) => {
   const navigate = useNavigate();
+  const { resetState } = useRoomStore();
   const {
     webSocketClient,
     setIsLogout,
     reconnectAttempts,
     maxReconnectAttempts,
+    resetWebSocket,
   } = useWebSocketStore();
 
   const handleUserInfo = () => {
@@ -28,11 +31,10 @@ const Navigation = ({ dockLayoutRef }: NavigationProps) => {
   const handleLogout = () => {
     setIsLogout(true);
     webSocketClient?.deactivate();
-    console.log(webSocketClient);
     removeRefreshToken();
     removeAccessToken();
-    localStorage.removeItem('roomStatus');
-    localStorage.removeItem('userStatus');
+    resetState();
+    resetWebSocket();
     navigate('/login');
   };
 
