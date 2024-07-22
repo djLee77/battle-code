@@ -14,6 +14,7 @@ import PasswordModal from 'components/room-list/PasswordModal';
 import alertStyles from 'styles/alert.module.css';
 import { Alert } from '@mui/material';
 import useAlert from 'hooks/useAlert';
+import useRoomStore from 'store/useRoomStore';
 
 interface RoomListProps {
   dockLayoutRef: React.RefObject<DockLayout>; // DockLayout 컴포넌트에 대한 RefObject 타입 지정
@@ -27,24 +28,15 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [selectedRoom, setSelectedRoom] = useState<IRoomList>();
   const { alertOpen, showAlert } = useAlert(false, 3000);
+  const { roomStatus, setUserStatus, setRoomStatus } = useRoomStore();
   const { unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
     getGameRoomList();
-    const roomStatus = localStorage.getItem('roomStatus');
-    const userStatus = localStorage.getItem('userStatus');
-    if (roomStatus && userStatus) {
-      console.log(JSON.parse(roomStatus).roomId);
-    }
-
-    if (roomStatus !== null && userStatus !== null) {
+    if (roomStatus) {
       addTab(
-        `${JSON.parse(roomStatus).roomId}번방`,
-        <Room
-          roomStatus={JSON.parse(roomStatus)}
-          userStatus={JSON.parse(userStatus)}
-          dockLayoutRef={dockLayoutRef}
-        />,
+        `${roomStatus.roomId}번방`,
+        <Room dockLayoutRef={dockLayoutRef} />,
         dockLayoutRef
       );
     }
@@ -81,14 +73,11 @@ const RoomList = ({ dockLayoutRef }: RoomListProps) => {
       console.log(response);
       if (response.status === 200) {
         unsubscribe('room');
-        // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+        setRoomStatus(response.data.data.roomStatus);
+        setUserStatus(response.data.data.userStatus);
         addTab(
           `${room.roomId}번방`,
-          <Room
-            roomStatus={response.data.data.roomStatus}
-            userStatus={response.data.data.userStatus}
-            dockLayoutRef={dockLayoutRef}
-          />,
+          <Room dockLayoutRef={dockLayoutRef} />,
           dockLayoutRef
         );
       }

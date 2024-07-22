@@ -11,6 +11,7 @@ import api from 'utils/axios';
 import { addTab } from 'utils/tabs';
 import useWebSocketStore from 'store/useWebSocketStore';
 import Room from '../../tabs/Room';
+import useRoomStore from 'store/useRoomStore';
 
 // 모달 창 스타일
 const style = {
@@ -51,6 +52,7 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { unsubscribe } = useWebSocketStore();
+  const { setRoomStatus, setUserStatus } = useRoomStore();
 
   const levelSelectList = levelData;
   const langSelectList = langData;
@@ -74,14 +76,11 @@ const CreateRoomModal = ({ dockLayoutRef }: IProps) => {
       });
       console.log(response);
       const roomId = response.data.data.roomStatus.roomId;
-      // 방 생성 완료되면 대기방 탭 열고 모달창 닫기
+      setRoomStatus(response.data.data.roomStatus);
+      setUserStatus(response.data.data.userStatus);
       addTab(
         `${roomId}번방`,
-        <Room
-          roomStatus={response.data.data.roomStatus}
-          userStatus={response.data.data.userStatus}
-          dockLayoutRef={dockLayoutRef}
-        />,
+        <Room dockLayoutRef={dockLayoutRef} />,
         dockLayoutRef
       );
       handleClose();

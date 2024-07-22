@@ -9,9 +9,10 @@ interface IProps {
 }
 
 const UserList = (props: IProps) => {
+  console.log(props.userStatus);
   return (
     <div className={styles['user-list']}>
-      {props.userStatus.map((userData) => (
+      {props.userStatus?.map((userData) => (
         <UserCard
           key={userData.userId}
           roomId={props.roomId}

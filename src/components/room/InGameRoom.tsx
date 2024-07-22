@@ -15,6 +15,7 @@ import Problem from './ingame-room/Problem';
 import emitter from 'utils/eventEmitter';
 import ScoreBoard from './ingame-room/ScoreBoard';
 import ChatInput from './chat/ChatInput';
+import useRoomStore from 'store/useRoomStore';
 
 interface IProblem {
   id: number;
@@ -29,11 +30,7 @@ interface IProblem {
 
 interface IProps {
   userId: string | null;
-  userStatus: IUserStatus[];
-  roomStatus: IRoom;
   dockLayoutRef: React.RefObject<DockLayout>;
-  setIsGameStart: (isGameStart: boolean) => void;
-  setUserStatus: (userStatus: IUserStatus[]) => void;
 }
 
 interface ISurrenders {
@@ -61,43 +58,41 @@ interface IMessages {
 }
 
 const InGameRoom = (props: IProps) => {
+  const {
+    roomStatus,
+    userStatus,
+    submitCount,
+    surrenders,
+    usersCorrectStatus,
+    setSubmitCount,
+    setUserStatus,
+    setIsGameStart,
+    setSurrenders,
+    setUsersCorrectStatus,
+    resetState,
+  } = useRoomStore();
   const [problems, setProblems] = useState<IProblem[]>([]);
   const [code, setCode] = useState<string>(
     "var message = 'Monaco Editor!' \nconsole.log(message);"
   );
-  const [surrenders, setSurrenders] = useState<ISurrenders[]>([]);
-  const [usersCorrectStatus, setUsersCorrectStatus] = useState<
-    IUsersCorrectStatus[]
-  >([]);
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const [winnerInfo, setWinnerInfo] = useState<IWinnerInfo>();
   const [messages, setMessages] = useState<IMessages[]>([]);
   const [isJudging, setIsJudging] = useState<boolean>(false);
-  const [submitCount, setSubmitCount] = useState<number>(
-    props.roomStatus.maxSubmitCount
-  );
   const { publishMessage, unsubscribe } = useWebSocketStore();
 
   useEffect(() => {
-    const usersCorrectStatus = localStorage.getItem('usersCorrectStatus');
-    if (!usersCorrectStatus) initializeGame();
+    initializeGame();
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      'usersCorrectStatus',
-      JSON.stringify(usersCorrectStatus)
-    );
-  }, [usersCorrectStatus]);
-
-  useEffect(() => {
-    localStorage.setItem('submitCount', JSON.stringify(submitCount));
-  }, [submitCount]);
-
-  useEffect(() => {
-    localStorage.setItem('surrenders', JSON.stringify(surrenders));
-  }, [surrenders]);
+    if (isGameEnd) {
+      setSurrenders([]);
+      setUsersCorrectStatus([]);
+      setSubmitCount(-1);
+    }
+  }, [isGameEnd]);
 
   useEffect(() => {
     const correctedUsers = usersCorrectStatus.filter(
@@ -110,7 +105,7 @@ const InGameRoom = (props: IProps) => {
       )
     );
 
-    if (correctedUsers.length === props.userStatus.length) {
+    if (correctedUsers.length === userStatus.length) {
       handleGameEnd();
     }
   }, [usersCorrectStatus]);
@@ -138,7 +133,7 @@ const InGameRoom = (props: IProps) => {
       }
 
       if (msg.userStatusList) {
-        props.setUserStatus(msg.userStatusList);
+        setUserStatus(msg.userStatusList);
       }
 
       if (msg.userSurrender) {
@@ -163,14 +158,18 @@ const InGameRoom = (props: IProps) => {
 
   const initializeGame = async () => {
     await fetchProblems();
-    initializeUserStates();
+    if (usersCorrectStatus.length === 0 && surrenders.length === 0) {
+      initializeUserStates();
+    }
+
+    if (submitCount === -1) {
+      setSubmitCount(roomStatus!.maxSubmitCount);
+    }
   };
 
   const fetchProblems = async () => {
     try {
-      const response = await api.get(
-        `v1/games/${props.roomStatus.roomId}/problems`
-      );
+      const response = await api.get(`v1/games/${roomStatus?.roomId}/problems`);
       setProblems(response.data.problems);
     } catch (error) {
       console.error(
@@ -181,7 +180,7 @@ const InGameRoom = (props: IProps) => {
   };
 
   const initializeUserStates = () => {
-    const sortedUserStatus = [...props.userStatus].sort((a, b) =>
+    const sortedUserStatus = userStatus.sort((a, b) =>
       a.userId.localeCompare(b.userId)
     );
 
@@ -218,19 +217,17 @@ const InGameRoom = (props: IProps) => {
   };
 
   const searchMyLanguage = () => {
-    const player = props.userStatus.find(
-      (user) => user.userId === props.userId
-    );
+    const player = userStatus.find((user) => user.userId === props.userId);
     return player ? player.language : '';
   };
 
   const handleSubmit = useCallback(async () => {
     try {
-      setSubmitCount((submitCount) => submitCount - 1);
+      setSubmitCount((submitCount: number) => submitCount - 1);
       setIsJudging(true);
       await api.post(`v1/judges`, {
         problemId: problems[0].id,
-        roomId: props.roomStatus.roomId,
+        roomId: roomStatus?.roomId,
         userId: props.userId,
         language: searchMyLanguage(),
         code: code,
@@ -241,28 +238,27 @@ const InGameRoom = (props: IProps) => {
         error instanceof Error ? error.message : error
       );
     }
-  }, [props.userId, props.roomStatus.roomId, problems, code]);
+  }, [props.userId, roomStatus?.roomId, problems, code]);
 
   const handleGameEnd = useCallback(async (): Promise<void> => {
     if (usersCorrectStatus[0]?.id !== props.userId) return;
 
     try {
-      await api.post(`v1/games/${props.roomStatus.roomId}/end`, {});
+      await api.post(`v1/games/${roomStatus?.roomId}/end`, {});
     } catch (error) {
       console.error(
         'Error ending game:',
         error instanceof Error ? error.message : error
       );
     }
-  }, [props.roomStatus.roomId, props.userId, usersCorrectStatus]);
+  }, [roomStatus?.roomId, props.userId, usersCorrectStatus]);
 
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     if (window.confirm('정말로 나가시겠습니까?')) {
       try {
-        await api.post(`v1/games/${props.roomStatus.roomId}/leave`, {});
-        removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-        localStorage.removeItem('roomStatus');
-        localStorage.removeItem('userStatus');
+        await api.post(`v1/games/${roomStatus?.roomId}/leave`, {});
+        removeTab(props.dockLayoutRef, `${roomStatus?.roomId}번방`);
+        resetState();
         unsubscribe('room');
       } catch (error) {
         console.error(
@@ -271,7 +267,7 @@ const InGameRoom = (props: IProps) => {
         );
       }
     }
-  }, [props.roomStatus.roomId, props.dockLayoutRef, unsubscribe]);
+  }, [roomStatus?.roomId, props.dockLayoutRef, unsubscribe]);
 
   const handleSurrender = () => {
     if (
@@ -280,7 +276,7 @@ const InGameRoom = (props: IProps) => {
       )
     ) {
       publishMessage(
-        `/app/games/${props.roomStatus.roomId}/${props.userId}/surrender`,
+        `/app/games/${roomStatus?.roomId}/${props.userId}/surrender`,
         {}
       );
     }
@@ -297,15 +293,15 @@ const InGameRoom = (props: IProps) => {
     <div>
       <div className={styles.header}>
         <div className={styles.titleBox}>
-          <h2 className={styles.title}>{props.roomStatus.title}</h2>
+          <h2 className={styles.title}>{roomStatus?.title}</h2>
           <Timer
             handleGameEnd={handleGameEnd}
-            limitTime={props.roomStatus.limitTime}
+            limitTime={roomStatus!.limitTime}
             isGameEnd={isGameEnd}
           />
         </div>
         <ScoreBoard
-          userStatus={props.userStatus}
+          userStatus={userStatus}
           setUsersCorrectStatus={setUsersCorrectStatus}
           setIsJudging={setIsJudging}
           userId={props.userId}
@@ -345,7 +341,7 @@ const InGameRoom = (props: IProps) => {
               disabled={isJudging || submitCount === 0 || isSurrender}
               bgColor="#108ee9"
             >
-              {'제출 ' + submitCount + ' / ' + props.roomStatus.maxSubmitCount}
+              {'제출 ' + submitCount + ' / ' + roomStatus?.maxSubmitCount}
             </RoomCustomButton>
           </div>
         </div>
@@ -356,11 +352,11 @@ const InGameRoom = (props: IProps) => {
                 isRightSideHide={isRightSideHide}
                 setIsRightSideHide={setIsRightSideHide}
                 messages={messages}
-                roomId={props.roomStatus.roomId}
+                roomId={roomStatus!.roomId}
               />
             </div>
             <div className={styles.rightFooter}>
-              <ChatInput roomId={props.roomStatus.roomId} />
+              <ChatInput roomId={roomStatus!.roomId} />
             </div>
           </div>
         ) : (
@@ -381,7 +377,7 @@ const InGameRoom = (props: IProps) => {
         winnerInfo={winnerInfo}
         open={isGameEnd}
         setOpen={setIsGameEnd}
-        setIsGameStart={props.setIsGameStart}
+        setIsGameStart={setIsGameStart}
       />
     </div>
   );

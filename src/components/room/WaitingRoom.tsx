@@ -13,17 +13,11 @@ import api from 'utils/axios';
 import emitter from 'utils/eventEmitter';
 import { removeTab } from 'utils/tabs';
 import ChatInput from './chat/ChatInput';
+import useRoomStore from 'store/useRoomStore';
 
 interface IProps {
   userId: string | null;
-  userStatus: IUserStatus[];
-  roomStatus: any;
   dockLayoutRef: React.RefObject<DockLayout>;
-  setIsGameStart: (isGameStart: boolean) => void;
-  setRoomStatus: (roomStatus: any) => void;
-  setUserStatus: (
-    updateFunction: (prevUserStatuses: IUserStatus[]) => IUserStatus[]
-  ) => void;
 }
 
 interface IMessages {
@@ -38,30 +32,38 @@ const WaitingRoom = (props: IProps) => {
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [messages, setMessages] = useState<IMessages[]>([]);
   const { publishMessage, unsubscribe } = useWebSocketStore();
+  const {
+    roomStatus,
+    userStatus,
+    setUserStatus,
+    setIsGameStart,
+    setRoomStatus,
+    resetState,
+  } = useRoomStore();
 
   useEffect(() => {
     // 호스트 유저를 제외한 모든 유저의 isReady 상태 확인
-    const allUsersExceptHost = props.userStatus.filter(
-      (user: IUserStatus) => user.userId !== props.roomStatus.hostId
+    const allUsersExceptHost = userStatus?.filter(
+      (user: IUserStatus) => user.userId !== roomStatus?.hostId
     );
     // 방에 호스트 혼자면 코드 실행 중지
-    if (allUsersExceptHost.length === 0) {
+    if (allUsersExceptHost?.length === 0) {
       return;
     }
-    const allReady = allUsersExceptHost.every(
+    const allReady = allUsersExceptHost!.every(
       (user: IUserStatus) => user.isReady
     );
 
     // 모든 유저가 준비 상태인지를 판단하여 상태 업데이트
     setIsAllUsersReady(allReady);
-  }, [props.userStatus]);
+  }, [userStatus]);
 
   useEffect(() => {
     const handleMessages = (msg: any) => {
       console.log('대기방 : ', msg);
       // 유저 상태 업데이트
       if (msg.updateUserStatus) {
-        props.setUserStatus((prev: any) =>
+        setUserStatus((prev: IUserStatus[]) =>
           prev.map((user: any) =>
             user.userId === msg.updateUserStatus.userId
               ? msg.updateUserStatus
@@ -72,7 +74,7 @@ const WaitingRoom = (props: IProps) => {
 
       //유저 입장
       if (msg.enterUserStatus) {
-        props.setUserStatus((prevUserStatus) => [
+        setUserStatus((prevUserStatus: any) => [
           ...prevUserStatus,
           msg.enterUserStatus,
         ]);
@@ -84,11 +86,11 @@ const WaitingRoom = (props: IProps) => {
         // 방장이 퇴장할시
         if (leaveUserStatus.isHost && leaveUserStatus.userId !== props.userId) {
           alert('방장이 나갔습니다 ㅠㅠ');
-          removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
+          removeTab(props.dockLayoutRef, `${roomStatus?.roomId}번방`);
           return;
         }
         // 유저가 퇴장할시
-        props.setUserStatus((prevUserStatus: IUserStatus[]) =>
+        setUserStatus((prevUserStatus: IUserStatus[]) =>
           prevUserStatus.filter(
             (user) => user.userId !== leaveUserStatus.userId
           )
@@ -97,12 +99,12 @@ const WaitingRoom = (props: IProps) => {
 
       // 방 설정 변경
       if (msg.roomStatus) {
-        props.setRoomStatus(msg.roomStatus);
+        setRoomStatus(msg.roomStatus);
       }
 
       // 게임 시작
       if (msg.startMessage) {
-        props.setIsGameStart(true);
+        setIsGameStart(true);
       }
 
       // 채팅
@@ -125,14 +127,12 @@ const WaitingRoom = (props: IProps) => {
   const handleRoomLeave = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/rooms/${props.roomStatus.roomId}/leave`,
+        `v1/rooms/${roomStatus?.roomId}/leave`,
         {}
       );
       console.log(response);
-      removeTab(props.dockLayoutRef, `${props.roomStatus.roomId}번방`);
-      localStorage.removeItem('roomStatus');
-      localStorage.removeItem('userStatus');
-      unsubscribe('room');
+      removeTab(props.dockLayoutRef, `${roomStatus?.roomId}번방`);
+      resetState(), unsubscribe('room');
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('요청 실패:', error.message);
@@ -140,25 +140,25 @@ const WaitingRoom = (props: IProps) => {
         console.error('알 수 없는 에러:', error);
       }
     }
-  }, [props.roomStatus.roomId, props.dockLayoutRef, unsubscribe]);
+  }, [roomStatus?.roomId, props.dockLayoutRef, unsubscribe]);
 
   const handleReady = useCallback((): void => {
-    const updateUser = props.userStatus.find(
-      (user) => user.userId === props.userId
+    const updateUser = userStatus.find(
+      (user: any) => user.userId === props.userId
     );
     if (updateUser) {
       updateUser.isReady = !updateUser.isReady;
       publishMessage(
-        `/app/rooms/${props.roomStatus.roomId}/update/user-status`,
+        `/app/rooms/${roomStatus?.roomId}/update/user-status`,
         updateUser
       );
     }
-  }, [props.userStatus, props.userId, props.roomStatus.roomId]);
+  }, [userStatus, props.userId, roomStatus?.roomId]);
 
   const handleGameStart = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse = await api.post(
-        `v1/rooms/${props.roomStatus.roomId}/start`,
+        `v1/rooms/${roomStatus?.roomId}/start`,
         {}
       );
       console.log(response);
@@ -169,17 +169,17 @@ const WaitingRoom = (props: IProps) => {
         console.error('알 수 없는 에러:', error);
       }
     }
-  }, [props.roomStatus.roomId, props.setIsGameStart]);
+  }, [roomStatus?.roomId, setIsGameStart]);
 
   return (
     <div>
       <div style={{ display: 'flex' }}>
         <div>
-          <h1 className={styles.title}>{props.roomStatus.title}</h1>
+          <h1 className={styles.title}>{roomStatus?.title}</h1>
         </div>
         <div style={{ margin: '20px 0px 0px 0px' }}>
-          {props.roomStatus.hostId === props.userId && (
-            <ModifyRoomModal data={props.roomStatus} />
+          {roomStatus?.hostId === props.userId && (
+            <ModifyRoomModal data={roomStatus} />
           )}
         </div>
       </div>
@@ -197,15 +197,19 @@ const WaitingRoom = (props: IProps) => {
         <div className={styles.center}>
           <div className={styles.centerBody}>
             <div className={styles.flexGrow}>
-              <UserList
-                userStatus={props.userStatus}
-                roomId={props.roomStatus.roomId}
-              />
-              <RoomSettings roomStatus={props.roomStatus} />
+              {roomStatus && (
+                <>
+                  <UserList
+                    userStatus={userStatus}
+                    roomId={roomStatus.roomId}
+                  />
+                  <RoomSettings roomStatus={roomStatus} />
+                </>
+              )}
             </div>
           </div>
           <div className={styles.centerFooter}>
-            {props.roomStatus.hostId === props.userId ? (
+            {roomStatus?.hostId === props.userId ? (
               <RoomCustomButton
                 // disabled={!isAllUsersReady}
                 onClick={handleGameStart}
@@ -220,18 +224,18 @@ const WaitingRoom = (props: IProps) => {
             )}
           </div>
         </div>
-        {!isRightSideHide ? (
+        {!isRightSideHide && roomStatus ? (
           <div className={styles.rightSide}>
             <div className={styles.rightBody}>
               <Chat
                 isRightSideHide={isRightSideHide}
                 setIsRightSideHide={setIsRightSideHide}
                 messages={messages}
-                roomId={props.roomStatus.roomId}
+                roomId={roomStatus.roomId}
               />
             </div>
             <div className={styles.rightFooter}>
-              <ChatInput roomId={props.roomStatus.roomId} />
+              <ChatInput roomId={roomStatus.roomId} />
             </div>
           </div>
         ) : (

@@ -15,34 +15,70 @@ interface IUsersCorrectStatus {
 
 interface RoomState {
   roomStatus: IRoom | null;
-  userStatus: IUserStatus | null;
+  userStatus: IUserStatus[];
   isGameStart: boolean;
-  usersCorrectStatus: IUsersCorrectStatus[] | null;
+  usersCorrectStatus: IUsersCorrectStatus[];
   submitCount: number;
-  surrenders: ISurrenders[] | null;
-  setRoomStatus: (status: IRoom) => void;
-  setUserStatus: (status: any) => void;
+  surrenders: ISurrenders[];
+  setRoomStatus: (status: IRoom | null) => void;
+  setUserStatus: (
+    status: IUserStatus[] | ((prev: IUserStatus[]) => IUserStatus[])
+  ) => void;
   setIsGameStart: (status: boolean) => void;
-  setUsersCorrectStatus: (status: IUsersCorrectStatus[]) => void;
-  setSubmitCount: (count: number) => void;
-  setSurrenders: (status: ISurrenders[]) => void;
+  setUsersCorrectStatus: (
+    status:
+      | IUsersCorrectStatus[]
+      | ((prev: IUsersCorrectStatus[]) => IUsersCorrectStatus[])
+  ) => void;
+  setSubmitCount: (count: number | ((prev: number) => number)) => void;
+  setSurrenders: (
+    status: ISurrenders[] | ((prev: ISurrenders[]) => ISurrenders[])
+  ) => void;
+  resetState: () => void;
 }
 
 const useRoomStore = create<RoomState>()(
   persist(
     (set) => ({
       roomStatus: null,
-      userStatus: null,
+      userStatus: [],
       isGameStart: false,
-      usersCorrectStatus: null,
-      submitCount: 0,
-      surrenders: null,
+      usersCorrectStatus: [],
+      submitCount: -1,
+      surrenders: [],
       setRoomStatus: (status) => set({ roomStatus: status }),
-      setUserStatus: (status) => set({ userStatus: status }),
+      setUserStatus: (status) =>
+        set((state) => ({
+          userStatus:
+            typeof status === 'function' ? status(state.userStatus) : status,
+        })),
       setIsGameStart: (status) => set({ isGameStart: status }),
-      setUsersCorrectStatus: (status) => set({ usersCorrectStatus: status }),
-      setSubmitCount: (count) => set({ submitCount: count }),
-      setSurrenders: (status) => set({ surrenders: status }),
+      setUsersCorrectStatus: (status) =>
+        set((state) => ({
+          usersCorrectStatus:
+            typeof status === 'function'
+              ? status(state.usersCorrectStatus)
+              : status,
+        })),
+      setSubmitCount: (count) =>
+        set((state) => ({
+          submitCount:
+            typeof count === 'function' ? count(state.submitCount) : count,
+        })),
+      setSurrenders: (status) =>
+        set((state) => ({
+          surrenders:
+            typeof status === 'function' ? status(state.surrenders) : status,
+        })),
+      resetState: () =>
+        set({
+          roomStatus: null,
+          userStatus: [],
+          isGameStart: false,
+          usersCorrectStatus: [],
+          submitCount: -1,
+          surrenders: [],
+        }),
     }),
     {
       name: 'room-storage',

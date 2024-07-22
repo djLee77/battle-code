@@ -4,7 +4,7 @@ import styles from 'styles/room/waiting-room/room-settings.module.css';
 
 interface IProps {
   roomStatus: {
-    problemLevel: string;
+    problemLevel: number;
     maxSubmitCount: number;
     language: string;
     limitTime: number;
