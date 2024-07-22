@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import SignupModal from '../components/SignupModal';
 import {
   setRefreshToken,
   removeRefreshToken,
   setAccessToken,
+  getAccessToken,
 } from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/login/login.module.css';
+import useWebSocketStore from 'store/useWebSocketStore';
 
 const Login = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -17,6 +19,13 @@ const Login = () => {
 
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      navigate('/');
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
