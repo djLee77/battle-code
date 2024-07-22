@@ -22,6 +22,7 @@ interface WebSocketStoreState {
   subscribe: (id: string, destination: string, callback: any) => void;
   unsubscribe: (id: string) => void;
   setIsLogout: (loggingOut: boolean) => void;
+  resetWebSocket: () => void;
 }
 
 // 전역 상태로 관리
@@ -152,7 +153,7 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
   // 구독 해제
   unsubscribe: (id: string) => {
     set((state) => {
-      const { subscriptions, webSocketClient } = state;
+      const { subscriptions } = state;
       const subscription = subscriptions.find((sub) => sub.id === id);
       if (subscription) {
         subscription.subscription?.unsubscribe();
@@ -169,6 +170,13 @@ const useWebSocketStore = create<WebSocketStoreState>((set, get) => ({
   setIsLogout: (value: boolean) => {
     set((state) => ({ ...state, isLogout: value }));
   },
+
+  resetWebSocket: () =>
+    set({
+      webSocketClient: null,
+      isConnected: false,
+      subscriptions: [],
+    }),
 }));
 
 export default useWebSocketStore;
