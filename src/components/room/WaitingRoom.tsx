@@ -132,7 +132,8 @@ const WaitingRoom = (props: IProps) => {
       );
       console.log(response);
       removeTab(props.dockLayoutRef, `${roomStatus?.roomId}번방`);
-      resetState(), unsubscribe('room');
+      resetState();
+      unsubscribe('room');
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('요청 실패:', error.message);
