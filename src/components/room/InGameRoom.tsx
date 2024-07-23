@@ -73,7 +73,36 @@ const InGameRoom = (props: IProps) => {
   } = useRoomStore();
   const [problems, setProblems] = useState<IProblem[]>([]);
   const [code, setCode] = useState<string>(
-    "var message = 'Monaco Editor!' \nconsole.log(message);"
+    `import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < n; i++) {
+            pq.add(Integer.parseInt(st.nextToken()));
+        }
+
+        int sum = 0;
+        int minus = 0;
+        for (int i = 0; i < k; i++) {
+            sum += pq.poll();
+            minus += i;
+        }
+
+        System.out.println(sum - minus);
+    }
+}`
   );
   const [isRightSideHide, setIsRightSideHide] = useState<boolean>(false);
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
